@@ -21,24 +21,24 @@ my $DEBUG = $repo->param( "debug" );
 my $hbinmode = $repo->param( "hbinmode" );
 
 # some parameters
-my $VERSION = 'v1.5.1';
+my $VERSION = 'v1.6.0';
 
 # NOTE: back-end file/ingest limits should always be geater than hybrid limits
 # max allowed file size for ingestion
-#my $max_fsize = 2 * 1024 * 1024 * 1024;
-my $max_fsize = 400 * 1024; # for testing
+my $max_fsize = 2 * 1024 * 1024 * 1024;
+#my $max_fsize = 400 * 1024; # for testing
 
 # max allowed total ingestion size
-#my $max_isize = 10 * 1024 * 1024 * 1024;
-my $max_isize = 450 * 1024; # for testing
+my $max_isize = 10 * 1024 * 1024 * 1024;
+#my $max_isize = 450 * 1024; # for testing
 
 # max allowed file size for back-end ingestion
-#my $max_fsize = 2 * 1024 * 1024 * 1024;
-my $max_befsize = 900 * 1024; # for testing
+my $max_befsize = 10 * 1024 * 1024 * 1024;
+#my $max_befsize = 900 * 1024; # for testing
 
 # max allowed total back-end ingestion size
-#my $max_isize = 10 * 1024 * 1024 * 1024;
-my $max_beisize = 800 * 1024; # for testing
+my $max_beisize = 100 * 1024 * 1024 * 1024;
+#my $max_beisize = 800 * 1024; # for testing
 
 # free space always required on root file system
 # this is deducted from rootfs_free and max_isize is reduced if necessary
@@ -75,6 +75,8 @@ my $down_file = '/usr/share/eprints/cgi/no_ingest';
 # define history info string
 my $history_str = <<'__HISTORY_INFO__';
 VERSION HISTORY
+1.6.0 - ADD: enhanced XML file analysis using LibXML library module
+        ADD: error trap to detect unmatched document 'main' values in XML files
 1.5.1 - ADD: link to ABE Ingest checker
 1.5.0 - ADD: back-end ingestion option for large files and datasets
 1.4.8 - ADD: max file size, ingestion size and root file system free space checks
@@ -252,7 +254,7 @@ if ( defined $history ) {
 	# create link to ingestion workflow
 	my $hp = $repo->make_element( "p" );
 	my $ha = $repo->render_link( $host_cfg{$hostname}{https_link} );
-	$ha->appendChild( $repo->make_text( 'Hybrid ingestion home page' ) );
+	$ha->appendChild( $repo->make_text( 'RDL Data Tool home page' ) );
 	$hp->appendChild( $ha );
 	$page->appendChild( $hp );
 }
@@ -310,61 +312,61 @@ elsif ( defined $xlsfile )
 	
 	# try file reference checking only if there are no errors so far
 	if ( ! $error_str ) {
-		$op .= "Checking file references in '$xmlfile'...\n\n";
+		#$op .= "Checking file references in '$xmlfile'...\n\n";
 
-		# some file checking parameters
-		my $fchk_total = 0;
-		my $fchk_found = 0;
-		my $fchk_missing = 0;
-		my $fchk_files = '';
+		# some file/document checking parameters
 		my $schk_oversized = 0;
 		my $schk_files = '';
 		my $schk_hbin_oversized = 0;
 		my $schk_hbin_files = '';
-		my $isize = 0;
+		my $fchk_files = '';
+		my $dchk_mains = '';
 
-        	if ( -f "$xlslpath$xmlfile" ) {
-        	        open FILE, "$xlslpath$xmlfile" or die "\nERROR: Cannot open file $xlslpath$xmlfile\n\n";
-        	        while (<FILE>) {
-        	                chomp;
-        	                if ($_ =~ /<url>file:\/\/(.*?)<\/url>/) {
-        	                        $fchk_total++;
-									my $raw_path = uri_unescape($1);
-        	                        if (-f $raw_path) {
-        	                                $fchk_found++;
-											my $fsize = -s $raw_path;
-											$isize += $fsize;
-											# check back-end file size limit
-											if ( $max_befsize && ( $fsize > $max_befsize ))
-											{
-												$schk_files .= basename($raw_path)
-													. '   [' . hr_bytes( $fsize, 1 ) . "]\n";
-												$schk_oversized++;
-											}
-											# check hybrid file size limit
-											if ( $max_fsize && ( $fsize > $max_fsize ))
-											{
-												$schk_hbin_files .= basename($raw_path)
-													. '   [' . hr_bytes( $fsize, 1 ) . "]\n";
-												$schk_hbin_oversized++;
-											}
-        	                        }
-        	                        else {
-        	                                $fchk_files .= basename($raw_path) . "\n";
-        	                                $fchk_missing++;
-        	                        }
-        	                }
-        	        }
-        	}
+		# get the hash ref from the file checking
+		my $fref = check_files( "$xlslpath$xmlfile" );
+		
+		$op .= $fref->{op_str};
 
-		$op .= "Found $fchk_found out of $fchk_total files referenced in the XML file\n\n";
+		foreach my $rfile ( @{$fref->{files}} )
+		{
+			# check back-end file size limit
+			if ( $max_befsize && ( $rfile->{size} > $max_befsize ))
+			{
+				$schk_files .= basename( $rfile->{name} )
+					. '   [' . hr_bytes( $rfile->{size}, 1 ) . "]\n";
+				$schk_oversized++;
+			}
+			# check hybrid file size limit
+			if ( $max_fsize && ( $rfile->{size} > $max_fsize ))
+			{
+				$schk_hbin_files .= basename( $rfile->{name} )
+					. '   [' . hr_bytes( $rfile->{size}, 1 ) . "]\n";
+				$schk_hbin_oversized++;
+			}
+			$fchk_files .= $rfile->{name} . "\n" if $rfile->{status} eq 'missing';
+		}
+
+		$op .= "Found " . $fref->{ffound} . " out of " . $fref->{ftotal}
+			. " files referenced in the XML file\n\n";
+		
+		# populate the document 'main' unmatched string
+		foreach my $dmain ( @{$fref->{docs}} )
+		{
+			$dchk_mains .= $dmain->{main} . "\n" if ! $dmain->{matched};
+		}
 		
 		# ERROR TRAPS
 		# missing files
-		if ( $fchk_missing )
+		if ( $fref->{fmissing} )
 		{
 			$op .= "ERROR: The following files were not found: -\n$fchk_files\n\n";
 			$error_str = 'bad file references';
+		}
+		# unmatched document 'main's
+		elsif ( $fref->{dunmatched} )
+		{
+			$op .= "ERROR: The following document 'main' values do not match a 'path' reference: -\n$dchk_mains\n\n";
+			$error_str = 'bad document.main references';		
 		}
 		# back-end ingestion size limits (if enabled)
 		elsif ( $be_enabled && $schk_oversized )
@@ -373,10 +375,10 @@ elsif ( defined $xlsfile )
 				. "[max " . hr_bytes( $max_befsize, 1 ) . "] : -\n$schk_files\n\n";
 			$error_str = 'file sizes too large';
 		}
-		elsif ( $be_enabled && $max_beisize && ( $isize > $max_beisize ))
+		elsif ( $be_enabled && $max_beisize && ( $fref->{isize} > $max_beisize ))
 		{
 				$op .= "ERROR: The total size of this ingestion ["
-					. hr_bytes( $isize, 1 ) . "] is too large.\n"
+					. hr_bytes( $fref->{isize}, 1 ) . "] is too large.\n"
 					. "Maximum permitted back-end ingestion size is "
 					. hr_bytes( $max_beisize, 1 ) . "\n\n";
 				$error_str = 'ingestion size too large';
@@ -403,7 +405,7 @@ elsif ( defined $xlsfile )
 					$error_str = 'file sizes too large';
 				}
 			}
-			elsif ( $max_isize && ( $isize > $max_isize ))
+			elsif ( $max_isize && ( $fref->{isize} > $max_isize ))
 			{
 				# we can't use hybrid in this case
 				$hbin_ok = 0;
@@ -412,14 +414,14 @@ elsif ( defined $xlsfile )
 				{			
 					$op .= "INFO: Back-end ingestion is necessary because ";
 					$op .= "the total size of this ingestion is\n"
-						. hr_bytes( $isize, 1 ) . "].\n"
+						. hr_bytes( $fref->{isize}, 1 ) . "].\n"
 						. "Maximum permitted hybrid ingestion size is "
 						. hr_bytes( $max_isize, 1 ) . "\n\n";
 				}
 				else
 				{
 					$op .= "ERROR: The total size of this ingestion ["
-						. hr_bytes( $isize, 1 ) . "] is too large.\n"
+						. hr_bytes( $fref->{isize}, 1 ) . "] is too large.\n"
 						. "Maximum permitted hybrid ingestion size is "
 						. hr_bytes( $max_isize, 1 ) . "\n\n";
 					$error_str = 'ingestion size too large';				
@@ -659,6 +661,88 @@ sub hr_bytes
 	}
 }
 
+sub check_files
+{
+	my $xmlfile = shift;
+	
+	# some file checking parameters returned as a flattened hash ref
+	my %r = (
+		# ingestion level
+		isize => 0,
+		# eprint level
+		etotal => 0,
+		# doc level
+		dtotal => 0,
+		docs => [],
+		dunmatched => 0,
+		# file level
+		ftotal => 0,
+		ffound => 0,
+		fmissing => 0,
+		fgood => 0,
+		files => [],
+		op_str => '',
+		err_str => '',
+	);
+
+	if ( -f "$xmlfile" )
+	{
+		#print "\nFile analysis and preparation...\n";
+		$r{op_str} .= "Checking file '" . basename( $xmlfile ) . "' \n";
+		
+		my $x = XML::LibXML->load_xml(location => $xmlfile);
+
+		foreach my $eprint ( $x->findnodes('eprints/eprint') )
+		{
+			$r{etotal}++;
+			$r{op_str} .= 'Eprint: ' . $eprint->findvalue('./eprintid') . "\n";
+			foreach my $doc ( $eprint->findnodes('./documents/document') )
+			{
+				my %d;
+				$r{dtotal}++;
+				$d{main} = $doc->findvalue('./main');
+				$d{matched} = 0;
+				foreach my $file ( $doc->findnodes('./files/file') )
+				{
+					my %f;
+					$f{size} = 0;
+					$r{ftotal}++;
+					my $ref = $file->findvalue('./url');
+					$ref =~ s/file\:\/\///g;
+					my $raw_path = uri_unescape( $ref );
+					$r{op_str} .= "Checking file '" . basename( $raw_path ) . "' \n";
+					$f{name} = $raw_path;
+					if ( -f $raw_path )
+					{
+						$r{ffound}++;
+						$f{size} = -s $raw_path;
+						
+						$r{isize} += $f{size};
+						$f{status} = 'good';
+						$r{fgood}++;
+					}
+					else
+					{
+							$f{status} = 'missing';
+							$r{fmissing}++;
+					}
+					push @{$r{files}}, \%f;
+					$d{matched} = 1 if $d{main} eq basename( $raw_path );
+				}
+				if ( ! $d{matched} )
+				{
+					$r{dunmatched}++;
+				}
+				push @{$r{docs}}, \%d;
+			}
+		}
+	}
+	else
+	{
+		$r{err_str} .= "ERROR: XML metadata file '$xmlfile' not found\n";
+	}
+	return \%r;
+}
 
 # Create table for metadata
 #my $table = $repo->make_element( "table" );
