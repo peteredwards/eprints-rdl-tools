@@ -1,0 +1,58 @@
+use EPrints;
+use strict;
+use Data::Dumper;
+
+my $VERSION = '1.0.0';
+
+my $eprints = EPrints->new;
+my $repo = $eprints->current_repository;
+exit( 0 ) unless( defined $repo );
+
+$repo->send_http_header( content_type=>"text/plain; charset=UTF-8" );
+
+my %counts;
+
+{
+        my $sql = 'SELECT document.eprintid, substring(eprint.title, 1, 60), count(*)';
+		$sql .= ' FROM document JOIN eprint ON document.eprintid = eprint.eprintid';
+		$sql .= ' WHERE eprint.eprint_status=\'archive\' AND docid NOT IN (SELECT docid FROM document_relation_type)';
+		$sql .= ' GROUP BY document.eprintid;';
+
+        my $sth = $repo->get_database->prepare_select( $sql );
+        $repo->get_database->execute( $sth , $sql );
+        my %dcounts;
+		my $dtotal;
+		my $etotal;
+		
+        while( my ( $eprintid, $title, $num ) = $sth->fetchrow_array )
+        {
+                $dcounts{$eprintid} = [ $title, $num ];
+				$dtotal += $num;
+				$etotal++;
+				
+        }
+		
+		print "ORIGINAL DOCUMENTS COUNT IN RDL LIVE ARCHIVE GROUPED BY EPRINT ID\n\n";
+        foreach my $eprint ( sort {$a<=>$b} keys %dcounts )
+        {
+                print sprintf("%5d    %-60s    %5d\n", 
+                        $eprint,
+                        ${$dcounts{$eprint}}[0],
+						${$dcounts{$eprint}}[1]
+                );
+        }
+		 print sprintf("%5s    %60s    %5d\n", 
+                        "",
+                        "GRAND TOTAL",
+						$dtotal
+                );
+				
+		print "\n\n  TOTAL EPRINTS: $etotal\nTOTAL DOCUMENTS: $dtotal\n\n";
+}
+
+
+# version
+print sprintf(" bstats version: %s\n", $VERSION);
+print sprintf("EPrints version: %s\n", EPrints->human_version);
+
+exit;

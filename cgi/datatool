@@ -1,0 +1,232 @@
+use EPrints;
+use strict;
+use Data::Dumper;
+$|++;
+my $eprints = EPrints->new;
+my $repo = $eprints->current_repository;
+exit( 0 ) unless( defined $repo );
+
+# Get xlsfile and path parameters from URL
+my $xlsfile = $repo->param( "xlsfile" );
+my $xlspath = $repo->param( "xlspath" );
+my $xmlfilepath = $repo->param( "xmlfilepath" );
+my $passphrase = $repo->param( "oneliner" );
+my $repoid = $repo->param( "repoid" );
+
+# some parameters
+my $pathmsg = 'PASTE FULL PATH HERE';
+my $ppmsg = 'TYPE PASSPHRASE HERE...';
+my $ppans = 'g0_r3s34rch_d4t4';
+my $prepath = 'N:/Academic\-Services/Library\-Services/RDL/Repository/';
+my $linuxpath = '/mnt/rdl/Repository/';
+my $cmd_conv = 'perl /export/home/eprints/_scripts/excel.pl -o -u 1 -t archive -p $xlslpath researchdata ';
+my $cmd_ingest = '/usr/share/eprints/bin/import --force $repoid eprint XMLIngest ';
+my @repo_list = ( 'rdtest', 'researchdata' ); 
+my %repo_labels = (
+	rdtest => 'RDL review repository',
+	researchdata => 'RDL live repository [WARNING - ARE YOU SURE?]',
+);
+
+show_error('Sorry but I can only work on a secure connection (try retyping the URL prefixing it with https://)') if(!$ENV{'HTTPS'});
+
+# Create empty document
+my $page = $repo->make_doc_fragment();
+
+# PROCESS XLS FILE
+if ( defined $xlsfile )
+{
+	show_error("Invalid passphrase") if $passphrase ne $ppans; 
+	show_error("You have not selected an .xls file") if $xlsfile !~ /\.xls$/i; 
+
+	show_error("You have not supplied the full path to the file .xls file")
+		 if ! defined $xlspath || $xlspath =~ /^$pathmsg/ ; 
+
+	# convert path to slashes
+	$xlspath =~ s#\\#/#g;
+
+	# add trailing slash if not present
+	$xlspath .= '/' if $xlspath !~ m#/$# ;
+
+	show_error("The supplied path is not allowed. The file must reside in the Repository folder with the RDL share on the N: drive") if $xlspath !~ /^$prepath/ ; 
+
+	# create a linux version of the path
+	my $xlslpath = $xlspath;
+	$xlslpath  =~ s#^$prepath#$linuxpath#;
+
+	# check if file exists on linux side
+	show_error("The file '$xlspath$xlsfile' cannot be found.") if ! -f $xlslpath.$xlsfile;
+	
+	# construct the output filename
+	my $xmlfile = $xlsfile;
+	$xmlfile =~ s#\.xls$#\.xml#i;
+
+	my $op = "Converting '$xlspath$xlsfile'\n\n";
+	my $cmd = eval('"'."$cmd_conv".'"') . " $xlslpath$xlsfile $xlslpath$xmlfile 2>&1";
+	$op .= `$cmd`;
+
+	my $pre = $repo->make_element( "pre", style => 'white-space: pre-wrap; overflow: auto;' );
+	$pre->appendChild( $repo->make_text( $op ) );
+	$page->appendChild( $pre );
+	
+	# Create paragraph
+	my $p = $repo->make_element( "p" );
+	$p->appendChild( $repo->make_text( "If the conversion appears to have worked without errors you can attempt ingestion..." ) );
+	$page->appendChild( $p );
+	
+	# create form
+	my $f = $repo->render_form( "POST" );
+	$f->appendChild( $repo->render_hidden_field( "xmlfilepath", "$xlslpath$xmlfile" ) );
+	$f->appendChild( $repo->render_option_list(
+                name => 'repoid',
+                id => 'repoid',
+                values => \@repo_list,
+                default => $repo_list[0],
+                labels => \%repo_labels ) );
+
+	$f->appendChild( $repo->render_input_field( name => "oneliner", size => 40, value => "$ppmsg")  );
+	$f->appendChild( $repo->render_action_buttons( submit => "Ingest into EPrints" ) );
+	$page->appendChild( $f );
+	
+}
+
+# INGEST XML FILE
+elsif ( defined $xmlfilepath )
+{
+	show_error("Invalid passphrase") if $passphrase ne $ppans; 
+	my $xmlpcfilepath = $xmlfilepath;
+	
+	$xmlpcfilepath =~ s#^$linuxpath#$prepath#;
+	$xmlpcfilepath =~ s#/#\\#g;
+	
+	my $op = "Attempting ingestion using metadata file\n'$xmlpcfilepath'...\n\n";
+
+	my $cmd = eval('"'."$cmd_ingest".'"') . " $xmlfilepath 2>&1";
+	$op .= `$cmd`;
+	#$op .= `$cmd_ingest $xmlfilepath 2>&1`;
+
+	my $pre = $repo->make_element( "pre", style => 'white-space: pre-wrap; overflow: auto;' );
+	$pre->appendChild( $repo->make_text( $op ) );
+	$page->appendChild( $pre );
+}
+
+# SHOW FILE SELECTOR
+else
+{
+	# render form
+        my $t = $repo->make_element( "h1" );
+        $t->appendChild( $repo->make_text( "Spreadsheet conversion [BETA!!]" ) );
+        $page->appendChild( $t );
+
+        # Create paragraphs
+        my $p = $repo->make_element( "p" );
+        $p->appendChild( $repo->make_text( "Browse to the .xls spreadsheet file you wish to convert to EPrints XML" ) );
+        $page->appendChild( $p );
+
+        $p = $repo->make_element( "p" );
+        $p->appendChild( $repo->make_text( "Note: the spreadsheet file must reside within the Repostiory folder in the RDL area of the N: drive, and any associated data files must reside in the same folder as the spreadsheet file, or in a sub-folder within it." ) );
+        $page->appendChild( $p );
+
+        $p = $repo->make_element( "p" );
+        $p->appendChild( $repo->make_text( "In this beta version you must supply the full path to the file separately (copy it from top of File Upload window)" ) );
+        $page->appendChild( $p );
+
+        $p = $repo->make_element( "p" );
+        $p->appendChild( $repo->make_text( "IMPORTANT: this facility OVERWRITES the .xml file without warning (e.g. oops.xls -> oops.xml)" ) );
+        $page->appendChild( $p );
+
+        # create form
+        my $f = $repo->render_form( "POST" );
+        $f->appendChild( $repo->render_upload_field( "xlsfile" )  );
+        $f->appendChild( $repo->render_input_field( name => "xlspath", size => 120, value => "$pathmsg... e.g. N:\\Academic-Services\\Library-Services\\RDL\\Repository\\Some\\path")  );
+        $f->appendChild( $repo->render_input_field( name => "oneliner", size => 40, value => "$ppmsg")  );
+        $f->appendChild( $repo->render_action_buttons( submit => "Convert to EPrints XML" ) );
+        $page->appendChild( $f );
+}
+
+
+
+# create title
+my $title = $repo->make_text( "Spreadsheet conversion [BETA!!]" );
+
+# Wrap in template
+$repo->build_page( $title, $page );
+$repo->send_page();
+
+# End repo
+$repo->terminate;
+
+
+
+
+sub show_error
+{
+	my $msg = shift;
+	$msg =~ s#\n# #g;
+
+	# Build error page
+		$repo->build_page(
+		$repo->make_text( "ERROR" ),
+		$repo->make_text( $msg ),
+	);
+	$repo->send_page();
+	$repo->terminate;
+	exit;
+}
+
+sub render_custom_form
+{
+	# if not we present the user with a description, file browse button and submit button
+	my $t = $repo->make_element( "h1" );
+	$t->appendChild( $repo->make_text( "Spreadsheet conversion [BETA!!]" ) );
+	$page->appendChild( $t );
+	 
+	# Create paragraphs
+	my $p = $repo->make_element( "p" );
+	$p->appendChild( $repo->make_text( "Browse to the .xls spreadsheet file you wish to convert to EPrints XML" ) );
+	$page->appendChild( $p );
+
+	$p = $repo->make_element( "p" );
+	$p->appendChild( $repo->make_text( "Note: the spreadsheet file must reside within the Repostiory folder in the RDL area of the N: drive, and any associated data files must reside in the same folder as the spreadsheet file, or in a sub-folder within it." ) );
+	$page->appendChild( $p );
+
+	$p = $repo->make_element( "p" );
+	$p->appendChild( $repo->make_text( "In this beta version you must supply the full path to the file separately (copy it from top of File Upload window)" ) );
+	$page->appendChild( $p );
+
+	$p = $repo->make_element( "p" );
+	$p->appendChild( $repo->make_text( "IMPORTANT: this facility OVERWRITES the .xml file without warning (e.g. oops.xls -> oops.xml)" ) );
+	$page->appendChild( $p );
+
+	# create form
+	my $f = $repo->render_form( "POST" );
+	$f->appendChild( $repo->render_upload_field( "xlsfile" )  );
+	$f->appendChild( $repo->render_input_field( name => "xlspath", size => 120, value => "$pathmsg... e.g. N:\\Academic-Services\\Library-Services\\RDL\\Repository\\Some\\path")  );
+	$f->appendChild( $repo->render_input_field( name => "oneliner", size => 40, value => "$ppmsg")  );
+	$f->appendChild( $repo->render_action_buttons( submit => "Convert to EPrints XML" ) );
+	$page->appendChild( $f );
+}
+
+
+# Create table for metadata
+#my $table = $repo->make_element( "table" );
+#$page->appendChild( $table );
+
+# Get list of fields for eprint type
+#my $type = $eprint->get_value( "type" );
+#my @fields = $eprint->get_dataset->get_type_fields( $type );
+
+# Iterate over fields
+#foreach my $field ( @fields )
+#{
+#	# Add table row containing field name / field value
+#	my $tr = $repo->make_element( "tr" );
+#	$table->appendChild( $tr );
+#	my $th = $repo->make_element( "th" );
+#	$tr->appendChild( $th );
+#	$th->appendChild( $field->render_name( $repo ) );
+#	my $td = $repo->make_element( "td" );
+#	$tr->appendChild( $td );
+#	$td->appendChild( $eprint->render_value( $field->get_name ) );
+#}
+
+#my $title = $eprint->render_value( "title" );
