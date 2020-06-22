@@ -1,0 +1,123 @@
+use EPrints;
+use strict;
+use Data::Dumper;
+$|++;
+my $eprints = EPrints->new;
+my $repo = $eprints->current_repository;
+exit( 0 ) unless( defined $repo );
+
+my $passphrase = $repo->param( "oneliner" );
+my $ppmsg = 'TYPE PASSPHRASE HERE...';
+
+my $ppans = 'g0_r3s34rch_d4t4';
+my $cmd_purge = '/usr/share/eprints/bin/epadmin --force erase_eprints rdtest';
+my $cmd_regen = '/usr/share/eprints/bin/generate_views rdtest';
+
+my $repo_view_link = 'http://roadmap2.leeds.ac.uk/view';
+my $repo_purge_link = 'https://archive.researchdata.leeds.ac.uk/cgi/datapurge';
+
+my $page = $repo->make_doc_fragment();
+
+show_error( 'Sorry but I can only work on a secure connection - try ', $repo_purge_link ) if(!$ENV{'HTTPS'});
+
+# Create empty document
+
+# PROCESS XLS FILE
+if ( defined $passphrase )
+{
+	show_error("Invalid passphrase") if $passphrase ne $ppans; 
+
+	my $op = "Purging all data from the RDL Review repository...\n\n";
+	my $cmd = eval('"'."$cmd_purge".'"') . " 2>&1";
+	#$op .= "$cmd";
+	$op .= `$cmd`;
+
+	$op .= "\n\nRegenerating the views for RDL Review repository...\n\n";
+	my $cmd = eval('"'."$cmd_regen".'"') . " 2>&1";
+	$op .= `$cmd`;
+
+	my $pre = $repo->make_element( "pre", style => 'white-space: pre-wrap; overflow: auto;' );
+	$pre->appendChild( $repo->make_text( $op ) );
+	$page->appendChild( $pre );
+	
+	my $p = $repo->make_element( "p" );
+	$p->appendChild( $repo->make_text( "You can check if data purging has been successful by going to " ) );
+
+	my $a = $repo->render_link( $repo_view_link );
+	$a->appendChild( $repo->make_text( $repo_view_link ) );
+	$p->appendChild( $a );
+	
+	$page->appendChild( $p );
+	
+}
+
+else
+{
+	# render form
+        my $t = $repo->make_element( "h1" );
+        $t->appendChild( $repo->make_text( "Review Repository data purger [DANGEROUS!!]" ) );
+        $page->appendChild( $t );
+
+        my $p = $repo->make_element( "p" );
+        $p->appendChild( $repo->make_text( "This utility is dangerous. It will delete ALL DATA from the RDL Review repository." ) );
+        $page->appendChild( $p );
+
+        $p = $repo->make_element( "p" );
+        $p->appendChild( $repo->make_text( "PLEASE NOTE - IT CANNOT BE UNDONE!" ) );
+        $page->appendChild( $p );
+
+        $p = $repo->make_element( "p" );
+        $p->appendChild( $repo->make_text( "Make absolutely sure that you want to do this before starting the procedure." ) );
+        $page->appendChild( $p );
+
+
+        # create form
+        my $f = $repo->render_form( "POST" );
+        $f->appendChild( $repo->render_input_field( name => "oneliner", size => 40, value => "$ppmsg")  );
+        $f->appendChild( $repo->render_action_buttons( submit => "Purge ALL data from RDL Review repository" ) );
+        $page->appendChild( $f );
+}
+
+
+
+# create title
+my $title = $repo->make_text( "Review Repository data purger [DANGEROUS!!]" );
+
+# Wrap in template
+$repo->build_page( $title, $page );
+$repo->send_page();
+
+# End repo
+$repo->terminate;
+
+
+sub show_error
+{
+	my $msg = shift;
+	my $uri = shift;
+	my $link_name = shift;
+
+	$msg =~ s#\n# #g;
+
+	my $p = $repo->make_element( "p" );
+        $p->appendChild( $repo->make_text( $msg ) );
+
+	if ( defined $uri ) {
+		my $a = $repo->render_link( $uri );
+		$link_name = $uri if ! defined $link_name;
+		$a->appendChild( $repo->make_text( $link_name ) );
+		$p->appendChild( $a );
+	}
+
+        $page->appendChild( $p );
+
+	# Build error page
+	$repo->build_page(
+		$repo->make_text( "ERROR" ),
+		$page,
+	);
+	$repo->send_page();
+	$repo->terminate;
+	exit;
+}
+

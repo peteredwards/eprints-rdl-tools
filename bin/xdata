@@ -1,0 +1,139 @@
+#!/usr/bin/perl -w
+
+use FindBin;
+use lib "$FindBin::Bin/../perl_lib";
+use EPrints;
+use strict;
+
+$|=1;
+my %data;
+my @data_keys;
+
+my $repoid = $ARGV[0];
+if( !defined $repoid )
+{
+        print STDERR "Repository not specified\n";
+        exit 1;
+}
+my $repo = new EPrints::Session( 1 , $repoid , 1 );
+if( !defined $repo )
+{
+	print STDERR "Failed to load repository: $repoid\n";
+	exit 1;
+}
+
+my $opf = "/usr/share/eprints/var/xdata_$repoid.log";
+my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = gmtime;
+k_assign( 'timestamp', sprintf("%04d%02d%02d%02d%02d%02d", $year + 1900, $mon + 1, $mday, $hour, $min, $sec) );
+
+foreach my $ds_id ( sort $repo->get_sql_dataset_ids )
+{
+	my $ds = $repo->dataset( $ds_id );
+	my $table = $ds->get_sql_table_name;
+	k_assign( $ds_id, $repo->get_database->count_table( $table ) );
+}
+
+my $ds = $repo->dataset( "eprint" );
+my $search = $ds->prepare_search;
+my @data = $search->perform_groupby( $ds->field( "eprint_status" ) );
+my %edata;
+foreach my $i (0..$#{$data[0]})
+{
+	$edata{$data[0]->[$i]} = $data[1]->[$i];
+}
+for(qw( inbox buffer archive deletion ))
+{
+	$edata{$_} ||= 0;
+}
+foreach ( sort keys %edata )
+{
+	k_assign( $_, $edata{$_} );
+}
+
+
+my $sql = 'select eprint_status as status, count(*) as count';
+$sql .= ' from document join eprint on document.eprintid = eprint.eprintid';
+$sql .= ' where docid not in (select docid from document_relation_type)';
+$sql .= ' group by status;';
+
+my $sth = $repo->get_database->prepare_select( $sql );
+$repo->get_database->execute( $sth , $sql );
+my %ddata;
+while( my ( $status, $num ) = $sth->fetchrow_array )
+{
+		$ddata{$status} = $num;
+}
+for(qw( archive buffer inbox deletion ))
+{
+		$ddata{$_} ||= 0;
+}
+foreach my $docs ( sort keys %ddata )
+{
+	k_assign( sprintf("original_documents_%s", $docs), $ddata{$docs} );
+}
+
+
+# version
+k_assign( 'version', EPrints->human_version );
+
+# indexer status
+my $daemon = EPrints::Index::Daemon->new(
+		session => $repo,
+		logfile => EPrints::Index::logfile(),
+		noise => ($repo->{noise}||1),
+);
+
+my $status = "not-running";
+$status = "running" if $daemon->is_running();
+$status = "stalled" if $daemon->has_stalled();
+k_assign( 'indexer', $status );
+
+# epm plugins
+my $first = 1;
+my $epmlist = '';
+$repo->dataset( 'epm' )->dataobj_class->map($repo, sub {
+	my( undef, undef, $epm ) = @_;
+
+	if ( !$first ) {
+		$epmlist .= ';';
+	}
+	else {
+		$first = 0;
+	}
+	$epmlist .= $epm->value( 'epmid' ) . '=' . $epm->value( 'version' );
+});
+
+k_assign( 'epm', $epmlist );
+
+my $line = '';
+$first = 1;
+foreach ( @data_keys )
+{
+	if (!$first) {
+		$line .= '|';
+	}
+	else {
+		$first = 0;
+	}
+	$line .= "$_:$data{$_}";
+}
+
+open DATA, '>>', $opf || die "Cannot open data file '$opf'\n";
+print DATA "$line\n";
+close DATA;
+
+sub doctotal
+{
+	my ( $session, $dataset, $eprint, $info ) = @_;
+	my @docs = $eprint->get_all_documents;
+        $info->{count} += scalar(@docs);	
+}
+
+sub k_assign
+{
+	my ( $key, $value ) = @_;
+	push @data_keys, $key;
+	$data{$key} = $value;
+}
+
+exit;

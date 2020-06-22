@@ -1,0 +1,106 @@
+#!/usr/bin/perl
+# Checks for non 1-to-1 doc file relationships in all live eprints
+# can also specify a single eprintID
+
+use warnings;
+use strict;
+use File::Basename;
+
+use FindBin;
+use lib "$FindBin::Bin/../perl_lib";
+use EPrints;
+
+die "Usage:\n\t" . basename($0) . " <repo_id> [<eprint_id>]\n" if ! $ARGV[0];
+
+my $repo_id = $ARGV[0];
+my $eprintid = 0;
+
+# connect to repository
+my $repo = new EPrints::Session( 1 , $repo_id , 1 );
+if( !defined $repo )
+{
+	print STDERR "Failed to load repository: $repo_id\n";
+	exit 1;
+}
+
+$eprintid = $ARGV[1] if $ARGV[1];
+
+if ( $eprintid )
+{
+	my $ep_obj = EPrints::DataObj::EPrint->new( $repo, $eprintid );
+	if ( ! defined $ep_obj )
+	{
+		die "EprintID $eprintid not found\n";
+	}
+	else
+	{
+		print " EprintID: $eprintid\n"
+			. "    Title: " . substr( $ep_obj->get_value( 'title' ), 0, 65 ) . "\n"
+			. "   Status: " . $ep_obj->get_value( 'eprint_status' ) . "\n"
+			. "\n";
+		my @docs = $ep_obj->get_all_documents;
+		foreach my $doc ( @docs )
+		{
+			my @files = @{$doc->get_value( 'files' )};
+			my $num_files = scalar( @files );
+			if ( $num_files != 1 )
+			{
+				print 'DocID: ' . $doc->get_id . "\n";
+				print "Num files: $num_files\n";
+				foreach my $file ( @files )
+				{
+					my $filename = $file->get_value( 'filename' );
+					print "Filename: $filename\n";
+				}
+			}
+		}
+	}
+}
+else
+{
+	my $num_eprints = 0;
+	# get archive virtual dataset (i.e. only live eprints)
+	my $ds = $repo->dataset( 'archive' ) ;
+	if( !defined $ds )
+	{
+		print STDERR "Unknown Dataset ID: archive\n";
+		$repo->terminate;
+		exit 1;
+	}
+	my $list = $ds->search;
+	#my $n = $list->count;
+	my @eprints = $list->slice;
+	my $tot_eprints = scalar( @eprints );
+	foreach my $eprint ( @eprints )
+	{
+		$num_eprints++;
+		$eprintid = $eprint->get_id;
+		#foreach my $doc ( @{$eprint->get_value("documents")} ) # this gets thumbnails too
+		my @docs = $eprint->get_all_documents;
+		foreach my $doc ( @docs )
+		{
+			##my %files = $doc->files;
+			##foreach my $filename ( keys %files )
+			my @files = @{$doc->get_value( 'files' )};
+			my $num_files = scalar( @files );
+			if ( $num_files != 1 )
+			{
+				print "\n EprintID: $eprintid\n";
+				print "   Status: " . $eprint->get_value( 'eprint_status' ) . "\n";
+				print '    DocID: ' . $doc->get_id . "\n";
+				my $main = $doc->get_main || '';
+				print "     Main: $main\n";
+				print "Num files: $num_files\n";
+				foreach my $file ( @files )
+				{
+					my $filename = $file->get_value( 'filename' );
+					print "File name: $filename\n";
+				}
+			}
+		}
+		print "\n** Checked $num_eprints of $tot_eprints eprints...\n" if ! ( $num_eprints % 100 );
+	}
+}
+
+$repo->terminate;
+exit;

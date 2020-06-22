@@ -1,0 +1,42 @@
+use EPrints;
+use strict;
+use Data::Dumper;
+use Sys::Hostname;
+
+$|++;
+#my $eprints = EPrints->new;
+my $repo = EPrints->new->current_repository;
+exit( 0 ) unless( defined $repo );
+
+# Get xlsfile and path parameters from URL
+my $xlsfile = $repo->param( "xlsfile" );
+my $xlspath = $repo->param( "xlspath" );
+my $xmlfilepath = $repo->param( "xmlfilepath" );
+my $passphrase = $repo->param( "oneliner" );
+my $repoid = $repo->param( "repoid" );
+
+# some parameters
+my $pathmsg = 'PASTE FULL PATH HERE';
+my $ppmsg = 'TYPE PASSPHRASE HERE...';
+my $ppans = 'g0_r3s34rch_d4t4';
+my $prepath = 'N:/Academic\-Services/Library\-Services/RDL/Repository/';
+my $linuxpath = '/mnt/rdl/Repository/';
+my $cmd_conv = 'perl /export/home/eprints/_scripts/excel.pl -o -u 1 -t archive -p $xlslpath researchdata ';
+my $cmd_ingest = '/usr/share/eprints/bin/import --force $repoid eprint XMLIngest ';
+my $cmd_genview = '/usr/share/eprints/bin/generate_views $repoid ';
+my $cmd_genabs = '/usr/share/eprints/bin/generate_abstracts $repoid ';
+
+my @repo_list = ( 'rdtest', 'researchdata' ); 
+my %repo_labels = (
+	rdtest => 'staging repository',
+	researchdata => 'live RDL repository',
+);
+
+#my $hostname = `hostname`;
+my $hostname = hostname;
+$hostname =~ s/\s//; # remove white space form host name
+
+print STDERR "JBTEST: [ $$ ] hostname is $hostname\n"; 
+
+# End repo
+$repo->terminate;

@@ -1,0 +1,2 @@
+#!/bin/bash
+/usr/share/eprints/bin/clone_repo researchdata radar radar.researchdata.leeds.ac.uk researchdataenquiries@leeds.ac.uk radar h31nr1ch

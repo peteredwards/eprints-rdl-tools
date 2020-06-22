@@ -1,0 +1,136 @@
+######################################################################
+#
+#  Show EPrints modified or added in the past 30 days
+#
+######################################################################
+#
+#  __COPYRIGHT__
+#
+# Copyright 2000-2008 University of Southampton. All Rights Reserved.
+# 
+#  __LICENSE__
+#
+######################################################################
+
+use EPrints;
+
+use strict;
+my $session = new EPrints::Session;
+exit( 0 ) unless( defined $session );
+
+my $ds = $session->dataset( "archive" );
+my $page=$session->make_doc_fragment();
+
+$page->appendChild( $session->html_phrase( "cgi/latestxm:intro" ) );
+
+my $citation = $session->config( "latest_citation" );
+my $days = 30;
+
+my $date = time() - 86400 * $days;
+$date = EPrints::Time::iso_date( $date );
+$date = "$date-".EPrints::Time::iso_date( time() );
+
+my @entries;
+
+$ds->search(
+	custom_order => "-datestamp",
+	filters => [
+		{ meta_fields => [qw( metadata_visibility )], value => "show" },
+		{ meta_fields => [qw( datestamp )], value => $date },
+	],
+)->map(sub {
+	my( undef, undef, $item ) = @_;
+
+	my $datestamp = $item->value( "datestamp" );
+	$datestamp = EPrints::Time::datetime_utc( EPrints::Time::split_value( $datestamp ) );
+	$datestamp -= $datestamp % 86400;
+
+	my $age = int(((time() - time() % 86400) - $datestamp) / 86400);
+
+	$entries[$age] ||= [];
+
+	push @{$entries[$age]}, $item->render_citation_link( 
+			$citation,
+			n => [scalar(@{$entries[$age]})+1, "INTEGER"] );
+});
+
+my $seensome = 0;
+for( my $d=0; $d<$days; ++$d )
+{
+	my $list = $entries[$d];
+	next if !$list;
+
+	$seensome = 1;
+
+	my $day;
+	my $month;
+	if( $d == 0 )
+	{
+		$day = $session->html_phrase( "cgi/latestxm:today" );
+	}
+	elsif( $d == 1 )
+	{
+		$day = $session->html_phrase( "cgi/latestxm:yesterday" );
+	}
+	else
+	{
+		my $dow = (localtime(time-$d*86400))[6];
+		my $moy = sprintf("%02d",(localtime(time-$d*86400))[4]+1);
+
+		$day = $session->html_phrase( "cgi/latestxm:day_".$dow );
+		$month = $session->html_phrase( "lib/utils:month_".$moy );
+		#$day = $session->html_phrase( "cgi/latestxm:day_".$dow )
+		#	." ".(localtime(time-$d*86400))[3]." ".$session->html_phrase( "lib/utils:month_".$moy );
+	}
+	
+	#print $day;exit;
+	my $h2= $session->make_element( "h2" );
+	$h2->appendChild( $day );
+	$h2->appendChild( $month );
+	$page->appendChild( $h2 );
+
+	my $type = $session->get_citation_type( $ds, $citation );
+	my $container;
+	if( $type eq "table_row" )
+	{
+		$container = $session->make_element( 
+				"table", 
+				class=>"ep_latest_list" );
+	}
+	else
+	{
+		$container = $session->make_element( 
+				"div", 
+				class=>"ep_latest_list" );
+	}
+	$page->appendChild( $container );
+	foreach my $entry (@$list)
+	{
+		if( $type eq "table_row" )
+		{
+			$container->appendChild( $entry );
+		}
+		else
+		{
+			my $div = $session->make_element( 
+				"div", 
+				class=>"ep_latest_result" );
+			$div->appendChild( $entry );
+			$container->appendChild( $div );
+		}
+	}
+
+	$page->appendChild( $session->render_ruler() );
+}
+if( !$seensome )
+{
+	$page->appendChild( $session->html_phrase( "cgi/latestxm:none" ) );
+}
+
+$page->appendChild( $session->html_phrase( "general:frontpage_link" ) );
+	
+my $title = $session->html_phrase( "cgi/latestxm:title" );
+$session->build_page( $title, $page, "latest" );
+$session->send_page();
+
+$session->terminate;

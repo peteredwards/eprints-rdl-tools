@@ -1,0 +1,50 @@
+#!/usr/bin/perl -w
+use FindBin;
+use lib "/usr/share/eprints/perl_lib";
+use EPrints;
+use strict;
+use File::Basename;
+
+our $noise = 1;
+
+if ( scalar @ARGV < 2 )
+{
+        print "Usage: " . basename($0) . " <repo_id> <eprintid>\n";
+        exit 1;
+}
+
+$|=1;
+
+my $repoid = $ARGV[0];
+my $epid = $ARGV[1];
+
+my $session = new EPrints::Session( 1 , $repoid , $noise );
+if( !defined $session )
+{
+        print STDERR "Failed to load repository: $repoid\n";
+        exit 1;
+}
+
+my $ep = EPrints::DataObj::EPrint->new( $session, $epid );
+if( !defined $ep ){
+		print STDERR "Eprint '$epid' not found\n";
+		exit 1;
+}
+
+my @docs = $ep->get_all_documents();
+
+foreach my $doc ( @docs )
+{
+        if( !defined $doc ){
+                print STDERR "Document not found\n";
+                exit 1;
+        }
+
+        my @paths;
+        foreach my $file (@{$doc->get_value( "files" )})
+        {
+                my $path = $file->get_local_copy;
+                push @paths, "$path";
+                print "$path\n";
+        }
+}

@@ -1,0 +1,227 @@
+#!/usr/bin/perl -w
+
+use FindBin;
+use lib "$FindBin::Bin/../perl_lib";
+use strict;
+
+use EPrints;
+
+#sanity checks
+die "Usage: $0 <repo_id> <action>\n\twhere <action> is either 'inject' or 'remove'"
+	if ! defined $ARGV[0];
+die "You need to add 'inject' or 'remove' as a command line argument\n"
+	if ! defined $ARGV[1] || ( $ARGV[1] ne 'inject' && $ARGV[1] ne 'remove' );
+
+# assign command line arguments
+my $repoid = $ARGV[0];
+my $action = $ARGV[1];
+
+# start session
+my $session = new EPrints::Session( 1, $repoid, 1 );
+if( !defined $session )
+{
+	print STDERR "Failed to load repository: $repoid\n";
+	exit 1;
+}
+
+inject($session) if $action eq 'inject';
+remove($session) if $action eq 'remove';
+
+# close session
+$session->terminate();
+exit;
+
+
+
+
+sub inject
+{
+	my $repo = shift;
+
+my $dataset_workflow = '<?xml version="1.0"?>
+<workflow xmlns="http://eprints.org/ep3/workflow" xmlns:epc="http://eprints.org/ep3/control">
+	  <stage name="rdl_files">
+	    <component type="Upload" show_help="always"/>
+	    <component type="Documents">
+	      <field ref="title"/>
+	      <field ref="version"/>
+	      <field ref="security"/>
+	      <field ref="publication_date"/>
+	      <field ref="doi"/>
+	      <field ref="mime_type"/>
+
+	      <field ref="content" set_name="rdl_document_contents"/>
+	      <field ref="formatdesc"/>
+	      <field ref="date_embargo"/>
+	      <field ref="license" set_name="rdl_licenses"/>
+	      <!--  <field ref="relation" /> -->
+	      <!--  <field ref="language" /> -->
+	      <field ref="note"/>
+	    </component>
+	  </stage>
+	<stage name="dataset">
+		<component><field ref="title" required="yes" input_lookup_url="{$config{rel_cgipath}}/users/lookup/title_duplicates" input_lookup_params="id={eprintid}&amp;dataset=eprint&amp;field=title" /></component>
+		<component><field ref="abstract" required="yes"/></component>
+		<component><field ref="keywords" required="yes"/></component>
+		<component><field ref="divisions" required="yes"/></component>
+
+		<component collapse="yes"><field ref="alt_title"/></component>
+		<component><field ref="creators" required="yes" input_lookup_url="{$config{rel_cgipath}}/users/lookup/name" /></component>
+		<component collapse="yes"><field ref="corp_creators"/></component>
+		<component collapse="yes"><field ref="version"/></component>
+		<epc:if test="$STAFF_ONLY = \'TRUE\'">
+			<component show_help="always"><field ref="doi"/></component>
+			<component collapse="yes"><field ref="id_number"/></component>
+			<component collapse="yes"><field ref="alt_identifier"/></component>
+		</epc:if>
+		<component><field ref="data_type" required="yes" input_lookup_url="{$config{perl_url}}/users/lookup/simple_file" input_lookup_params="file=data_type" /></component>
+
+		<component><field ref="contributors" collapse="yes" /></component>
+		<component type="Field::Multi">
+		    <title>Research Funders</title>
+		    <field ref="funders" input_lookup_url="{$config{perl_url}}/users/lookup/simple_file" input_lookup_params="file=funders" />
+		    <field ref="projects"/>
+		    <field ref="grant" collapse="yes" />
+		</component>
+		<component type="Field::Multi">
+		    <title>Time period</title>
+		    <help>Help text here</help>
+		    <field ref="collection_date" required="yes" />
+		    <field ref="temporal_cover" />
+		</component>
+		<component collapse="yes"><field ref="geographic_cover"/></component>
+		<component type="Field::Multi" show_help="always" collapse="yes">
+		    <title>Geographic location</title>
+		    <help>Enter if applicable the Longitude and Latitude values of a theoretical geographic bounding rectangle that would cover the region in which your data were collected. You can use</help>
+		    <field ref="bounding_box" />
+		</component>
+		<component collapse="yes"><field ref="collection_method"/></component>
+		<component collapse="yes"><field ref="legal_ethical"/></component>
+		<component collapse="yes"><field ref="provenance"/></component>
+		<component type="Field::Multi">
+		    <title>Language</title>
+			<field ref="language" required="yes"/>
+			<field ref="metadata_language" required="yes"/>
+		</component>
+		<component collapse="yes"><field ref="note"/></component>
+		<component collaspe="yes"><field ref="related_resources"/></component>
+		<epc:if test="$STAFF_ONLY = \'TRUE\'">
+			<component type="Field::Multi">
+			    <title> Original Publication Details</title>
+			    <field ref="publisher"/>
+			    <field ref="ispublished"/>
+			    <field ref="official_url"/>
+			    <field ref="date" />
+			    <field ref="date_type"/>
+			</component>
+		</epc:if>
+		<component><field ref="copyright_holders" required="yes" /></component>
+		<component collapse="yes"><field ref="data_location"/></component>
+		<component collapse="yes"><field ref="restrictions"/></component>
+		<component collapse="yes"><field ref="license" set_name="rdl_licenses"/></component>
+		<component><field ref="contact_email" required="yes"/></component>
+		<component collapse="yes"><field ref="contact"/></component>
+		<component collapse="yes"><field ref="suggestions"/></component>
+	<epc:if test="$STAFF_ONLY = \'TRUE\'">
+	<component collapse="yes"><field ref="citation"/></component>
+	<component collapse="yes"><field ref="terms_conditions_agreement"/></component>
+    <component type="Field::Multi">
+      <title>Retention Information</title>
+      <field ref="retention_date"/>
+      <field ref="retention_action"/>
+      <field ref="retention_comment"/> 
+    </component>
+</epc:if>
+	</stage>
+</workflow>';
+
+	my $xml = $repo->xml;
+
+	my $filename = $repo->config( "config_path" )."/workflows/eprint/default.xml";
+
+	EPrints::XML::add_to_xml( $filename, $dataset_workflow, 'RDL' );
+
+	my $dom = $xml->parse_file( $filename );
+
+	my @flow = $dom->getElementsByTagName("flow");
+	my $flow_elements = $xml->create_document_fragment();
+
+	foreach my $element ($flow[0]->childNodes()){
+		$element->unbindNode();
+		$flow_elements->appendChild($element);
+	}
+
+	my $choose_statement = $xml->create_element("epc:choose", required_by=>"RDL", id=>"rdl_choose");
+	$flow[0]->appendChild($choose_statement);
+
+	my $when_statement = $xml->create_element("epc:when", test=>"data_type = 'dataset'");
+	$choose_statement->appendChild($when_statement);
+	$when_statement->appendChild($xml->create_element("stage", ref=>"rdl_files"));
+	$when_statement->appendChild($xml->create_element("stage", ref=>"dataset"));
+	$when_statement->appendChild($xml->create_element("stage", ref=>"subjects"));
+
+	my $otherwise_statement = $xml->create_element("epc:otherwise");
+	$choose_statement->appendChild($otherwise_statement);
+	$otherwise_statement->appendChild($flow_elements);
+
+	open( FILE, ">", $filename );
+
+	print FILE $xml->to_string($dom, indent=>1);
+
+	close( FILE );
+
+	$repo->reload_config;
+
+}
+
+sub remove
+{
+	my $repo = shift;
+
+	my $xml = $repo->xml;
+	my $filename = $repo->config( "config_path" )."/workflows/eprint/default.xml";
+
+	my $dom = $xml->parse_file( $filename );
+
+	my $choose;
+	my @choices = $dom->getElementsByTagName("choose");
+	foreach my $element (@choices)
+	{
+		if($element->hasAttribute("required_by") && $element->getAttribute("required_by") eq 'RDL')
+		{
+			$choose = $element;
+			last;
+		}
+	}
+
+	if(defined $choose) {
+		#probably the flow element but err on the side of caution
+		my $choose_parent = $choose->parentNode;
+
+		my @otherwise = $choose->getElementsByTagName("otherwise");
+		foreach my $element ($otherwise[0]->childNodes()){
+			$element->unbindNode();
+			$choose_parent->appendChild($element);
+		}
+
+		open( FILE, ">", $filename );
+
+		print FILE $xml->to_string($dom, indent=>1);
+
+		close( FILE );
+	}
+
+	EPrints::XML::remove_package_from_xml( $filename, 'RDL' );
+
+
+	$dom = $xml->parse_file( $filename );
+
+	open( FILE, ">", $filename );
+
+	print FILE $xml->to_string($dom, indent=>1);
+
+	close( FILE );
+
+	$repo->reload_config;
+}
+

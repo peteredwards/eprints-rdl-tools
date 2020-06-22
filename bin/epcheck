@@ -1,0 +1,129 @@
+#!/usr/bin/perl
+# Checks for orphan eprint docs in EP back-end storage and AK appliance
+# This utility uses EPrints as the content list provider (not the file system)
+# If eprintID is supplied it will provide detailed output for single eprint
+# If no eprintID is supplied (just a repoID) it will iterate all LIVE eprints
+# and notify of missing files on either EP back-end or AK appliance
+
+use warnings;
+use strict;
+use File::Basename;
+
+use FindBin;
+use lib "$FindBin::Bin/../perl_lib";
+use EPrints;
+
+die "Usage:\n\t" . basename($0) . " <repo_id> [<eprint_id>]\n" if ! $ARGV[0];
+
+my $repo_id = $ARGV[0];
+my $eprintid = 0;
+
+# connect to repository
+my $repo = new EPrints::Session( 1 , $repo_id , 1 );
+if( !defined $repo )
+{
+	print STDERR "Failed to load repository: $repo_id\n";
+	exit 1;
+}
+
+my $ep_base = "/usr/share/eprints/archives/$repo_id/documents/disk0/";
+my $ak_base = "/mnt/arkivum/$repo_id/documents/disk0/";
+
+$eprintid = $ARGV[1] if $ARGV[1];
+
+if ( $eprintid )
+{
+	my $ep_obj = EPrints::DataObj::EPrint->new( $repo, $eprintid );
+	if ( ! defined $ep_obj )
+	{
+		die "EprintID $eprintid not found\n";
+	}
+	else
+	{
+		print " EprintID: $eprintid\n"
+			. "    Title: " . substr( $ep_obj->get_value( 'title' ), 0, 65 ) . "\n"
+			. "   Status: " . $ep_obj->get_value( 'eprint_status' ) . "\n"
+			. "AK status: " . $ep_obj->get_value( 'archive_status' ) . "\n"
+			. "\n";
+		my @docs = $ep_obj->get_all_documents;
+		print "EP  AK  FILENAME\n" if @docs;
+		foreach my $doc ( @docs )
+		{
+	# Could use this method
+	#		my %files = $doc->files;
+	#		foreach my $file ( keys %files )
+	#		{
+	#			print "$file\n";
+	#		}
+			my $local_path = $doc->local_path;
+			$local_path =~ s/$ep_base//g;
+			my @files = @{$doc->get_value( 'files' )};
+			
+			foreach my $file ( @files )
+			{
+				my $filename = $file->get_value( 'filename' );
+				my $filepath = "$local_path/$filename";
+				my $ep = ( -f "$ep_base$filepath" ) ? 'yes' : 'no ';
+				my $ak = ( -f "$ak_base$filepath" ) ? 'yes' : 'no ';			
+				print "$ep $ak $filepath\n";
+			}
+		}
+	}
+}
+else
+{
+	my $tsize;
+	my $totaldocs;
+	my @ep_missing;
+	my @ak_missing;
+	
+	# get archive virtual dataset (i.e. only live eprints)
+	my $ds = $repo->dataset( 'archive' ) ;
+	if( !defined $ds )
+	{
+		print STDERR "Unknown Dataset ID: archive\n";
+		$repo->terminate;
+		exit 1;
+	}
+	my $list = $ds->search;
+	#my $n = $list->count;
+	my @eprints = $list->slice;
+
+	foreach my $eprint ( @eprints )
+	{
+		my $esize = 0;
+		#foreach my $doc ( @{$eprint->get_value("documents")} ) # this gets thumbnails too
+		my @docs = $eprint->get_all_documents;
+		my $numdocs = 0;
+		foreach my $doc ( @docs )
+		{
+			$numdocs++;
+			my $dsize = 0;
+			my $local_path = $doc->local_path;
+			$local_path =~ s/$ep_base//g;
+			my %files = $doc->files;
+			foreach my $filename ( keys %files )
+			{
+				my $filepath = "$local_path/$filename";
+				if ( ! -f "$ep_base$filepath" )
+				{
+					print "EP: $filepath\n";
+					push @ep_missing, $filepath;
+				}
+				if ( ! -f "$ak_base$filepath" )
+				{
+					print "AK: $filepath\n";
+					push @ak_missing, $filepath;
+				}
+				$dsize += $files{$filename};
+			}
+			$esize += $dsize;
+		}
+		$tsize += $esize;
+		$totaldocs += $numdocs;
+		#print sprintf("%5d %3d %14d %.54s\n", $eprint->id, $numdocs, $esize, $eprint->get_value("title"));
+	}
+}
+
+$repo->terminate;
+exit;

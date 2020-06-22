@@ -1,0 +1,84 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+use Data::Dumper;
+
+use lib '/usr/share/eprints/perl_lib';
+use EPrints;
+
+my $tmp_file = '/tmp/show_config.txt';
+
+# no buffer
+$|++;
+# catch any break signals (so we can exit cleanly)
+$SIG{TERM} = $SIG{INT} = $SIG{QUIT} = $SIG{HUP} = sub { exit; };
+# ensure Dumper displays anonymous sub source code
+$Data::Dumper::Deparse = 1 ;
+
+die "Usage: $0 <repo_id> [ <config_item,config_subitem,config_subitem2> ]\n" if ! $ARGV[0];
+
+my $session = new EPrints::Session ( 1, $ARGV[0], 1);
+die "Cannot load EPrints repository '$ARGV[0]'\n" if ! $session;
+
+print "Loaded repository '$ARGV[0]'\n";
+
+if ( $ARGV[1] )
+{
+	my $c = get_conf(  $ARGV[1] );
+	print_conf( $c );
+}
+else
+{
+	print "\nEnter config value to display or 'q' to quit\n\n";
+	while ( <STDIN> )
+	{
+		chomp;
+		exit if $_ eq 'q';
+		my $c = get_conf( $_ );
+		print_conf( $c );
+	}
+}
+
+sub print_conf
+{
+	my $c = shift;
+        if ( defined $c )
+        {
+		open( my $fh, '>', $tmp_file );
+                print $fh Dumper( $c );
+                print $fh "$c\n\n";
+		close $fh;
+		system( "cat $tmp_file | more" );
+        }
+        else
+        {
+                print "[NOT DEFINED]\n\n";
+        }
+}
+
+sub conf_string
+{
+	my $ips = shift;
+	$ips =~ s/\s//g;
+	my @items = split( ',', $ips );
+	return @items;
+}
+
+sub get_conf
+{
+	my $args = shift;
+	my $result;
+	eval{ $result = $session->config( conf_string ( $args ) ) };
+	return undef if $@;
+	return $result;
+}
+
+# tidy up no matter how we are exiting
+END
+{
+	print "\nTidying up...\n";
+	$session->terminate() if $session;
+	system( "rm -f $tmp_file" ) if -f $tmp_file;
+	print "Done!\n";
+}

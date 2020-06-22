@@ -1,0 +1,291 @@
+#!/usr/bin/perl -w
+
+use FindBin;
+use lib "$FindBin::Bin/../perl_lib";
+
+######################################################################
+#
+#
+######################################################################
+
+=pod
+
+=for Pod2Wiki
+
+=head1 NAME
+
+B<user_admin> - EPrints user administration tool (possible actions - create, update, delete) 
+
+=head1 SYNOPSIS
+
+B<user_admin> I<action> I<archive_id> I<username> I<usertype> I<password> I<email> I<name_honourific> I<name_given> I<name_family>
+
+examples: -
+
+B<user_admin> create I<archive_id> I<username> I<usertype> I<password> I<email> I<name_honourific> I<name_given> I<name_family>
+
+B<user_admin> update I<archive_id> I<username> I<usertype> I<password> I<email> I<name_honourific> I<name_given> I<name_family>
+
+B<user_admin> delete I<archive_id> I<username>
+
+B<John Beaman - j.beaman@leeds.ac.uk>
+
+=cut
+
+
+use EPrints;
+
+use Sys::Hostname;
+use DBI;
+use Data::Dumper;
+use File::Path;
+
+use strict;
+use Getopt::Long;
+use Pod::Usage;
+
+my $verbose = 0;
+my $quiet = 0;
+my $help = 0;
+my $man = 0;
+my $version = 0;
+my $force = 0;
+
+Getopt::Long::Configure("permute");
+
+GetOptions( 
+	'help|?' => \$help,
+	'man' => \$man,
+	'version' => \$version,
+	'verbose+' => \$verbose,
+	'silent' => \$quiet,
+	'quiet' => \$quiet,
+	'force' => \$force,
+) || pod2usage( 2 );
+EPrints::Utils::cmd_version( "epadmin" ) if $version;
+pod2usage( 1 ) if $help;
+pod2usage( -exitstatus => 0, -verbose => 2 ) if $man;
+pod2usage( 2 ) if( scalar @ARGV == 0 ); 
+
+# Set STDOUT to auto flush (without needing a \n)
+$|=1;
+
+my $noise = 1;
+$noise = 0 if( $quiet );
+$noise = 1+$verbose if( $verbose );
+
+my $REGEXP_HOSTNAME_MIDDLE = '[a-z0-9-]+(\.[a-z0-9-]+)*';
+my $REGEXP_HOSTNAME = '^'.$REGEXP_HOSTNAME_MIDDLE.'$';
+my $REGEXP_EMAIL = '^[^@]+@'.$REGEXP_HOSTNAME_MIDDLE.'$';
+my $REGEXP_HOSTNAME_FULL = '^[a-z0-9-]+(\.[a-z0-9-]+)*$';
+my $REGEXP_VARNAME = '^[a-zA-Z][_A-Za-z0-9]*$';
+my $REGEXP_NUMBER = '^[0-9]+$';
+my $REGEXP_YESNO = '^(yes|no)$';
+my $REGEXP_ANY = '^.*$';
+my @PASSWORD_CHARS = ( 'a'..'z','A'..'Z','0'..'9' );
+
+my $eprints = EPrints->new();
+
+my $action = shift @ARGV;
+pod2usage(1) unless defined $action && grep ( /^$action$/, qw( create update delete ) );
+
+my $repoid = shift @ARGV;
+pod2usage(1) unless defined $repoid;
+
+create_user( $repoid, @ARGV ) if $action eq 'create';
+update_user( $repoid, @ARGV ) if $action eq 'update';
+delete_user( $repoid, @ARGV ) if $action eq 'delete';
+
+exit;
+
+
+sub create_user
+{
+	my( $repoid, @info ) = @_;
+
+	my $repo = &repository( $repoid );
+
+	my %info;
+	my %name;
+	
+	( @info{qw( username usertype password email )}, @name{qw( honourific given family )} ) = @info;
+
+	print "Creating a new user in $repoid\n\n";
+	$info{username} ||= EPrints::Utils::get_input( $REGEXP_VARNAME, 'Enter a username', 'testuser' );
+	while( defined $repo->user_by_username( $info{username} ) )
+	{
+		print STDERR "User with username '".$info{username}."' already exists.\n";
+		$info{username} = EPrints::Utils::get_input( $REGEXP_VARNAME, 'Enter a username', 'testuser' );
+	}
+	my @utypes = $repo->get_types( "user" );
+	$info{usertype} ||= EPrints::Utils::get_input( '^('.join( '|', @utypes ).')$', 'Select a user type ('.join( "|",@utypes).')', 'user' );
+	$info{password} ||= EPrints::Utils::get_input_hidden( $REGEXP_VARNAME, 'Enter Password' );
+	$info{password} = EPrints::Utils::crypt_password( $info{password}, $repo );
+	$info{email} ||= EPrints::Utils::get_input( $REGEXP_EMAIL, 'Email' );
+	
+	if ( !$name{given} && !$name{family} ) {
+		$name{honourific} ||= EPrints::Utils::get_input( $REGEXP_ANY, 'Enter honourific title (e.g. Mr, Miss, Mrs, Dr)' );
+		$name{given} ||= EPrints::Utils::get_input( $REGEXP_ANY, 'Enter given name' );
+		$name{family} ||= EPrints::Utils::get_input( $REGEXP_ANY, 'Enter family name' );
+	}
+	$info{name} = \%name;
+	my $user_ds = $repo->dataset( "user" );
+	my $new_user = $user_ds->create_dataobj( \%info );
+
+	print "\n";
+
+	if( defined $new_user )
+	{
+		if( $noise >= 1 )
+		{
+			print "Successfully created new user:\n";
+			print "       ID: ".$new_user->get_value( "userid" )."\n";
+		}
+		if( $noise >= 2 )
+		{
+			print " Username: ".$new_user->get_value( "username" )."\n";
+			print "     Type: ".$new_user->get_value( "usertype" )."\n";
+		}
+	}
+	else
+	{
+		my $db_error = $repo->database->error;
+		print STDERR "Error creating user: $db_error\n";
+	}
+}
+
+sub update_user
+{
+	my( $repoid, @info ) = @_;
+
+	my $repo = &repository( $repoid );
+
+	my %info;
+	my %name;
+	
+	( @info{qw( username usertype password email )}, @name{qw( honourific given family )} ) = @info;
+
+	print "Updating user in $repoid\n\n";
+
+	$info{username} ||= EPrints::Utils::get_input( $REGEXP_VARNAME, 'Enter an exisiting username', 'testuser' );
+	while( ! defined $repo->user_by_username( $info{username} ) )
+	{
+		print STDERR "User with username '".$info{username}."' does not exist.\n";
+		$info{username} = EPrints::Utils::get_input( $REGEXP_VARNAME, 'Enter an existing username', 'testuser' );
+	}
+	while( $info{username} eq 'admin' )
+	{
+		print STDERR "Updating username 'admin' is not allowed using this facility.\n";
+		$info{username} = EPrints::Utils::get_input( $REGEXP_VARNAME, 'Enter an existing username', 'testuser' );
+	}
+	my @utypes = $repo->get_types( "user" );
+	$info{usertype} ||= EPrints::Utils::get_input( '^('.join( '|', @utypes ).')$', 'Select a user type ('.join( "|",@utypes).')', 'user' );
+	$info{password} ||= EPrints::Utils::get_input_hidden( $REGEXP_VARNAME, 'Enter Password' );
+	$info{password} = EPrints::Utils::crypt_password( $info{password}, $repo );
+	$info{email} ||= EPrints::Utils::get_input( $REGEXP_EMAIL, 'Email' );
+	
+	if ( !$name{given} && !$name{family} ) {
+		$name{honourific} ||= EPrints::Utils::get_input( $REGEXP_ANY, 'Enter honourific title (e.g. Mr, Miss, Mrs, Dr)' );
+		$name{given} ||= EPrints::Utils::get_input( $REGEXP_ANY, 'Enter given name' );
+		$name{family} ||= EPrints::Utils::get_input( $REGEXP_ANY, 'Enter family name' );
+	}
+	$info{name} = \%name;
+	#my $user_ds = $repo->dataset( "user" );
+	my $user = $repo->user_by_username( $info{username} );
+	
+	foreach my $field ( keys %info ) {
+		next if $field eq 'username';
+		$user->set_value( $field, $info{$field} );
+	}
+	$user->commit();
+
+	print "\n";
+
+	if( 1 ) # need suitable test here
+	{
+		if( $noise >= 1 )
+		{
+			print "Updated user:\n";
+			print "       ID: ".$user->get_value( "userid" )."\n";
+		}
+		if( $noise >= 2 )
+		{
+			print " Username: ".$user->get_value( "username" )."\n";
+			print "     Type: ".$user->get_value( "usertype" )."\n";
+		}
+	}
+	else
+	{
+		my $db_error = $repo->database->error;
+		print STDERR "Error updating user: $db_error\n";
+	}
+}
+
+sub delete_user
+{
+	my( $repoid, @info ) = @_;
+
+	my $repo = &repository( $repoid );
+
+	my %info;
+	my %name;
+	
+	( @info{qw( username usertype password email )}, @name{qw( honourific given family )} ) = @info;
+
+	print "Deleting user in $repoid\n\n";
+
+	$info{username} ||= EPrints::Utils::get_input( $REGEXP_VARNAME, 'Enter an exisiting username', 'testuser' );
+	while( ! defined $repo->user_by_username( $info{username} ) )
+	{
+		print STDERR "User with username '".$info{username}."' does not exist.\n";
+		$info{username} = EPrints::Utils::get_input( $REGEXP_VARNAME, 'Enter an existing username', 'testuser' );
+	}
+	while( $info{username} eq 'admin' )
+	{
+		print STDERR "Deleting username 'admin' is not allowed using this facility.\n";
+		$info{username} = EPrints::Utils::get_input( $REGEXP_VARNAME, 'Enter an existing username', 'testuser' );
+	}
+
+	#my $user_ds = $repo->dataset( "user" );
+	my $user = $repo->user_by_username( $info{username} );
+	
+	my $userid = $user->get_value( "userid" );
+	$user->remove();
+	
+	print "\n";
+
+	if( 1 ) # need suitable test here
+	{
+		if( $noise >= 1 )
+		{
+			print "Deleted user:\n";
+			print "       ID: ".$userid."\n";
+		}
+		if( $noise >= 2 )
+		{
+			print " Username: ".$info{username}."\n";
+		}
+	}
+	else
+	{
+		my $db_error = $repo->database->error;
+		print STDERR "Error deleting user: $db_error\n";
+	}
+}
+
+
+sub repository
+{
+	my( $repoid, %opts ) = @_;
+
+	return $repoid if ref($repoid) && $repoid->isa( "EPrints::Repository" );
+
+	my $repo = $eprints->repository( $repoid, noise => $noise, %opts );
+	if( !defined $repo )
+	{
+		print STDERR "Failed to load repository: $repoid\n";
+		exit 1;
+	}
+
+	return $repo;
+}

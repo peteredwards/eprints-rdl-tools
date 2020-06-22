@@ -1,0 +1,110 @@
+#!/usr/bin/perl -w
+
+use strict;
+use XML::LibXML;
+use XMLHashLX; # locally situtated since not installed by default on VMs
+use Data::Dumper;
+
+# some settings
+my $un = 'BL.LEEDS';
+my $pw = 'ForestPl0ts';
+my $url = 'https://mds.datacite.org/';
+
+my $doi1 = '10.5518';
+my $doi2 = '10.5521';
+my $doi3 = '10.5072';
+
+my $doctype = "<?xml version='1.0' encoding='UTF-8'?>";
+my $restag = "<resource xmlns='http://datacite.org/schema/kernel-3'"
+  . " xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'"
+  . " xsi:schemaLocation='http://datacite.org/schema/kernel-3"
+  . " http://schema.datacite.org/meta/kernel-3/metadata.xsd'>";
+
+my $output;
+
+# we need exactly one argument
+show_usage() if $#ARGV != 0;
+
+# output list of all DOIs
+if ( $ARGV[0] eq 'list' )
+{
+  print `curl -su $un:$pw $url/doi` . "\n";
+}
+
+# output metadata for all DOIs
+elsif ( $ARGV[0] eq 'all' )
+{
+  # get list
+  my $list = `curl -su $un:$pw $url/doi`;
+
+  # form XML header
+  $output = "$doctype\n";
+
+  # start the (made-up!) resources tag
+  $output .= "<resources>\n\n";
+
+  # loop through list of DOIs
+  my @doi_list = split("\n", $list);
+  for (@doi_list) {
+    my $curl = `curl -su $un:$pw $url/metadata/$_`;
+
+    # examine the metadata returned for each item line by line
+    for ( split ( "\n", $curl ) )
+    {
+      chomp;
+
+      # ignore any non-XML error strings
+      next if $_ =~ /dataset inactive/;
+
+      # skip lines if the are doctype definition - note that we cannot pin
+      # to start of line since some items returned via the API
+      # contain non-printable characters at the start of this line!
+      next if $_ =~ /<\?xml version/;
+
+      # replace lines containing a resource tag opening with a simpler one
+      if ( $_ =~ /<resource / )
+      {
+        $output .= "<resource>\n";
+        next;
+      }
+
+      $output .= $_ . "\n";
+    }
+    $output .= "\n\n";
+  }
+
+  # close last XML tag
+  $output .= "</resources>\n";
+
+  # output the results
+  print $output;
+
+  #my $hash = xml2hash( $output );
+  #print Dumper $hash;
+}
+
+# if the argument starts with a valid DOI prefix
+elsif ( $ARGV[0] =~ /^$doi1/ || $ARGV[0] =~ /^$doi2/ || $ARGV[0] =~ /^$doi3/ )
+{
+  # we need a full DOI not just the prefix
+  die "You must provide a full DOI not just the prefix $ARGV[0]\n"
+    if ( $ARGV[0] eq $doi1 || $ARGV[0] eq $doi2 || $ARGV[0] eq $doi3 );
+
+  # we have a full DOI (though it may not be a valid one)
+  print `curl -su $un:$pw $url/metadata/$ARGV[0]` . "\n";
+}
+
+# otherwise we must have an error
+else
+{
+  die "The only valid DOI prefixes for $un are $doi1, $doi2 and $doi3\n";
+}
+
+sub show_usage
+{
+  print "\nUsage:\n\tdoi <arg>\n\nwhere <arg> is one of: -\n";
+  print "\t list = show list of all DOIs associated with $un\n";
+  print "\t  all = show all metadata for all DOIs associated with $un\n";
+  print "\t<doi> = show metadata for <doi> where <doi> is a valid $un DOI\n\n";
+  exit;
+}

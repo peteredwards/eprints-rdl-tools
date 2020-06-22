@@ -1,0 +1,66 @@
+#!/usr/bin/perl -w
+use FindBin;
+use lib "$FindBin::Bin/../perl_lib";
+use EPrints;
+use strict;
+use Data::Dumper;
+
+# these stop the warnings for "bad" chars in the titles
+use charnames ':full';
+binmode(STDOUT, ":utf8");
+
+my $tsize = 0;
+my $totaldocs = 0;
+
+# repository to work with
+my $repo_id = 'researchdata';
+
+# connect to repository
+my $repo = new EPrints::Session( 1 , $repo_id , 1 );
+if( !defined $repo )
+{
+	print STDERR "Failed to load repository: $repo_id\n";
+	exit 1;
+}
+
+# get archive virtual dataset (i.e. only live eprints)
+my $ds = $repo->dataset( 'archive' ) ;
+if( !defined $ds )
+{
+	print STDERR "Unknown Dataset ID: archive\n";
+	$repo->terminate;
+	exit 1;
+}
+
+my $list = $ds->search;
+my $n = $list->count;
+my @eprints = $list->slice;
+
+foreach my $eprint ( @eprints )
+{
+	my $esize = 0;
+	#foreach my $doc ( @{$eprint->get_value("documents")} ) # this gets thumbnails too
+	my @docs = $eprint->get_all_documents;
+	my $numdocs = 0;
+	foreach my $doc ( @docs )
+	{
+		$numdocs++;
+		my $dsize = 0;
+		my %files = $doc->files;
+		foreach my $key ( keys %files )
+		{
+			#print "$key : $files{$key}\n";
+			$dsize += $files{$key};
+		}
+		#print $doc->get_value("main") . "   " . "\n";
+		$esize += $dsize;
+	}
+	$tsize += $esize;
+	$totaldocs += $numdocs;
+	print sprintf("%5d %3d %14d %.54s\n", $eprint->id, $numdocs, $esize, $eprint->get_value("title"));
+}
+print "\nTotal eprints: $n    Total files: $totaldocs    Total data volume: $tsize\n";
+$repo->terminate;
+
+exit;
+

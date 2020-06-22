@@ -1,0 +1,602 @@
+#!/usr/bin/perl -w 
+
+use strict;
+use File::Basename;
+use URI::Escape;
+# requires Crypt::CBC and Crypt::Blowfish
+use Crypt::CBC;
+use MIME::Base64;
+use XML::LibXML;
+use Getopt::Long;
+
+
+# max allowed file size for back-end ingestion
+my $max_befsize = 10 * 1024 * 1024 * 1024;
+
+# max allowed total back-end ingestion size
+my $max_beisize = 100 * 1024 * 1024 * 1024;
+
+# flags to enable/disable file and ingeststion size checks
+my $do_befsize = 1;
+my $do_beisize = 1;
+
+my $pversion; # latest is 1
+
+$|=1;
+
+my $list_only = 0;
+my $win_mode = 0; # show windows relative paths
+get_options();
+
+my $itotal = 0;
+my $igood = 0;
+my $ibad = 0;
+my $igtsize = 0;
+
+# sanity check
+$max_befsize = $max_beisize if $max_befsize > $max_beisize;
+
+my $base_path = '/mnt/rdl/Repository/';
+my $log_path = '/usr/share/eprints/var/';
+my $datestamp = timestring();
+my $log_file = $log_path . basename($0) . '_' . $datestamp . '.log';
+my $prep_filename = '_rdl_ingest_ready';
+my $error_filename = '_rdl_ingest_error.txt';
+my $done_filename = '_rdl_ingest_completed.txt';
+my %repo_name = (
+	researchdata => 'RDL Live',
+	rdtest => 'RDL Review',
+	radar => 'RDL RADAR'
+);
+
+# if the base path is explicitly defined use that instead
+$base_path = $ARGV[0] if defined $ARGV[0];
+$base_path .= '/' if $base_path !~ /\/$/;
+
+# search for folders with prep files in them
+my $dir_list = `find $base_path -name $prep_filename 2>/dev/null`;
+my @ingestions = split( "\n", $dir_list );
+
+my $lfh;
+
+# only open log file if we have files to process
+if ( @ingestions && ! $list_only )
+{
+	open ( $lfh, '>>', $log_file );
+	print $lfh "START: $datestamp\n";
+}
+
+foreach my $prep_file ( @ingestions )
+{
+	print "************************************************************\n";
+	
+	my $r = check_prep( $prep_file, $base_path, $win_mode );
+
+	# update counts
+	$itotal++;
+	if ( $r->{error_str} )
+	{
+		$ibad++;
+	}
+	else
+	{
+		$igood++;
+		$igtsize += $r->{isize};
+	}
+	
+	# if we are only listing what will be processed
+	if ( $list_only )
+	{	
+		#print rel_path( $r->{xml_file}, $base_path, $win_mode ) . "\n";
+		if ( $r->{error_str} )
+		{
+			print $r->{error_str};
+			print "ABE INGESTION PREP STATUS: >>>>> BAD <<<<<\n";
+		}
+		else
+		{
+			print "ABE INGESTION PREP STATUS: OK\n";
+		}
+		print "************************************************************\n\n";
+		# move on to next one since we are only listing them
+		next;
+	}
+	
+	# form the error file path and delete any existing file
+	my $error_file = dirname( $prep_file ) . '/' . $error_filename;
+	unlink $error_file if -f $error_file;
+
+	# form the done file path and delete any existing file	
+	my $done_file = dirname( $prep_file ) . '/' . $done_filename;
+	unlink $done_file if -f $done_file;
+	
+	# if we have prep errors create an error file and write them to it (and to stdio)
+	if ( $r->{error_str} )
+	{
+		open( my $efh, '>>', $error_file );
+		print $efh " Ingest datestamp: $datestamp\n";
+		print $efh $r->{error_str};
+		print $r->{error_str};
+		close ( $efh );
+		print $lfh "ERROR[1]: $prep_file\n";
+	}
+	else
+	{
+		# now try the ingest
+		my $irc = system( '/usr/share/eprints/bin/ingest -c ABE '
+			. $r->{repoid} . ' ' . $r->{xml_file} );
+		#print '/usr/share/eprints/bin/ingest -c ABE '
+		#	. $r->{repoid} . ' ' . $r->{xml_file};
+
+		# if return code is zero we should have no error
+		if ( ! $irc )
+		{
+			open( my $dfh, '>>', $done_file );
+			print $dfh " Ingest datestamp: $datestamp\n";
+			print $dfh $r->{op_str};
+			print $dfh " EPrints ingested: " . $r->{etotal} . "\n";
+			print $dfh "   Files ingested: " . ( $r->{good} - 1 ) . "\n";
+			print $dfh "   Ingestion size: " . $r->{isize} . "\n\n"; 
+			print $dfh $r->{flist_str};
+			print $dfh "\n** YOU SHOULD NOW CHECK TO ENSURE ALL LISTED FILES HAVE BEEN INGESTED CORRECTLY\n";
+			close ( $dfh );
+			print $lfh "SUCCESS[" . $r->{etotal} . "|". ( $r->{good} - 1 )
+				. "|" . $r->{isize} . "|" . $r->{repoid} . "]: " . $r->{xml_file} . "\n";
+		}
+		# otherwise we must have encountered an error during ingestion
+		else
+		{
+			open( my $efh, '>>', $error_file );
+			print $efh " Ingest datestamp: $datestamp\n";
+			print $efh "EPRINTS INGESTION ERROR\n";
+			close ( $efh );
+			print $lfh "ERROR[2]: $prep_file\n";		
+		}
+	}
+	
+	# remove the prep file
+	unlink( $prep_file ) if ! $list_only;
+	print "************************************************************\n\n";
+}
+
+# only close log file if we have done some work
+if ( @ingestions && ! $list_only )
+{
+	print $lfh "END: " . timestring() . "\n";
+	close ( $lfh );
+}
+
+# print summary if just listing
+if ( $list_only )
+{
+	if ( @ingestions )
+	{
+		print "ABE PREPARED INGESTIONS - TOTAL: $itotal   GOOD: $igood    BAD: $ibad\n";
+	}
+	else
+	{
+		print "THERE ARE NO ABE PREPARED INGESTIONS AT THIS TIME\n";
+	}
+}
+
+sub check_prep
+{
+	my ( $file, $base, $win ) = @_;
+
+	# hash for prep file data
+	my %p = (
+		files => [],
+		etotal => 0,
+		total => 0,
+		good => 0,
+		badsize => 0,
+		badtime => 0,
+		badpath => 0,
+		missing => 0,
+		oversized => 0,
+		isize => 0,
+		error_str => '',
+		op_str => '',
+		flist_str => '',
+	);
+		
+	my $skip = 1; #number of lines to skip in the prep file
+	
+	print "Analysing prep file: '" . rel_path( $file, $base, $win ) . "'\n";
+
+	open( my $itemfh, '<', $file );
+	
+	# skip the required number of lines
+	while ( $skip-- && <$itemfh> ) {} # order is crucial here
+
+	# read the "header" line and assign the values
+	my $header_line = <$itemfh>;
+	if ( ! $header_line )
+	{
+		$p{error_str} .= "ERROR: Bad prep file [1]\n";
+		return \%p;
+	}
+	chomp $header_line;
+	my @h = split( "\t", $header_line );
+	$pversion = $h[0];
+	if ( $pversion eq '1' )
+	{
+		$p{datestamp} = $h[1];
+		$p{repoid} = $h[2];
+	}
+	else
+	{
+		$p{error_str} .= "ERROR: Prep format version '$pversion' unknown\n";
+		close ( $itemfh );
+		return \%p;
+	}
+	
+	# read hashed security line
+	my $sec_line = <$itemfh>;
+	if ( ! $sec_line )
+	{
+		$p{error_str} .= "ERROR: Bad prep file [2]\n";
+		close ( $itemfh );
+		return \%p;
+	}
+	chomp $sec_line;
+	( $p{datestamp_sec}, $p{repoid_sec}, $p{xmlfile_sec} )
+			= split( "\t", jbdec( $sec_line  ) );
+			
+	if ( $p{datestamp} ne $p{datestamp_sec} )
+	{
+		$p{error_str} .= "ERROR: Bad prep file [3]\n";
+		close ( $itemfh );
+		return \%p;
+		
+	}
+
+	if ( $p{repoid} ne $p{repoid_sec} )
+	{
+		$p{error_str} .= "ERROR: Bad prep file [4]\n";
+		close ( $itemfh );
+		return \%p;
+	}
+
+	# get base path of prep file
+	my $prep_base = dirname( $file );
+	
+	# xml file should be in same folder as prep file
+#	if ( dirname( $p{xmlfile_sec} ) ne $prep_base )
+#	{
+#		$p{error_str} .= "ERROR: Bad prep file [5]\n";
+#		close ( $itemfh );
+#		return \%p;
+#	}
+	
+	
+	# read all file lines (first should be the XML metadata file)
+	while (<$itemfh>)
+	{
+		chomp;
+		my %f;
+
+		( $f{name}, $f{finger_enc} ) = split "\t", $_;
+		if ( ( ! $f{name} ) || ( ! $f{finger_enc} ) )
+		{
+			$p{error_str} .= "ERROR: Bad prep file [6]\n";
+			close ( $itemfh );
+			return \%p;
+		}
+
+		$f{finger} = jbdec( $f{finger_enc} );
+		if ( $f{finger} !~ /^[0-9]{29}$/ )
+		{
+			$p{error_str} .= "ERROR: Bad prep file [7]\n";
+			close ( $itemfh );
+			return \%p;
+		}
+		
+		$p{total}++;
+
+		$f{size} = 0;
+		if ( -f $f{name} )
+		{
+			$f{status} = 'good';
+			$f{size} = -s $f{name};
+			my @stat = stat( $f{name} );
+			$f{datestamp} = timestring( $stat[9] );
+			$f{fdatestamp} = substr( $f{finger}, 0, 14 );
+			$f{fsize} = int( substr( $f{finger}, 14 ) );
+			####print "$f{name} $f{datestamp} $f{size} $f{fdatestamp} $f{fsize}\n";
+			if ( $f{datestamp} ne $f{fdatestamp} )
+			{
+				$f{status} = 'badtime';
+				$p{badtime}++;
+				$p{error_str} .= 'ERROR: File timestamp changed: '
+					. rel_path( $f{name}, $base, 1 ) . "\n";
+				# don't return here
+			}
+			if ( $f{size} != $f{fsize} )
+			{
+				$f{status} = 'badsize';
+				$p{badsize}++;
+				$p{error_str} .= 'ERROR: File size changed: '
+					. rel_path( $f{name}, $base, 1 ) . "\n";
+				# don't return here
+			}
+			if ( dirname( $f{name} ) !~ /^$prep_base/ )
+			{
+				$f{status} = 'badpath';
+				$p{badpath}++;
+				$p{error_str} .= 'ERROR: Bad path for file: '
+					. rel_path( $f{name}, $base, 1 ) . "\n";
+				# don't return here
+			}
+			# we omit the first file since it is the XML file
+			if ( $p{total} > 1 )
+			{
+				$p{isize} += $f{size};
+				$p{flist_str} .= sprintf( "%17d  ", $f{size} )
+					. rel_path( $f{name}, $base, 1 ) . "\n";
+			}
+		}
+		else
+		{
+			$f{status} = 'missing';
+			$p{missing}++;
+			$p{error_str} .= 'ERROR: File missing: '
+				. rel_path( $f{name}, $base, 1 ) . "\n";
+			# don't return here
+		}
+		
+		if ( $do_befsize && ( $f{size} > $max_befsize ) )
+		{
+			$f{status} = 'oversized';
+			$p{oversized}++;
+			$p{error_str} .= "ERROR: File oversized [$f{size}/$max_befsize]:"
+				. rel_path( $f{name}, $base, 1 ) . "\n";
+			# don't return here
+		}
+		$p{good}++ if $f{status} eq 'good';
+		# add file info to list
+		push @{$p{files}}, \%f;
+	}
+	close( $itemfh );
+
+	# first file should be the xml file
+	$p{xml_file} = $p{files}->[0]{name};
+	if ( $p{xml_file} !~ /\.xml$/ )
+	{
+		$p{error_str} .= "ERROR: First file in prep file should be an 'xml' file.\n";
+		return \%p;
+	}
+	
+	# if something is not right return now
+	return \%p if ( $p{badtime} || $p{badsize} || $p{missing} || $p{oversized} || $p{badpath} );
+	
+	if ( $do_beisize && ( $p{isize} > $max_beisize ) )
+	{
+		$p{error_str} .= "ERROR: Total ingestion size too large [$p{isize}/$max_beisize]\n";
+		return \%p;
+	}
+	
+	# prep file checks done - now process the hash of files
+	
+	# prep some output
+	$p{op_str} .= "   Prep datestamp: $p{datestamp}\n";
+	$p{op_str} .= "Target repository: $repo_name{$p{repoid}}\n";
+	$p{op_str} .= "Metadata XML file: "
+		. rel_path( $p{xml_file}, $base_path, 1 ) . "\n";
+
+	# get file references in the XML metadata file
+	my $xrefs = get_file_refs( $p{xml_file} );
+	
+	if ( ! $xrefs )
+	{
+		$p{error_str} .= "ERROR: cannot extract file references from XML file\n";
+		return \%p;
+	}
+
+	print $xrefs->{ref_str};
+	
+	# number of eprints in this ingestion file
+	$p{etotal} = $xrefs->{etotal};
+	
+	my $num_xrefs = scalar( @{$xrefs->{files}} );
+	# decrement plist by 1 to account for xml file in the list
+	my $num_plist = scalar ( @{$p{files}} ) - 1;
+
+	# Check file list in prep file matches XML file references
+	if ( $num_xrefs != $num_plist )
+	{
+		$p{error_str} .= "ERROR: Prep file list size ($num_plist)"
+			. " not equal to number of metadata file references ($num_xrefs)\n";
+		return \%p;
+	}
+	# start at 1 to take account of xml file
+	my $i = 1;
+	my $unmatched = 0;
+	foreach my $fi ( @{$xrefs->{files}} )
+	{
+		if ( $fi ne $p{files}->[$i]{name} )
+		{
+			$p{error_str} .= "ERROR: File reference mismatch between prep and metadata files\n";
+			$p{error_str} .= $p{files}->[$i]{name} . "\n";
+			$p{error_str} .= "$fi\n";
+			$unmatched++;
+		}
+		$i++;
+	}
+	#next if $unmatched;
+	
+	# everything is good if we get here so attempt ingestion
+	#$p{green} = 1;
+	return \%p;
+}
+
+
+sub timestring
+{
+	my $t = shift;
+	$t = time if ! defined $t;
+	
+	my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($t);
+	return sprintf("%04d%02d%02d%02d%02d%02d", $year+1900, $mon+1, $mday, $hour, $min, $sec);
+}
+
+sub get_file_refs
+{
+	my $xmlfile = shift;
+	
+	# some file checking parameters returned as a hash ref
+	my %x = (
+		files => [],
+		etotal => 0,
+		ref_str => '',
+	);
+
+	if ( -f "$xmlfile" )
+	{
+		my $x = XML::LibXML->load_xml(location => $xmlfile);
+		$x{ref_str} .= "Analysing XML file '" . basename( $xmlfile ) . "' \n";
+		
+		# look for file references in the XML file
+		foreach my $eprint ( $x->findnodes('eprints/eprint') )
+		{
+			$x{etotal}++;
+			$x{ref_str} .= 'Eprint: ' . $eprint->findvalue('./eprintid') . "\n";
+			foreach my $doc ( $eprint->findnodes('./documents/document') )
+			{
+				foreach my $file ( $doc->findnodes('./files/file') )
+				{
+					my $ref = $file->findvalue('./url');
+					$ref =~ s/file\:\/\///g;
+					my $raw_path = uri_unescape( $ref );
+					$x{ref_str} .= "XML file reference '" . basename( $raw_path ) . "' \n";
+					push @{$x{files}}, $raw_path;
+				}
+			}
+		}
+	}
+	else
+	{
+		print "ERROR: XML metadata file '$xmlfile' not found\n";
+		return undef;
+	}
+	return \%x;
+}
+
+# return a "fingerprint" string for a file consisting of mod time and size
+# which we will will subsequently encrypt
+# we don't do MD5 hash of file because it takes too long on large files
+# we could do MD5 hash of just the mod date/size string but don't do this
+# since MD5 is one-way so doesn't allow any post error analysis
+sub fingerprint
+{
+	my $file = shift;
+	
+	return undef if ! -f $file;
+
+	my ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,
+		$atime,$mtime,$ctime,$blksize,$blocks) = stat($file);
+	my $fstring = timestring( $mtime ) . sprintf( "%015d", $size );
+	#my $fstring = timestring( $mtime ) . $size;
+
+	return $fstring;
+}
+
+
+sub jbenc
+{
+	my $ptext = shift;
+	
+	return undef if ! defined $ptext;
+	
+	my $cipher = Crypt::CBC->new(
+		-key => 'RDLBEingest',
+		-cipher => 'Blowfish',
+		-keysize => 16
+	);
+
+	my $cbytes = $cipher->encrypt( $ptext );
+	
+	# remove salt header
+	$cbytes =~ s!Salted__!!g;
+
+	# return a BF encoded hex string  
+	return join( '', map( sprintf( "%02x", ord ), split( //, $cbytes ) ) );
+}
+
+
+sub jbdec
+{
+	my $cipherhex = shift;
+	
+	return undef if $cipherhex !~ /^(?:[a-fA-F0-9]{2})+$/;
+	
+	my $cbytes = $cipherhex;
+	$cbytes =~ s/([a-fA-F0-9][a-fA-F0-9])/chr(hex($1))/eg;
+	
+	# add the salt header
+	$cbytes = 'Salted__' . $cbytes;
+	
+	my $cipher = Crypt::CBC->new(
+		-key => 'RDLBEingest',
+		-cipher => 'Blowfish',
+		-keysize => 16
+	);
+	my $ptext = $cipher->decrypt( $cbytes );
+	
+	return $ptext;
+}
+
+# pretty print a byte number in units of 1024 - and show raw bytes too if show_bytes flag is set
+sub hr_bytes
+{
+	my $rawb = shift;
+	my $show_bytes = shift || 0;
+	
+	return '' if $rawb !~ /^[0-9]+$/;
+	
+	my $modb = $rawb;
+
+	foreach ( 'bytes', 'KB', 'MB', 'GB', 'TB', 'PB' )
+	{
+		if ( $modb < 1024 )
+		{
+			my $op = sprintf("%.0f ",$modb)."$_";
+			$op .= " ($rawb bytes)" if ( $show_bytes && $rawb > 1023 );
+			return $op;
+		}
+		$modb /= 1024;
+	}
+}
+
+# print an error message into error file and to stdio
+sub perror
+{
+	my $pf = shift;
+	my $msg = shift;
+	
+	my $ef = dirname( $pf ) . '/' . $error_filename;
+	open( my $efh, '>>', $ef);
+	print $msg;
+	print $efh $msg;
+	close ( $efh );
+}
+
+# print file path without base path and swap to backslashes if windows mode
+sub rel_path
+{
+	my ( $path, $base, $windows ) = @_;
+	
+	# remove base path if it is present
+	$path =~ s!^$base!!;
+	$path =~ s!/!\\!g if $windows;
+	
+	return $path;
+}
+
+sub get_options {
+	Getopt::Long::Configure ("bundling");
+	GetOptions(
+		'list|l' => \$list_only,
+		'windows|w' => \$win_mode,
+	);
+}

@@ -1,0 +1,70 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+use File::Basename;
+
+sub show_usage
+{
+	print "Usage:\n\t" . basename($0) . " <repoid> <eprintid> <date> [ <time> ]\n\n";
+	print "\t  where <date> is of the form yyyy/mm/dd\n";
+	print "\t    and <time> is of the form hh:mm\n\n";
+	print "If <time> is not supplied it will be set to midnight (00:00)\n\n";
+	exit;
+}
+
+sub in_range
+{
+	my ( $num, $lower, $upper ) = @_;
+	return 0 if $num !~ /^\d+$/ || $lower !~ /^\d+$/ || $upper !~ /^\d+$/;
+	return 0 if $num < $lower || $num > $upper;
+	return 1;
+}
+
+my ( $year, $month, $day );
+my $hour = 0;
+my $minute = 0;
+
+show_usage() if ( ($#ARGV != 2) && ($#ARGV != 3) );
+my $repo = $ARGV[0];
+
+show_usage() if $ARGV[1] !~ /^\d+$/;
+my $eprintid = $ARGV[1];
+
+show_usage() if $ARGV[2] !~ /^(\d\d\d\d)\/(\d\d?)\/(\d\d?)$/;
+
+( $year, $month, $day ) = ( $1, $2, $3 );
+
+if ( defined $ARGV[3] ) {
+	show_usage() if $ARGV[3] !~ /^(\d\d?)\:(\d\d?)$/;
+	( $hour, $minute ) = ( $1, $2 );
+}
+
+show_usage() if ! in_range( $year, 2015, 2100 );
+show_usage() if ! in_range( $month, 1, 12 );
+show_usage() if ! in_range( $day, 1, 31 );
+show_usage() if ! in_range( $hour, 0, 23 );
+show_usage() if ! in_range( $minute, 0, 59 );
+
+my $sql .= "UPDATE eprint SET ";
+$sql .= "datestamp_year = $year, "; 
+$sql .= "datestamp_month = $month, "; 
+$sql .= "datestamp_day = $day, "; 
+$sql .= "datestamp_hour = $hour, "; 
+$sql .= "datestamp_minute = $minute, "; 
+$sql .= "lastmod_year = $year, "; 
+$sql .= "lastmod_month = $month, "; 
+$sql .= "lastmod_day = $day, "; 
+$sql .= "lastmod_hour = $hour, "; 
+$sql .= "lastmod_minute = $minute, "; 
+$sql .= "status_changed_year = $year, "; 
+$sql .= "status_changed_month = $month, "; 
+$sql .= "status_changed_day = $day, "; 
+$sql .= "status_changed_hour = $hour, "; 
+$sql .= "status_changed_minute = $minute "; 
+$sql .= "WHERE eprintid = $eprintid;\n";
+
+system("mysql -e \"$sql\" -uroot -p $repo");
+system("/usr/share/eprints/bin/generate_abstracts $repo $eprintid");
+
+

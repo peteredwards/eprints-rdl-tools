@@ -1,0 +1,87 @@
+#!/usr/bin/perl -w -I/usr/share/eprints/perl_lib
+# Compares datasets from two eprints repositories.
+# Note that the first repository defines which fields are tested.
+# All fields found in the first respository's dataset will be tested.
+# If they do not exist or are different in the second respository
+# the user is informed.
+# Fields present in the second respoitory's dataset which are NOT
+# in the first repository will be IGNORED since this utility is
+# desgined to facilitate copying of datasets from one repo to another
+# where the first repository is the source and the second the target.
+
+use strict;
+use EPrints;
+use File::Basename;
+use Getopt::Long;
+use Data::Dumper;
+
+$Data::Dumper::Maxdepth = 1;
+
+$|=1;
+
+my $verbose = 0;
+GetOptions(
+	'v|verbose+' => \$verbose,
+);
+
+if ( ! ( $ARGV[0] && $ARGV[1] ) )
+{
+	print "\nUsage\n\t" . basename($0)
+		.  " [-v] <repo_id1> <repo_id2> [<dataset_id>]\n\n";
+	exit 1;
+}
+my $session1 = new EPrints::Session( 1, $ARGV[0], 1 );
+die "ERROR: Cannot load repository '$ARGV[0]'\n" if ! defined $session1;
+
+my $session2 = new EPrints::Session( 1, $ARGV[1], 1 );
+die "ERROR: Cannot load repository '$ARGV[1]'\n" if ! defined $session2;
+
+my $dataset_id = ( $ARGV[2] ) ? $ARGV[2] : 'eprint';
+
+my $ds1 = $session1->dataset( $dataset_id );
+die "ERROR: Unknown dataset '$dataset_id' in repository '$ARGV[0]'\n"
+	if ! defined $ds1;
+
+my $ds2 = $session2->dataset( $dataset_id );
+die "ERROR: Unknown dataset '$dataset_id' in repository '$ARGV[1]'\n"
+	if ! defined $ds2;
+
+my @ds_list1 = $ds1->get_fields;
+my @ds_list2 = $ds2->get_fields;
+
+print "Repository: $ARGV[0], Data object: $dataset_id, Number of fields: "
+	. scalar( @ds_list1 ) . "\n";
+print "Repository: $ARGV[1], Data object: $dataset_id, Number of fields: "
+	. scalar( @ds_list2 ) . "\n";
+foreach my $field ( @ds_list1 )
+{
+	my $name = $field->name;
+	my $type = $field->type;
+	my $req = ( $field->property( 'required' ) ) ? 1 : 0;
+	my $multi = ( $field->property( 'multiple' ) ) ? 1 : 0;
+
+	print sprintf( "TESTING: %3s %5s %12s %s\n",
+		( $req ) ? 'req' : 'nr',
+		( $multi ) ? 'multi' : 'sing',
+		$type,
+		$name,
+	) if $verbose;
+	if ( exists $ds2->{field_index}->{$name} )
+	{
+		my $f = $ds2->{field_index}->{$name};
+		my $r = ( $f->property( 'required' ) ) ? 1 : 0;
+		my $m = ( $f->property( 'multiple' ) ) ? 1 : 0;
+		print "'$name' 'TYPE' MISMATCH\n" if $type ne $f->type;
+		print "'$name' 'REQUIRED' MISMATCH\n" if $req ne $r;
+		print "'$name' 'MULTIPLE' MISMATCH\n" if $multi ne $m;
+	}
+	else
+	{
+		print "'$name' NOT PRESENT IN '$ARGV[1]'\n"
+	}
+#	print Dumper ( $field );
+}
+undef @ds_list1;
+undef @ds_list2;
+$session1->terminate();
+$session2->terminate();

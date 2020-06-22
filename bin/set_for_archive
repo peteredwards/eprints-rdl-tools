@@ -1,0 +1,94 @@
+#!/usr/bin/perl -w
+use FindBin;
+use lib "$FindBin::Bin/../perl_lib";
+use EPrints;
+use strict;
+use Data::Dumper;
+# list of eprint IDs to be processed
+#my @eprint_ids = ( 1, 2, 3, 4 ,5, 6, 7, 8 );
+my @eprint_ids = ( 20 );
+
+# repository to work with
+my $repo_id = 'researchdata';
+
+# connect to repository
+my $repo = new EPrints::Session( 1 , $repo_id , 1 );
+if( !defined $repo )
+{
+	print STDERR "Failed to load repository: $repo_id\n";
+	exit 1;
+}
+
+# get eprints dataset
+my $ds = $repo->dataset( 'eprint' ) ;
+if( !defined $ds )
+{
+	print STDERR "Unknown Dataset ID: eprint\n";
+	$repo->terminate;
+	exit 1;
+}
+
+foreach my $epid ( @eprint_ids ) {
+	#my $ep = new EPrints::DataObj::EPrint( $repo, $epid );
+	my $ep = $ds->dataobj( $epid );
+	if ( defined $ep ) {
+	 	print "$epid: " . $ep->get_value('title') . "\n"; 
+		#print Dumper( $ep ) if $epid == 4;
+		#do_trigger( $repo, $ep );
+		do_arkivum( $repo, $ep );
+	}
+}
+
+# run the Arkivum checker plugin
+my $plugin = $repo->plugin('Event::Arkivum');
+$plugin->astor_checker();
+
+$repo->terminate;
+exit;
+
+
+
+
+# process an eprint object to set it for archive 
+sub do_arkivum 
+{
+	my ( $repo, $eprint ) = @_;
+	
+	  # request to store the eprint in A-Stor
+	  if ( defined $eprint ) 
+	  {
+			my $eprintid = $eprint->id;
+			my $status = $eprint->get_value( "eprint_status" );
+			if ( $status eq 'archive' ) 
+			{
+				print "Doing " . $eprint->id . "\n";
+				  $repo->dataset( "astor_eprint" )->create_dataobj(
+				  {
+						eprintid => $eprintid,
+						userid => 1, #$repo->current_user->id,
+						justification => 'EPrint A-Stor Archive Request',
+						astor_status => 'archive_scheduled',
+				  });
+				  
+				  # Update the eprint archive_status field so we know
+				  # that the A-Stor request has been made
+				  $eprint->set_value("archive_status", "archive_approved");
+				  $eprint->commit();
+			}
+	  }
+}
+
+# set a trigger on an eprint object
+sub do_trigger
+{
+	my ( $repo, $eprint ) = @_;
+	$eprint->{session}->run_trigger( EPrints::Const::EP_TRIGGER_STATUS_CHANGE,
+			repository => $repo,
+	#$eprint->{dataset}->run_trigger( EPrints::Const::EP_TRIGGER_STATUS_CHANGE,
+			#repository => $repo,
+			dataobj => $eprint,
+			old_status => 'archive',
+			new_status => 'archive'
+        );
+}
+

@@ -1,0 +1,74 @@
+use EPrints;
+use strict;
+use Data::Dumper;
+
+my $eprints = EPrints->new;
+my $repo = $eprints->current_repository;
+exit( 0 ) unless( defined $repo );
+
+$repo->send_http_header( content_type=>"text/plain; charset=UTF-8" );
+
+my %counts;
+my %dcounts;
+		
+foreach my $ds_id ($repo->get_sql_dataset_ids)
+{
+	my $ds = $repo->dataset( $ds_id );
+	my $table = $ds->get_sql_table_name;
+	$counts{$ds_id} = $repo->get_database->count_table( $table );
+}
+{
+	my $ds = $repo->dataset( "eprint" );
+	my $search = $ds->prepare_search;
+	my @counts = $search->perform_groupby( $ds->field( "eprint_status" ) );
+	foreach my $i (0..$#{$counts[0]})
+	{
+		$counts{$counts[0]->[$i]} = $counts[1]->[$i];
+	}
+	for(qw( eprint inbox buffer archive deletion document ))
+	{
+		$counts{$_} ||= 0;
+	}
+}
+
+print "EPRINTS\n";
+print sprintf("[LIVE] Archive: %i\n", $counts{archive});
+print sprintf("        Buffer: %i\n", $counts{buffer});
+print sprintf("         Inbox: %i\n", $counts{inbox});
+print sprintf("      Deletion: %i\n", $counts{deletion});
+print sprintf("         TOTAL: %i\n", $counts{eprint});
+print "\n\n";
+
+
+{
+        my $sql = 'select eprint_status as status, count(*) as count';
+        $sql .= ' from document join eprint on document.eprintid = eprint.eprintid';
+        $sql .= ' where docid not in (select docid from document_relation_type)';
+        $sql .= ' group by status;';
+
+        my $sth = $repo->get_database->prepare_select( $sql );
+        $repo->get_database->execute( $sth , $sql );
+        while( my ( $status, $num ) = $sth->fetchrow_array )
+        {
+                $dcounts{$status} = $num;
+				$dcounts{total} += scalar( $num );
+        }
+        for(qw( archive buffer inbox deletion ))
+        {
+                $dcounts{$_} ||= 0;
+        }
+}
+
+print "ORIGINAL DOCUMENTS\n";
+print sprintf("[LIVE] Archive: %i\n", $dcounts{archive});
+print sprintf("        Buffer: %i\n", $dcounts{buffer});
+print sprintf("         Inbox: %i\n", $dcounts{inbox});
+print sprintf("      Deletion: %i\n", $dcounts{deletion});
+print sprintf("         TOTAL: %i\n", $dcounts{total});
+print "\n\n";
+
+print "ALL DOCUMENTS [ALL AREAS, INCLUDING THUMBNAILS]\n";
+print sprintf("         TOTAL: %i\n", $counts{document});
+print "\n";
+
+exit;

@@ -1,0 +1,7 @@
+#!/bin/bash
+
+/usr/share/eprints/bin/generate_abstracts researchdata
+/usr/share/eprints/bin/generate_views researchdata
+/usr/share/eprints/bin/generate_abstracts rdtest
+/usr/share/eprints/bin/generate_views rdtest
+

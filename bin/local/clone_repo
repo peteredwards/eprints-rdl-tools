@@ -1,0 +1,136 @@
+#!/bin/bash
+
+##### clone eprints repository                #####
+##### assumes base path of /usr/share/eprints #####
+
+# ensure we are eprints user
+if [ "$USER" != "eprints" ]
+then
+  echo not eprints user - use 'sudo -u eprint -i' first
+  exit
+fi
+
+# check we have right number of arguments
+if [ $# != 6 ]
+then
+  echo Usage:
+  echo   clone_repo \<src_repo_id\> \<new_repo_id\> \
+      \<url\> \<adm_email\> \<db_user\> \<db_pass\>
+  exit
+fi
+
+cat <<END
+Cloning repository '$1' to new repository '$2'
+with the following parameters
+                   URL: $3
+Repository admin email: $4
+         Database name: $2
+     Database username: $5
+     Database password: $6
+END
+
+read -p "Do you wish to continue? [y/n] "
+if [ "$REPLY" != "y" ]
+then
+  exit
+fi
+
+# check if source repo folder already exists  - if not we exit
+if [ ! -d /usr/share/eprints/archives/$1 ]
+then
+  echo Repository folder '/usr/share/eprints/archives/$1' not found!
+  echo The soure repository may not exist? Cannot continue.
+  exit
+fi
+
+# check if new repo folder already exists in which case we exit
+if [ -d /usr/share/eprints/archives/$2 ]
+then
+  echo The folder '/usr/share/eprints/archives/$2' already exists!
+  echo The repository may already exist? Cannot continue.
+  exit
+fi
+
+# create cfg.d folder within relevant path since rsync cannot do a mkdir -p
+mkdir -p /usr/share/eprints/archives/$2/cfg
+
+# create a few other folders to stop eprints complaining
+mkdir -p /usr/share/eprints/archives/$2/cgi
+mkdir -p /usr/share/eprints/archives/$2/documents
+mkdir -p /usr/share/eprints/archives/$2/html
+mkdir -p /usr/share/eprints/archives/$2/var
+
+# sync the cfg folder from the source repo
+rsync -av /usr/share/eprints/archives/$1/cfg/ /usr/share/eprints/archives/$2/cfg/
+
+# identify files which contain repo specific text in cfg
+echo The following files contain repository specific entries, please edit
+grep -lr "$1" /usr/share/eprints/archives/$2/cfg
+
+# amend some files in the new repo cfg folder
+# likely to be database.pl, 10_core.pl, and adminemail.pl
+# set the URLs
+echo Amending \'host\' and \'securehost\' in the \'10_core.pl\' file...
+sed -i "s/\(.*{ *host *}\).*/\1 = '$3';/" /usr/share/eprints/archives/$2/cfg/cfg.d/10_core.pl
+sed -i "s/\(.*{ *securehost *}\).*/\1 = '$3';/" /usr/share/eprints/archives/$2/cfg/cfg.d/10_core.pl
+
+echo Amending \'dbname\', \'dbuser\', \'dbpass\' in \'database.pl\' file...
+sed -i "s/\(.*{ *dbname *}\).*/\1 = '$2';/" /usr/share/eprints/archives/$2/cfg/cfg.d/database.pl
+sed -i "s/\(.*{ *dbuser *}\).*/\1 = '$5';/" /usr/share/eprints/archives/$2/cfg/cfg.d/database.pl
+sed -i "s/\(.*{ *dbpass *}\).*/\1 = '$6';/" /usr/share/eprints/archives/$2/cfg/cfg.d/database.pl
+
+echo Amending \'adminemail\' in \'adminemail.pl\' file...
+sed -i "s/\(.*{ *adminemail *}\).*/\1 = '$4';/" /usr/share/eprints/archives/$2/cfg/cfg.d/adminemail.pl
+
+# amend the repo name in cfg/lang/en/phrases/archive_name.xml
+read -p "Enter desciptive repository title [then enter]: "
+sed -i "s/\(.*archive_name\).*/\1\"\>$REPLY\<\/epp\:phrase\>/" /usr/share/eprints/archives/$2/cfg/lang/en/phrases/archive_name.xml
+
+# if apache conf files exist for source repo, copy and amend them as necessary
+# http config
+if [ -f /usr/share/eprints/cfg/apache/$1.conf ]
+then
+  echo Creating Apache conf file \'/usr/share/eprints/cfg/apache/$2.conf\'
+  rsync -av /usr/share/eprints/cfg/apache/$1.conf /usr/share/eprints/cfg/apache/$2.conf
+  sed -i "s/\(.*ServerName *\).*/\1 $3/" /usr/share/eprints/cfg/apache/$2.conf
+  sed -i "s/\(.*PerlSetVar *EPrints_ArchiveID *\).*/\1 $2/" /usr/share/eprints/cfg/apache/$2.conf
+else
+  echo Cannot find Apache conf file \'/usr/share/eprints/cfg/apache/$1.conf\'
+  echo The file \'/usr/share/eprints/cfg/apache/$2.conf\' will NOT be created
+fi
+# https config
+if [ -f /usr/share/eprints/cfg/apache_ssl/$1.conf ]
+then
+  echo Creating Apache conf file \'/usr/share/eprints/cfg/apache_ssl/$2.conf\'
+  rsync -av /usr/share/eprints/cfg/apache_ssl/$1.conf /usr/share/eprints/cfg/apache_ssl/$2.conf
+  sed -i "s/\(.*ServerName *\).*/\1 $3/" /usr/share/eprints/cfg/apache_ssl/$2.conf
+  sed -i "s/\(.*PerlSetVar *EPrints_ArchiveID *\).*/\1 $2/" /usr/share/eprints/cfg/apache_ssl/$2.conf
+else
+  echo Cannot find Apache conf file \'/usr/share/eprints/cfg/apache_ssl/$1.conf\'
+  echo The file \'/usr/share/eprints/cfg/apache_ssl/$2.conf\' will NOT be created
+fi
+
+# run epadmin to create the database, answer relevant questions
+/usr/share/eprints/bin/epadmin create_db $2
+
+# test the new config
+echo Performing repository config test on \'$2\'
+/usr/share/eprints/bin/epadmin test $2
+
+echo Ready to load the new repository config...
+read -p "Does everything look okay? [y/n] "
+if [ "$REPLY" != "y" ]
+then
+  echo Please check the config files for errors
+  exit
+fi
+
+echo Reloading repository configurations into eprints
+/usr/share/eprints/bin/epadmin reload $2
+
+echo Generating static html pages for repo \'$2\'
+/usr/share/eprints/bin/generate_static $2
+
+# Prompt to restart apache service
+echo IMPORTANT - Please now restart the Apache web service, using \'sudo\'
+

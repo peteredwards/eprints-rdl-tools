@@ -1,0 +1,5 @@
+#!/bin/bash
+/usr/share/eprints/bin/ingest researchdata /mnt/rdl/Repository/Zapata_Cornelio_F/DOI_195/data_ingest_DOI_195_Zapata_GB.xml
+/usr/share/eprints/bin/ingest researchdata /mnt/rdl/Repository/Zapata_Cornelio_F/DOI_196/data_ingest_DOI_196_Zapata_GB.xml
+/usr/share/eprints/bin/ingest researchdata /mnt/rdl/Repository/Zapata_Cornelio_F/DOI_198/data_ingest_DOI_198_Zapata_GB.xml
+

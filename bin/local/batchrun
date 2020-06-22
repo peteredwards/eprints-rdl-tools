@@ -1,0 +1,25 @@
+#!/usr/bin/perl -w
+
+use strict;
+use File::Basename;
+
+# min allowed free space
+my $block_size = 1024 * 1204 * 1024;
+my $min_free = 200;
+my $vol_name = '/export/DigitisationLabStore';
+my $free = `df -P -B $block_size $vol_name | grep $vol_name | awk '{print \$4}'`;
+
+$|=1;
+
+print "$free\n";
+
+
+
+sub timestring
+{
+	my $t = shift;
+	$t = time if ! defined $t;
+	
+	my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($t);
+	return sprintf("%04d%02d%02d%02d%02d%02d", $year+1900, $mon+1, $mday, $hour, $min, $sec);
+}

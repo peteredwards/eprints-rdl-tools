@@ -1,0 +1,183 @@
+#!/usr/bin/perl -w 
+# ingest - a wrapper for the eprints import script
+# some advantages over doing a raw import are:
+# basic file reference checking (including checking 'main' doc value) 
+# timestamped log file output
+# CSV cumulative stats file output
+# stats include ingestion date, time, size and duration, XML prep date etc.
+
+use strict;
+use File::Basename;
+use Getopt::Long;
+use XML::LibXML;
+use URI::Escape;
+
+$|=1;
+
+die "Sorry, you need to be 'eprints' user to run this\n" if getpwuid($<) ne 'eprints';
+
+my $caller = 'MBE'; # default ingestion type caller value (manual back-end)
+get_options();
+
+die "ERROR: Caller must be 'MBE', 'ABE' or 'HYB'\n"
+	if ! grep( /^$caller$/, qw( MBE ABE HYB ) );
+
+my $start = time;
+my $start_time = timestring( $start );
+my $base_path = '/mnt/rdl/Repository/';
+my $log_path = '/usr/share/eprints/var/';
+my $log_file = $log_path . basename($0) . '_' . $start_time . '.log';
+my $stats_filepath = '/usr/share/eprints/var/ing_stats.csv';
+#my $cmd_ingest = '/usr/share/eprints/bin/import --force --verbose --verbose $repoid eprint XMLIngest $xml_file >> $log_file 2>&1';
+my $cmd_ingest = '/usr/share/eprints/bin/import --force --verbose --verbose $repoid eprint XMLIngest $xml_file 2>&1 | tee -a $log_file';
+
+my $repoid = $ARGV[0];
+my $xml_file = $ARGV[1];
+
+die "Usage:\n\t" . basename($0) . " <repo_id> <rel_path_to_xml_file>\n" if ! ( $ARGV[0] && $ARGV[1] );
+die "The <repo_id> must be 'researchdata', 'radar' or 'rdtest'\n"
+	if ! grep( /^$repoid$/, qw( researchdata radar rdtest ) );
+
+# append base path to XML file
+$xml_file = $base_path . $xml_file if $xml_file !~ /^$base_path/;
+die "Cannot find XML file '$xml_file'\n" if ! -f $xml_file;
+
+my $cmd = eval('"'."$cmd_ingest".'"');
+
+my $fdata = proc_file_refs( $xml_file );
+
+#system( "date >> $log_file" );
+open ( my $lfh, '>>', $log_file );
+#print $lfh "Start: " . `date`;
+print $lfh "Start: $start_time\n";
+print $lfh "Ingestion type: $caller\n";
+print $lfh "Repository: $repoid\n";
+print $lfh "XML file: $xml_file\n";
+
+if ( $fdata->{errors} )
+{
+	print $lfh "$fdata->{error_str}\n";
+	print STDERR "$fdata->{error_str}\n";
+	close $lfh;
+	exit 1;
+}
+
+# if no errors, invoke the ingestion
+# need to close the log file
+close $lfh;
+
+# this command outputs (via tee) to the log file
+my $ec = system( "$cmd" );
+#print `$cmd`;
+
+my $end = time;
+my $end_time = timestring ( $end );
+my $duration = $end - $start;
+
+open ( $lfh, '>>', $log_file );
+#print $lfh "End: " . `date`;
+print $lfh "End: $end_time\n";
+print $lfh "Duration: $duration\n";
+
+# if ingestion returned a non-zero error code
+if ( $ec )
+{
+	print $lfh "ERROR: Eprints ingestion was not successful\n";
+	print STDERR "ERROR: Eprints ingestion was not successful\n";
+	close $lfh;
+	exit 1;
+}
+# if return code was good - append the stats CSV file
+else
+{
+	# TO DO - append to stats file CSV output file
+	# breakdown by eprint?
+	# TO DO - ensure prep time is set to XML datestamp for non-ABE ingestions
+
+	open ( my $sfh, '>>', $stats_filepath );
+	print $sfh "$caller,$repoid,$start_time,$end_time,$duration,$fdata->{pdate},"
+		. "$fdata->{eprints},$fdata->{files},$fdata->{isize},$xml_file\n";
+	close $sfh;
+	
+}
+close $lfh;
+
+sub timestring
+{
+	my $time = shift || time;
+	my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($time);
+	return sprintf("%04d%02d%02d%02d%02d%02d", $year+1900, $mon+1, $mday, $hour, $min, $sec);
+}
+
+sub get_options {
+	Getopt::Long::Configure ("bundling");
+	GetOptions(
+		'caller|c=s' => \$caller,
+	);
+}
+
+sub proc_file_refs
+{
+	my $fn = shift;
+	my %r = (
+		errors => 0,
+		error_str => '',
+		isize => 0,
+		pdate => '',
+		eprints => 0,
+		docs => 0,
+		files => 0,
+	);
+	
+	# if we can't find the XML file return with error
+	if ( ! -f $fn )
+	{
+		$r{errors}++;
+		$r{error_str} .= "ERROR: Cannot find file '$fn'\n";
+		return \%r;
+	}
+	
+	# get mod date of XML file
+	my @stat = stat( $fn );
+	$r{pdate} = timestring( $stat[9] );
+	
+	my $x = XML::LibXML->load_xml(location => $fn);
+
+	foreach my $eprint ( $x->findnodes('eprints/eprint') )
+	{
+		$r{eprints}++;
+		print 'Eprint: ' . $eprint->findvalue('./eprintid') . "\n";
+		foreach my $doc ( $eprint->findnodes('./documents/document') )
+		{
+			$r{docs}++;
+			my $main = $doc->findvalue('./main');
+			print "$main\n";
+			my $match = 0;
+			foreach my $file ( $doc->findnodes('./files/file') )
+			{
+				$r{files}++;
+				my $ref = $file->findvalue('./url');
+				$ref =~ s/file\:\/\///g;
+				$ref = uri_unescape($ref);
+				print "$ref\n";
+				if ( -f $ref )
+				{
+					my $size = -s $ref;
+					print "$size  $ref\n";
+					$r{isize} += $size;
+				}
+				else
+				{	$r{errors}++;
+					$r{error_str} .=  "ERROR: MISSING '$ref'\n";
+				}
+				$match = 1 if $main eq basename( $ref );
+			}
+			if ( ! $match )
+			{
+				$r{errors}++;
+				$r{error_str} .= "ERROR: main '$main' does not match any path reference\n";
+			}
+		}
+	}
+	return \%r;
+}

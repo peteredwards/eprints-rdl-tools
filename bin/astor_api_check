@@ -1,0 +1,44 @@
+#!/usr/bin/perl
+use FindBin;
+use lib "$FindBin::Bin/../perl_lib";
+use Data::Dumper;
+use JSON;
+
+my %count = (
+	total => 0,
+	proc => 0,
+	error_md5 => 0,
+);
+my ( $resp, $path, $epath, $url, $md5a, $md5m, $md5e );
+
+# set max_proc to 0 for no maximum number of files to process
+my $max_proc = 0;
+my $base_url = 'https://rdarchive.leeds.ac.uk:8443/api/2/files/fileInfo/';
+my $file_list = `find /mnt/arkivum/researchdata/documents/disk0 -type f`;
+my $eprint_path = '/usr/share/eprints/archives/';
+
+my $start = time;
+for ( split /\n/, $file_list ) {
+	$count{total}++;
+	next if $max_proc && ( $count{total} > $max_proc );
+	$count{proc}++;
+	$path = $_;
+	$url = $path;
+	$url =~ s/\/mnt\/arkivum\///;
+	$epath = $eprint_path . $url;
+	$url = $base_url . $url;
+	$resp = from_json(`curl -s -k $url`);
+	$md5a = $resp->{md5};
+	$md5m = `md5sum $_ | awk '{ print \$1 }'`;
+	$md5e = `md5sum $epath | awk '{ print \$1 }'`;
+	chomp ($md5m);
+	chomp ($md5e);
+	print $resp->{ingestState} . "\t" . $resp->{replicationState} . "\t" 
+		. $md5a . "\t" . "$path\n";
+	if (( $md5a ne $md5m ) || ( $md5a ne $md5e )) {
+		$count{error_md5}++;
+		print "ERROR:\tmount_md5=$md5m\teprint_md5=$md5e\n";
+	}
+}
+my $duration = time - $start;
+print "TOTAL: $count{total}\tPROCESSED: $count{proc}\tERRORS: $count{error_md5}\tEXEC: ${duration}s\n";

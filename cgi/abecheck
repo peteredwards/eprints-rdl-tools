@@ -1,0 +1,161 @@
+use EPrints;
+use strict;
+use Data::Dumper;
+use Sys::Hostname;
+use File::Basename;
+use URI::Escape;
+
+$|++;
+#my $eprints = EPrints->new;
+my $repo = EPrints->new->current_repository;
+exit( 0 ) unless( defined $repo );
+
+my $passphrase = $repo->param( "oneliner" );
+my $abecheck = $repo->param( "abecheck" );
+
+my $TITLE = "RDL Automated Back-End (ABE) Ingestion Checker";
+
+my $pathmsg = 'PASTE FULL PATH HERE';
+my $ppmsg = 'TYPE PASSPHRASE HERE...';
+my $ppans = 'g0_r3s34rch_d4t4';
+my $cmd_abecheck = '/usr/share/eprints/bin/inscan -l -w';
+
+# Create empty document
+my $page = $repo->make_doc_fragment();
+
+# Create page title
+my $t = $repo->make_element( "h1" );
+$t->appendChild( $repo->make_text( $TITLE ) );
+$page->appendChild( $t );
+
+if ( defined $abecheck )
+{
+	# TO DO - the flag below will be included in an ingestion config file
+	# along with max size limits at a later date
+	my $abe_enabled = 1;
+	
+	show_error($repo, $page, "Invalid passphrase") if $passphrase ne $ppans; 
+
+
+	# initiate output string
+	my $op = '';
+	# try the conversion to XML file if there are no file path or file name errors
+
+	$op = "Initiating ABE Ingestion Checker...\n\n";
+	my $cmd = eval('"'."$cmd_abecheck".'"') . " 2>&1";
+	$op .= `$cmd`;
+	$op .= "\n";
+	
+	# display the system output regardless of any errors
+	my $pre = $repo->make_element( "pre", style => 'white-space: pre-wrap; overflow: auto;' );
+	$pre->appendChild( $repo->make_text( $op ) );
+	$page->appendChild( $pre );
+	
+	my $p = $repo->make_element( "p" );
+	$p->appendChild( $repo->make_text( "Note: Any items listed with an ABE Ingestion Prep Status of 'BAD' will NOT be ingested." ) );
+	$page->appendChild( $p );
+
+	$p = $repo->make_element( "p" );
+	$p->appendChild( $repo->make_text( "ABE Ingestions normally take place in the evening Sun-Thu (inclusive)." ) );
+	$page->appendChild( $p );
+
+	$p = $repo->make_element( "p" );
+	$p->appendChild( $repo->make_text( "To PREVENT a previously prepared item from being ingested via ABE remove the file '_rdl_ingest_ready' in the relevant folder." ) );
+	$page->appendChild( $p );
+
+}
+else
+{
+	# Create paragraphs
+	my $p = $repo->make_element( "p" );
+	$p->appendChild( $repo->make_text( "Use this facility to check which items are prepared for ABE ingestion" ) );
+	$page->appendChild( $p );
+
+	# create form
+	my $f = $repo->render_form( "POST" );
+	$f->appendChild( $repo->render_hidden_field( "abecheck", "1" ) );
+	$f->appendChild( $repo->render_input_field( name => "oneliner", size => 40, value => "$ppmsg")  );
+	$f->appendChild( $repo->render_action_buttons( submit => "Check ABE Prepared Ingestions" ) );
+	$page->appendChild( $f );
+}
+
+my $dt = $repo->make_element( "p" );
+$dt->appendChild( $repo->make_text( "To ingest items into RDL please go to the " ) );
+my $dt_link = $repo->render_link( 'datatool' );
+$dt_link->appendChild( $repo->make_text( 'RDL Data Tool' ) );
+$dt->appendChild( $dt_link );
+$page->appendChild( $dt );
+
+# create title
+my $title = $repo->make_text( $TITLE );
+
+# Wrap in template
+$repo->build_page( $title, $page );
+$repo->send_page();
+
+# End repo
+$repo->terminate;
+
+
+sub show_error
+{
+	# NOTE - need to pass in any globally defined variables here to prevent
+	# pesky thread caching issues where for a given apache thread, a sub
+	# may end up using a globally defined variable value from a previous
+	# instantiation of the script - the only other way to prevent this
+	# is to restart the apache service after each run - probably best
+	# not doing that!
+	my $rr = shift;
+	my $pp = shift;
+	my $msg = shift;
+	my $uri = shift;
+	my $link_name = shift;
+
+	$msg =~ s#\n# #g;
+
+	$msg = "ERROR: $msg ";
+	my $p = $rr->make_element( "p" );
+        $p->appendChild( $rr->make_text( "$msg" ) );
+
+	if ( defined $uri ) {
+		my $a = $rr->render_link( $uri );
+		$link_name = $uri if ! defined $link_name;
+		$a->appendChild( $rr->make_text( $link_name ) );
+		$p->appendChild( $a );
+	}
+
+	$pp->appendChild( $p );
+	my $debug_str = "[ $$ ] " . localtime . " " . $rr->{request}->connection->remote_ip;
+	$pp->appendChild( $rr->make_element( "p" )->appendChild( $rr->make_text( "$debug_str" ) ) ) ;
+
+	# Build error page
+	$rr->build_page(
+		$rr->make_text( "ERROR" ),
+		$pp,
+	);
+	$rr->send_page();
+	$rr->terminate;
+	exit;
+}
+
+# pretty print a byte number in units of 1024 - and show raw bytes too if show_bytes flag is set
+sub hr_bytes
+{
+	my $rawb = shift;
+	my $show_bytes = shift || 0;
+	
+	return '' if $rawb !~ /^[0-9]+$/;
+	
+	my $modb = $rawb;
+
+	foreach ( 'bytes', 'KB', 'MB', 'GB', 'TB', 'PB' )
+	{
+		if ( $modb < 1024 )
+		{
+			my $op = sprintf("%.0f ",$modb)."$_";
+			$op .= " ($rawb bytes)" if ( $show_bytes && $rawb > 1023 );
+			return $op;
+		}
+		$modb /= 1024;
+	}
+}

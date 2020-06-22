@@ -1,0 +1,2436 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+
+<resource>
+<identifier identifierType='DOI'>10.5072/uol/jb/test1</identifier>
+<creators>
+	<creator>
+		<creatorName>JB</creatorName>
+	</creator>
+</creators>
+<titles>
+	<title>First test</title>
+</titles>
+<publisher>University of Leeds</publisher>
+<publicationYear>2016</publicationYear>
+</resource>
+
+
+<resource>
+<identifier identifierType='DOI'>10.5518/10</identifier>
+<creators>
+	<creator>
+		<creatorName>King, Marco-Felipe</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org'>http://orcid.org/0000-0001-7010-476X</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Noakes, Catherine J</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org'>http://orcid.org/0000-0003-3084-7467</nameIdentifier>
+		<affiliation>Ubiversity of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Sleigh, P. Andrew</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org'>http://orcid.org/0000-0001-9218-5660</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Waters, Liz</creatorName>
+		<affiliation>NHS Wales</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Bale, Sue</creatorName>
+		<affiliation>NHS Wales</affiliation>
+	</creator>
+</creators>
+<titles>
+	<title>Ysbyty Aneurin Bevan surface contact and hand hygiene audit.</title>
+</titles>
+<publisher>University of Leeds</publisher>
+<publicationYear>2015</publicationYear>
+<language>en</language>
+<resourceType resourceTypeGeneral='Dataset'></resourceType>
+</resource>
+
+
+<resource>
+<identifier identifierType='DOI'>10.5518/11</identifier>
+<creators>
+	<creator>
+		<creatorName>Behera, Ardhendu</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0003-0276-9000</nameIdentifier>
+	</creator>
+	<creator>
+		<creatorName>Hogg, David</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0002-6125-9564</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Cohn, Anthony</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0002-7652-8907</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+</creators>
+<titles>
+	<title>COGNITO: Activity monitoring and recovery</title>
+</titles>
+<publisher>University of Leeds</publisher>
+<publicationYear>2015</publicationYear>
+<subjects>
+	<subject subjectScheme='JACS' schemeURI='https://www.hesa.ac.uk/jacs3'>I000 - Computer sciences &gt; I400 - Artificial intelligence &gt; I440 - Computer vision</subject>
+</subjects>
+<language>en</language>
+<resourceType resourceTypeGeneral='Dataset'>Dataset</resourceType>
+<relatedIdentifiers>
+	<relatedIdentifier relatedIdentifierType='URL' relationType='References'>http://eprints.whiterose.ac.uk/87830/</relatedIdentifier>
+	<relatedIdentifier relatedIdentifierType='DOI' relationType='References'>10.1371/journal.pone.0127769</relatedIdentifier>
+</relatedIdentifiers>
+<rightsList>
+	<rights rightsURI='https://creativecommons.org/licenses/by/4.0/'>Creative Commons Attribution 4.0 International (CC BY 4.0)</rights>
+</rightsList>
+<descriptions>
+	<description descriptionType='Abstract'>In order to test our hierarchical framework, we have obtained two datasets using an egocentric setup. These datasets consist of non-periodic manipulative tasks in an industrial context. All the sequences were captured with on-body sensors consisting IMUs, a backpack-mounted RGB-D camera for top-view and a chestmounted fisheye camera for front-view of the workbench. The first dataset is the scenario of hammering nails and driving screws. In this dataset, subjects are asked to hammer 3 nails and drive 3 screws using prescribed tools. The second dataset is a labelling and packaging bottles scenario. In this dataset, participants asked to attach labels to two bottles, then package them in the correct positions within a box. This requires opening the box, placing the bottles, closing the box, and then writing on the box as completed using a marker pen.</description>
+</descriptions>
+</resource>
+
+
+<resource>
+<identifier identifierType='DOI'>10.5518/12</identifier>
+<creators>
+	<creator>
+		<creatorName>Batley, Joseph</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Rosamond, Mark</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Linfield, Edmund</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0001-6912-0535</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Burnell, Gavin</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0002-9486-0639</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Hickey, Bryan</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+</creators>
+<titles>
+	<title>Spin relaxation through Kondo scattering in Cu/Py lateral spin valves</title>
+</titles>
+<publisher>University of Leeds</publisher>
+<publicationYear>2015</publicationYear>
+<subjects>
+	<subject subjectScheme='JACS' schemeURI='https://www.hesa.ac.uk/jacs/'>F320 - Chemical physics</subject>
+	<subject subjectScheme='JACS' schemeURI='https://www.hesa.ac.uk/jacs/'>F390 - Physics not elsewhere classified</subject>
+	<subject subjectScheme='PACS' schemeURI='https://www.aip.org/pacs'>72.25.Ba - Spin polarized transport in metals</subject>
+	<subject subjectScheme='PACS' schemeURI='https://www.aip.org/pacs'>72.15.Qm - Scattering mechanisms and Kondo effect</subject>
+	<subject subjectScheme='PACS' schemeURI='https://www.aip.org/pacs'>72.25.Rb - Spin relaxation and scattering</subject>
+	<subject subjectScheme='PACS' schemeURI='https://www.aip.org/pacs'>75.76.+j - Spin transport effects</subject>
+</subjects>
+<language>en</language>
+<resourceType resourceTypeGeneral='Dataset'>Dataset</resourceType>
+<relatedIdentifiers>
+	<relatedIdentifier relatedIdentifierType='arXiv' relationType='References'>http://arxiv.org/abs/1504.07515v2</relatedIdentifier>
+</relatedIdentifiers>
+<rightsList>
+	<rights rightsURI='https://creativecommons.org/licenses/by/4.0/'> Creative Commons Attribution 4.0 International (CC BY 4.0)</rights>
+</rightsList>
+<descriptions>
+	<description descriptionType='Abstract'>measurements of Py/Cu/Py spin valves fabricated with different purities of Cu. Including extracted spin diffusion length which shows a suppression below 30K only in the presence of the Kondo effect. The processed data calculates the spin-relaxation rate and isolates the contributions from magnetic impurities. The spin-flip probability of a magnetic impurity is 34%.</description>
+</descriptions>
+</resource>
+
+
+<resource>
+<identifier identifierType='DOI'>10.5518/13</identifier>
+<creators>
+	<creator>
+		<creatorName>Xijin Hua</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0001-7512-660X</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Zhongmin Jin</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0001-6374-3221</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+</creators>
+<titles>
+	<title>Finite element model for cemented total hip replacements: investigation of cement fixation.</title>
+</titles>
+<publisher>University of Leeds</publisher>
+<publicationYear>2015</publicationYear>
+<language>en</language>
+<resourceType resourceTypeGeneral='Dataset'>Dataset</resourceType>
+<relatedIdentifiers>
+	<relatedIdentifier relatedIdentifierType='DOI' relationType='References'>http://doi.org/10.1016/j.medengphy.2015.08.003</relatedIdentifier>
+</relatedIdentifiers>
+<rightsList>
+	<rights rightsURI='https://creativecommons.org/licenses/by/4.0/'>Creative Commons Attribution 4.0 International (CC BY 4.0)</rights>
+</rightsList>
+</resource>
+
+
+<resource>
+<identifier identifierType='DOI'>10.5518/14 </identifier>
+<creators>
+	<creator>
+		<creatorName>Zhaopeng Zhang</creatorName>
+		<affiliation>University of Leeds</affiliation>
+		<affiliation>University of Manchester</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Gleeson, Helen F. </creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+</creators>
+<titles>
+	<title>Polarised Raman Spectroscopy data of dimer liquid crystals</title>
+</titles>
+<publisher>University of Leeds</publisher>
+<publicationYear>2015</publicationYear>
+<subjects>
+	<subject subjectScheme='JACS 3.0' schemeURI='https://www.hesa.ac.uk/jacs3'>F200 - Materials science</subject>
+</subjects>
+<language>en</language>
+<relatedIdentifiers>
+	<relatedIdentifier relatedIdentifierType='DOI' relationType='References'>http://doi.org/10.1039/c5tc02174j</relatedIdentifier>
+</relatedIdentifiers>
+<rightsList>
+	<rights rightsURI='https://creativecommons.org/licenses/by/4.0/'>Creative Commons Attribution 4.0 International (CC BY 4.0)</rights>
+</rightsList>
+<descriptions>
+	<description descriptionType='Abstract'>Polarised Raman Spectroscopy (PRS) is used to quantify the orientational order in the conventional (N) and twist-bend (NTB) nematic phases of a homologous series of liquid crystalline dimers. The dimers investigated have 7, 8, 9 and 11 methylene groups connecting two cyanobiphenyl mesogens and data for 4-pentyl-4ʹ-cyanobiphenyl (5CB) and 4-octyl-4ʹ-cyanobiphenyl (8CB) are included for comparison. This data file includes the source data (polarised Raman spectra for the materials, deduced at various temperatures and for a series of orientation angles with respect to the input and output polarisation direction of the laser light). These spectra are in the file format produced by the Renishaw Raman microscope used, suitable for GRAMMS software. The data file also includes the depolarised Raman intensities for each of the materials at the selected temperatures as Excel files.</description>
+</descriptions>
+</resource>
+
+
+<resource>
+<identifier identifierType='DOI'>10.5518/15 </identifier>
+<creators>
+	<creator>
+		<creatorName>Porter, Nicholas</creatorName>
+	</creator>
+	<creator>
+		<creatorName>Spencer, Charles</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0001-7579-3234</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Temple, Rowan</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0002-2461-9022</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Kinane, Christian</creatorName>
+		<affiliation>ISIS, STFC Rutherford Appleton Laboratory</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Charlton, Timothy</creatorName>
+		<affiliation>ISIS, STFC Rutherford Appleton Laboratory</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Langridge, Sean</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0003-1104-0772</nameIdentifier>
+		<affiliation>ISIS, STFC Rutherford Appleton Laboratory</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Marrows, Christopher</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0003-4812-6393</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+</creators>
+<titles>
+	<title>Manipulation of the spin helix in FeGe thin films and FeGe/Fe multilayers - Raw data and images</title>
+</titles>
+<publisher>University of Leeds</publisher>
+<publicationYear>2015</publicationYear>
+<resourceType resourceTypeGeneral='Dataset'>Dataset</resourceType>
+<descriptions>
+	<description descriptionType='Abstract'>Raw data and images used for figures found in &quot;Manipulation of the spin helix in FeGe thin films and FeGe/Fe multilayers&quot;. The data files are grouped by figure number.</description>
+</descriptions>
+</resource>
+
+
+<resource>
+<identifier identifierType='DOI'>10.5518/17</identifier>
+<creators>
+	<creator>
+		<creatorName>Ruddle, R.A.</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Thomas, R.</creatorName>
+	</creator>
+	<creator>
+		<creatorName>Randell, R.</creatorName>
+	</creator>
+	<creator>
+		<creatorName>Quirke, P.</creatorName>
+	</creator>
+	<creator>
+		<creatorName>Treanor, D.</creatorName>
+	</creator>
+</creators>
+<titles>
+	<title>The Design and Evaluation of Interfaces for Navigating Gigapixel Images in Digital Pathology</title>
+</titles>
+<publisher>University of Leeds</publisher>
+<publicationYear>2015</publicationYear>
+<subjects>
+	<subject subjectScheme='JACS' schemeURI='https://www.hesa.ac.uk/jacs/'>I140 - Human-computer interaction</subject>
+</subjects>
+<resourceType resourceTypeGeneral='Dataset'>Dataset</resourceType>
+<rightsList>
+	<rights rightsURI='https://creativecommons.org/licenses/by/4.0/'>Creative Commons Attribution 4.0 International (CC BY 4.0) </rights>
+</rightsList>
+<descriptions>
+	<description descriptionType='Abstract'>These datasets are from evaluations of the Leeds Virtual Microscope that involved pathologists making diagnoses of cancer. The data range from virtual slides to objective and subjective data provided by participants in the studies.</description>
+</descriptions>
+</resource>
+
+
+<resource>
+<identifier identifierType="DOI">10.5518/18</identifier>
+<titles>
+	<title>Integrated on-chip THz sensors for fluidic systems fabricated using flexible polyimide films</title>
+</titles>
+<creators>
+	<creator>
+		<creatorName>Christopher Russell</creatorName>
+		<nameIdentifier nameIdentifierScheme="ORCID" schemeURI="http://orcid.org/">0000-0002-7322-8255</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Matthew Swithenbank</creatorName>
+		<nameIdentifier nameIdentifierScheme="ORCID" schemeURI="http://orcid.org/">0000-0002-6146-1818</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Christopher D. Wood</creatorName>
+		<nameIdentifier nameIdentifierScheme="ORCID" schemeURI="http://orcid.org/">0000-0003-1679-5410</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Lianhe Li</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Edmund H. Linfield</creatorName>
+		<nameIdentifier nameIdentifierScheme="ORCID" schemeURI="http://orcid.org/">0000-0001-6912-0535</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Giles Davies</creatorName>
+		<nameIdentifier nameIdentifierScheme="ORCID" schemeURI="http://orcid.org/">0000-0002-1987-4846</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>John E. Cunningham</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+</creators>
+<publisher>University of Leeds</publisher>
+<publicationYear>2015</publicationYear>
+<subjects>
+	<subject subjectScheme="JACS" schemeURI="https://www.hesa.ac.uk/jacs3">H000 - Engineering</subject>
+	<subject subjectScheme="JACS" schemeURI="https://www.hesa.ac.uk/jacs3">H600 - Electronic and electrical engineering </subject>
+</subjects>
+<resourceType resourceTypeGeneral="Dataset">Dataset</resourceType>
+<descriptions>
+	<description descriptionType="Abstract">We investigate the use of an on-chip terahertz (THz) frequency sensor formed on a flexible, thin-film polyimide substrate to measure the properties of liquids encapsulated in a glass-walled capillary. We observe changes in the attenuation and velocity of the time-domain THz signal, which allows extraction of the broadband THz refractive index and relative attenuation coefficients of the liquid. The technique is used for sensing members of a homologous series of primary alcohols, and the results compared with those obtained from a free-space THz-TDS system.</description>
+</descriptions>
+<language>en</language>
+</resource>
+
+
+<resource>
+<identifier identifierType='DOI'>10.5518/19</identifier>
+<creators>
+	<creator>
+		<creatorName>Greenall, Nicholas</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Valavanis, Alexander </creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0001-5565-0463</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Desai, H.J.</creatorName>
+	</creator>
+	<creator>
+		<creatorName>Acheampong, D.O.</creatorName>
+	</creator>
+	<creator>
+		<creatorName>Li, Liane</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Cunningham, John E</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Davies, A Giles</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0002-1987-4846</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Linfield, Edmund</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0001-6912-0535</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Burnett, Andrew</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0003-2175-1893</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+</creators>
+<titles>
+	<title>Data associated with 'Design and Development of a Semtex Simulant Suitable for Measurements at THz Frequencies Using a Genetic Algorithm'</title>
+</titles>
+<publisher>University of Leeds</publisher>
+<publicationYear>2016</publicationYear>
+<subjects>
+	<subject subjectScheme='JACS' schemeURI='https://www.hesa.ac.uk/jacs3'>H160 - Bioengineering, biomedical engineering &amp; clinical engineering</subject>
+</subjects>
+<language>en</language>
+<resourceType resourceTypeGeneral='Dataset'>Dataset</resourceType>
+<rightsList>
+	<rights rightsURI='https://creativecommons.org/licenses/by/4.0/'>Creative Commons Attribution 4.0 International (CC BY 4.0)</rights>
+</rightsList>
+<descriptions>
+	<description descriptionType='Abstract'>The development and use of terahertz-frequency (THz) spectroscopy systems for security screening has shown an increased growth over the past 15 years. In order to test these systems in real world situations, safe simulants of illicit materials are required, particularly of explosives. Ideally simulants should mimic key features of the material of interest, such that it at least resembles or even appears indistinguishable from the material of interest to the interrogating technique(s), whilst not having hazardous or illicit properties. Ideally, simulants should: have similar physical properties such as malleability, density, surface energy, volatility etc; be non-toxic; be easy to clean and decontaminate from surfaces; be recyclable or disposable; and, be useable in a public environment. A THz explosive simulant would require spectral features at similar frequencies to those in a common explosive, in this instance Semtex-H, but would be safe to handle and be non-explosive. Here, we present a method for developing such a simulant based on a database of THz spectra of common organic molecules, and the use of a genetic algorithm to select a mixture of compounds automatically to form such a simulant. We propose four mixtures that could then be used to test the response of any instrument, working at terahertz frequencies, without the need for an explosive substance.</description>
+</descriptions>
+</resource>
+
+
+<resource>
+<identifier identifierType='DOI'>10.5518/2</identifier>
+<creators>
+	<creator>
+		<creatorName>Mengoni, Marlène</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>http://orcid.org/0000-0003-0986-2769</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Wilcox, Ruth</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>http://orcid.org/0000-0003-2736-7104</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+</creators>
+<titles>
+	<title>Ovine AF linear interlamellar material model calibration data set</title>
+</titles>
+<publisher>University of Leeds</publisher>
+<publicationYear>2015</publicationYear>
+</resource>
+
+
+<resource>
+<identifier identifierType='DOI'>10.5518/20 </identifier>
+<creators>
+	<creator>
+		<creatorName>Paul Dean</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Oleg Mitrofanov</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>James Keeley</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Iman Kundu</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Lianhe Li</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Edmund H. Linfield</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org'>0000-0001-6912-0535</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>A. Giles Davies</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org'>0000-0002-1987-4846</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+</creators>
+<titles>
+	<title>Dataset relating to &apos;Apertureless near-field terahertz imaging using the self-mixing effect in a quantum cascade laser&apos; </title>
+</titles>
+<publisher>University of Leeds</publisher>
+<publicationYear>2015</publicationYear>
+<language>en</language>
+<resourceType resourceTypeGeneral='Dataset'>Dataset</resourceType>
+<rightsList>
+	<rights rightsURI='https://creativecommons.org/licenses/by/4.0/'>Creative Commons Attribution 4.0 International (CC BY 4.0)</rights>
+</rightsList>
+<descriptions>
+	<description descriptionType='Abstract'>This dataset relates to data presented in the work, &apos;Apertureless near-field terahertz imaging using the self-mixing effect in a quantum cascade laser&apos;. In this work we report two-dimensional apertureless near-field terahertz (THz) imaging using a quantum cascade laser (QCL) source and scattering probe, and demonstrate a resolution of ~1 μm (~λ/100), which represents the highest value achieved to date with a THz QCL. By employing a detection scheme based on self-mixing interferometry, our approach offers experimental simplicity by removing the need for an external detector, and also provides sensitivity to the phase of the reinjected field. We demonstrate a near-field enhancement of the scattered field amplitude for small probe-sample separations, and investigate how the phase of the reinjected field varies with the round-trip time in the external cavity.</description>
+</descriptions>
+</resource>
+
+
+<resource>
+<identifier identifierType='DOI'>10.5518/21</identifier>
+<creators>
+	<creator>
+		<creatorName>John Kendrick</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Andrew Burnett</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCiD' schemeURI='http://orcid.org/'>0000-0003-2175-1893</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+</creators>
+<titles>
+	<title>Dataset relating to 'PDielec: The Calculation of Infrared and Terahertz Absorption for Powdered Crystals'</title>
+</titles>
+<publisher>University of Leeds</publisher>
+<publicationYear>2015</publicationYear>
+<subjects>
+	<subject subjectScheme='JACS' schemeURI='https://www.hesa.ac.uk/jacs3'>F170 - Physical chemistry</subject>
+	<subject subjectScheme='JACS' schemeURI='https://www.hesa.ac.uk/jacs3'>F180 - Analytical chemistry</subject>
+	<subject subjectScheme='JACS' schemeURI='https://www.hesa.ac.uk/jacs3'>F200 - Materials science</subject>
+	<subject subjectScheme='JACS' schemeURI='https://www.hesa.ac.uk/jacs3'>F320 - Chemical physics</subject>
+	<subject subjectScheme='JACS' schemeURI='https://www.hesa.ac.uk/jacs3'>F321 - Solid-state physics</subject>
+	<subject subjectScheme='JACS' schemeURI='https://www.hesa.ac.uk/jacs3'>H690 - Electronic &amp; electrical engineering not elsewhere classified</subject>
+</subjects>
+<resourceType resourceTypeGeneral='Dataset'>Dataset</resourceType>
+<rightsList>
+	<rights rightsURI='https://creativecommons.org/licenses/by/4.0/'>Creative Commons Attribution 4.0 International (CC BY 4.0)</rights>
+</rightsList>
+<descriptions>
+	<description descriptionType='Abstract'>This data set includes ASCII data for all figures described in the paper entitled PDielec: The Calculation of Infrared and Terahertz Absorption for Powdered Crystals. All data was generated using the PDielec package. The Python package PDielec calculates the infrared absorption characteristics of a crystalline material supported in a non absorbing medium. PDielec post processes solid state quantum mechanical and molecular mechanical calculations of the phonons and dielectric response of the crystalline material. The package calculates the internal electric field arising from different particle morphologies and calculates the resulting shift in absorption frequency and intensity arising from the coupling between a phonon and the internal field. The theory of the approach is described, followed by a description of the implementation within PDielec. Finally a section providing several examples of its application is given.</description>
+</descriptions>
+</resource>
+
+
+<resource>
+<identifier identifierType='DOI'>10.5518/22</identifier>
+<creators>
+	<creator>
+		<creatorName>Freeman, Joshua R.</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0002-5493-6352</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>A. Mohandas, Reshma</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Rosamond, Mark C.</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Hatem, Osama</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0003-4746-0963</nameIdentifier>
+	</creator>
+	<creator>
+		<creatorName>Chowdhury, Siddhant</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Ponnampalam, Lalitha</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0002-1114-8014</nameIdentifier>
+		<affiliation>University College London</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Fice, Martyn</creatorName>
+		<affiliation>University College London</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Seeds, Alwyn J.</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0002-5228-627X</nameIdentifier>
+		<affiliation>University College London</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Cannard, Paul</creatorName>
+	</creator>
+	<creator>
+		<creatorName>Robertson, Michael J.</creatorName>
+	</creator>
+	<creator>
+		<creatorName>Moodie, David G.</creatorName>
+	</creator>
+	<creator>
+		<creatorName>Cunningham, John E.</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Linfield, Edmund H.</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0001-6912-0535</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Davies, A. Giles</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0002-1987-4846</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Dean, Paul</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+</creators>
+<titles>
+	<title>Generation of continuous wave terahertz frequency radiation from MOCVD grown Fe-doped InGaAs and InGaAsP</title>
+</titles>
+<publisher>University of Leeds</publisher>
+<publicationYear>2016</publicationYear>
+<subjects>
+	<subject subjectScheme='JACS' schemeURI='https://www.hesa.ac.uk/jacs3'>F321 - Solid-state physics</subject>
+	<subject subjectScheme='JACS' schemeURI='https://www.hesa.ac.uk/jacs3'>H600 - Electronic &amp; electrical engineering</subject>
+</subjects>
+<language>en</language>
+<resourceType resourceTypeGeneral='Dataset'>Dataset</resourceType>
+<rightsList>
+	<rights rightsURI='https://creativecommons.org/licenses/by/4.0/'>Creative Commons Attribution 4.0 International (CC BY 4.0)</rights>
+</rightsList>
+<descriptions>
+	<description descriptionType='Abstract'>This dataset contains experimental data presented in the paper titled 'Generation of continuous wave terahertz frequency radiation from MOCVD grown Fe-doped InGaAs and InGaAsP'. The IV characteristics, THz signal amplitudes, bias and optical power dependence of the different InGaAs and InGaAsP wafers are given.</description>
+</descriptions>
+</resource>
+
+
+<resource>
+<identifier identifierType='DOI'>10.5518/23</identifier>
+<creators>
+	<creator>
+		<creatorName>Wu, Jingbo</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Sydoruk, Oleksiy</creatorName>
+	</creator>
+	<creator>
+		<creatorName>Mayorov, Alexander S</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Wood, Christopher</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0003-1679-5410</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Mistry, Divyang</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Li, Lianhe</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Linfield, Edmund</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0001-6912-0535</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Davies, A Giles</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0002-1987-4846</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Cunningham, John E</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+</creators>
+<titles>
+	<title>Dataset relating to 'Time domain measurement of terahertz magnetoplasmon resonance in a two-dimensional electron system through direct pulse injection'</title>
+</titles>
+<publisher>University of Leeds</publisher>
+<publicationYear>2016</publicationYear>
+<language>en</language>
+<resourceType resourceTypeGeneral='Dataset'>Dataset</resourceType>
+<rightsList>
+	<rights rightsURI='https://creativecommons.org/licenses/by/4.0/'>Creative Commons Attribution 4.0 International (CC BY 4.0)</rights>
+</rightsList>
+<descriptions>
+	<description descriptionType='Abstract'>We demonstrate the monolithic integration of AlGaAs/GaAs 2DEGs with short carrier lifetime photoconductive LT-GaAs, allowing the investigation of THz frequency range magnetoplasmon resonances by the direct injection of ~picosecond duration pulses through the system. The evolution of time domain signals with magnetic field were measured, and the results found to be in good agreement with theoretical calculations made using a mode-matching approach for frequencies above 0.1 THz. Our experimental work introduces a generic technique suitable for the study of ultrafast carrier dynamics in low-dimensional semiconductor nanostructures at THz frequencies</description>
+</descriptions>
+</resource>
+
+
+<resource>
+<identifier identifierType='DOI'>10.5518/24</identifier>
+<creators>
+	<creator>
+		<creatorName>Mengoni, Marlene</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org'>0000-0003-0986-2769</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Wilcox, Ruth</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org'>0000-0003-2736-7104</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+</creators>
+<titles>
+	<title>Cervical Functional Spine Units Multi-Validation Dataset</title>
+</titles>
+<publisher>University of Leeds</publisher>
+<publicationYear>2015</publicationYear>
+<subjects>
+	<subject subjectScheme='JACS' schemeURI='https://www.hesa.ac.uk/jacs/'>H161 - Biomaterials</subject>
+	<subject subjectScheme='JACS' schemeURI='https://www.hesa.ac.uk/jacs/'>H162 - Biomechanics (including fluid &amp; solid mechanics)</subject>
+</subjects>
+<language>en</language>
+<resourceType resourceTypeGeneral='Dataset'>Dataset</resourceType>
+<relatedIdentifiers>
+	<relatedIdentifier relatedIdentifierType='DOI' relationType='References'>http://doi.org/10.1016/j.jbiomech.2015.12.005</relatedIdentifier>
+</relatedIdentifiers>
+<rightsList>
+	<rights rightsURI='https://creativecommons.org/licenses/by/4.0/'> Creative Common Attribution 4.0 International (CC BY 4.0)</rights>
+</rightsList>
+<descriptions>
+	<description descriptionType='Abstract'>8 cervical FSU from 5 ovine spines: CT scan images, mechanical compression (load, displacement, pressure and image information) and FE models.</description>
+	<description descriptionType='Methods'>microCT100 (scanco medical AG, CH); instron 3365 (Instron, USA); tekscan 6900 pressure sensors (Tekscan, USA); photo images (Canon 550d, 55-250mm zoom lens, Japan)</description>
+</descriptions>
+</resource>
+
+
+
+
+<resource>
+<identifier identifierType='DOI'>10.5518/26</identifier>
+<creators>
+	<creator>
+		<creatorName>Hrabec, Ales</creatorName>
+		<affiliation>University Paris Sud</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Goncalves, Francisco</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0002-1671-437X</nameIdentifier>
+		<affiliation>Hiroshima University</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Spencer, Charles</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0001-7579-3234</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Arenholz, Elke</creatorName>
+		<affiliation>Lawrence Berkeley National Laboratory</affiliation>
+	</creator>
+	<creator>
+		<creatorName>N&apos;Diaye, Alpha</creatorName>
+		<affiliation>Lawrence Berkeley National Laboratory</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Stamps, Robert</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0003-0713-4864</nameIdentifier>
+		<affiliation>University of Glasgow</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Marrows, Christopher</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0003-4812-6393</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+</creators>
+<titles>
+	<title>Spin-orbit interaction enhancement in permalloy thin films by Pt-doping</title>
+</titles>
+<publisher>University of Leeds</publisher>
+<publicationYear>2016</publicationYear>
+<subjects>
+	<subject subjectScheme='JACS' schemeURI='https://www.hesa.ac.uk/jacs3'>F320 - Chemical physics</subject>
+</subjects>
+<language>en</language>
+<resourceType resourceTypeGeneral='Dataset'>Dataset</resourceType>
+<rightsList>
+	<rights rightsURI='https://creativecommons.org/licenses/by/4.0/'>CC-BY 4.0 International</rights>
+</rightsList>
+<descriptions>
+	<description descriptionType='Abstract'>Raw data and images used for figures found in &quot;Spin-orbit interaction enhancement in permalloy thin films by Pt-doping&quot;. The data files are grouped by technique.</description>
+</descriptions>
+</resource>
+
+
+<resource>
+<identifier identifierType='DOI'>10.5518/27</identifier>
+<creators>
+	<creator>
+		<creatorName>Kaur, Sarabjot</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0002-8411-8270</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Gleeson, Helen</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0002-7494-2100</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+</creators>
+<titles>
+	<title>Graphene electrodes for adaptive liquid crystal contact lenses</title>
+</titles>
+<publisher>University of Leeds</publisher>
+<publicationYear>2016</publicationYear>
+<subjects>
+	<subject subjectScheme='JACS' schemeURI='https://www.hesa.ac.uk/jacs3'>F300 - Physics</subject>
+</subjects>
+<contributors>
+	<contributor contributorType='Researcher'>
+		<contributorName>Kim, Jangyong</contributorName>
+	</contributor>
+</contributors>
+<language>en</language>
+<resourceType resourceTypeGeneral='Dataset'>Dataset</resourceType>
+<rightsList>
+	<rights rightsURI='https://creativecommons.org/licenses/by/4.0/'>Attribution 4.0 International (CC BY 4.0)  </rights>
+</rightsList>
+<descriptions>
+	<description descriptionType='Abstract'>The unique feature of graphene is that its superlatives cover a whole range of properties: electrical, chemical, mechanical, thermal and others. Each of such special properties earn graphene a place in current or future applications. However, the full potential of this material is realised when a number of its superlatives are used simultaneously in combination, which would allow one to create novel, unique applications, where no other material could be utilised. Here we demonstrate one such application – adaptive contact lenses based on liquid crystals, where simultaneously the high electrical conductivity, transparency, flexibility and elasticity of graphene are being utilised. In our devices graphene is used as a transparent conductive coating on flexible, curved PMMA substrates, which sandwich liquid crystal material. Voltage, applied to the graphene electrode, leads to switching of the planar aligned liquid crystal, changing the refractive index, thus modifying the optical power of the contact lens. Our adaptive lenses provide a +0.7 D change in optical power with an applied voltage of 7.1 V_rms - perfect to correct presbyopia, the age-related condition that limits the near-focus ability of 100% of the population over the age of fifty.</description>
+</descriptions>
+</resource>
+
+
+<resource>
+<identifier identifierType='DOI'>10.5518/28</identifier>
+<creators>
+	<creator>
+		<creatorName>Richardson, I.G.</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Girão, A.V.</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Taylor, R.</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Jia, S.</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+</creators>
+<titles>
+	<title>Dataset associated with 'Hydration of water- and alkali-activated white Portland cement pastes and blends with low-calcium pulverized fuel ash'</title>
+</titles>
+<publisher>University of Leeds</publisher>
+<publicationYear>2016</publicationYear>
+</resource>
+
+
+<resource>
+<identifier identifierType='DOI'>10.5518/29</identifier>
+<creators>
+	<creator>
+		<creatorName>Linch, Kevin</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0002-7915-8489</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+</creators>
+<titles>
+	<title>Individual records of desertion from the British Army 1807-1815</title>
+</titles>
+<publisher>University of Leeds</publisher>
+<publicationYear>2016</publicationYear>
+<subjects>
+	<subject subjectScheme='JACS' schemeURI='https://www.hesa.ac.uk/jacs3'>V391 - Military history</subject>
+	<subject subjectScheme='JACS' schemeURI='https://www.hesa.ac.uk/jacs3'>V144 - Modern history 1800-1899</subject>
+</subjects>
+<language>en</language>
+<resourceType resourceTypeGeneral='Dataset'>Dataset</resourceType>
+<rightsList>
+	<rights rightsURI='https://creativecommons.org/licenses/by/4.0/'>Creative Commons Attribution 4.0 International (CC BY 4.0)  </rights>
+</rightsList>
+<descriptions>
+	<description descriptionType='Abstract'>Transcriptions of deserter records from The National Archive’s volumes WO 25/2906 and WO 25/2907. The sample comprises desertions from the following regiments: · 2nd Dragoon Guards · 3rd Dragoons · 7th Light Dragoons · 8th Light Dragoons · 9th Light Dragoons · 10th Light Dragoons · 1st Foot Guards · 1st Foot · 6th Foot · 22nd Foot · 35th Foot · 43rd Foot · 59th Foot · 74th Foot This dataset lists the name, regiment, and rank of 1,300 individuals, details of their desertion given in the original records, along with additional fields used to analyse this information. The dataset covers 1807 to 1815, and the bulk of the records are concentrated in the years 1813 to 1815.</description>
+</descriptions>
+</resource>
+
+
+<resource>
+<identifier identifierType='DOI'>10.5518/3 </identifier>
+<creators>
+	<creator>
+		<creatorName>Xijin Hua</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org'>http://orcid.org/0000-0001-7512-660X</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Alison Jones</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org'>http://orcid.org/0000-0002-4984-7507</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+</creators>
+<titles>
+	<title>Parameterised contact model of pelvic bone and cartilage: development data set.</title>
+</titles>
+<publisher>University of Leeds</publisher>
+<publicationYear>2015</publicationYear>
+<language>en</language>
+<resourceType resourceTypeGeneral='Dataset'>Dataset</resourceType>
+</resource>
+
+
+<resource>
+<identifier identifierType='DOI'>10.5518/31</identifier>
+<creators>
+	<creator>
+		<creatorName>Oladokun, Abimbola</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org'>0000-0003-2361-987X</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+</creators>
+<titles>
+	<title>Fretting of CoCrMo and Ti6Al4V Alloys in Modular Prostheses</title>
+</titles>
+<publisher>University of Leeds</publisher>
+<publicationYear>2016</publicationYear>
+<subjects>
+	<subject subjectScheme='JACS' schemeURI='https://www.hesa.ac.uk/jacs/'>B800 - Medical technology</subject>
+	<subject subjectScheme='JACS' schemeURI='https://www.hesa.ac.uk/jacs/'>H161 - Biomaterials</subject>
+</subjects>
+<language>en</language>
+<resourceType resourceTypeGeneral='Dataset'>Dataset</resourceType>
+<relatedIdentifiers>
+	<relatedIdentifier relatedIdentifierType='DOI' relationType='References'>http://doi.org/10.1179/1751584X15Y.0000000014</relatedIdentifier>
+</relatedIdentifiers>
+<rightsList>
+	<rights rightsURI='https://creativecommons.org/licenses/by/4.0/'>Creative Common Attribution 4.0 International (CC BY 4.0)</rights>
+</rightsList>
+<descriptions>
+	<description descriptionType='Abstract'>Cobalt and Titanium based alloys are two most commonly used alloys in Total Hip Arthroplasty. The Cobalt alloy (Co28Cr6M) is commonly used as the head component of the Hip device whilst the Titanium alloy (Ti6Al4V) is used as the stem component. This paper assessed the failure mechanisms of both alloys under fretting conditions. The fretting contact was modelled using a ball-on-plate configuration at a contact pressure of 1 GPa serum containing solution. It was observed that the CoCr-CoCr fretting contact encouraged a gross slip fretting regime from as low as 25µm of displacement amplitude whereas, for the CoCr-Ti fretting contact at 25µm,  a stick regime was observed. This indicated that CoCr-CoCr fretting contact degrades through a wear dominated mechanism whilst CoCr-Ti degrades through a fatigue dominated mechanism. The slip at the contact was shown to effect the removing of the protect oxide layer of both passive alloys.</description>
+</descriptions>
+</resource>
+
+
+<resource>
+<identifier identifierType='DOI'>10.5518/32</identifier>
+<creators>
+	<creator>
+		<creatorName>Alomari, Muhannad</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0002-6565-4887</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Dukes, Kais</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+</creators>
+<titles>
+	<title>Extended train robots</title>
+</titles>
+<publisher>University of Leeds</publisher>
+<publicationYear>2016</publicationYear>
+<subjects>
+	<subject subjectScheme='JACS' schemeURI='https://www.hesa.ac.uk/jacs3'>I400 - Artificial intelligence</subject>
+</subjects>
+<language>en</language>
+<resourceType resourceTypeGeneral='Dataset'>Dataset</resourceType>
+<rightsList>
+	<rights rightsURI='https://creativecommons.org/licenses/by/4.0/'>Creative Commons Attribution 4.0 International (CC BY 4.0)</rights>
+</rightsList>
+<descriptions>
+	<description descriptionType='Abstract'>Train Robots is a dataset of synthetic scenes of a robot arm picking up and putting down different objects together with natural language descriptions of these actions. These descriptions were obtained using Amazon Mechanical Turk. An extension to the original dataset includes two more shapes and an additional colour. Finally, the natural given descriptions are given in Arabic as well as English.</description>
+</descriptions>
+</resource>
+
+
+<resource>
+<identifier identifierType='DOI'>10.5518/33</identifier>
+<creators>
+	<creator>
+		<creatorName>Peyman, Sally A</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+</creators>
+<titles>
+	<title>Data associated with &apos;On-chip preparation of nanoscale contrast agents toward high-resolution ultrasound imaging&apos;</title>
+</titles>
+<publisher>University of Leeds</publisher>
+<publicationYear>2016</publicationYear>
+<subjects>
+	<subject subjectScheme='JACS' schemeURI='https://www.hesa.ac.uk/jacs3'>F350 - Medical physics</subject>
+	<subject subjectScheme='JACS' schemeURI='https://www.hesa.ac.uk/jacs3'>F380 - Acoustics</subject>
+	<subject subjectScheme='JACS' schemeURI='https://www.hesa.ac.uk/jacs3'>C770 - Biophysical science</subject>
+</subjects>
+<language>en</language>
+<resourceType resourceTypeGeneral='Dataset'>Dataset</resourceType>
+<relatedIdentifiers>
+	<relatedIdentifier relatedIdentifierType='DOI' relationType='References'>http://doi.org/10.1039/C5LC01394A</relatedIdentifier>
+</relatedIdentifiers>
+<rightsList>
+	<rights rightsURI='https://creativecommons.org/licenses/by/4.0/'>Creative Commons Attribution 4.0 International (CC BY 4.0)</rights>
+</rightsList>
+<descriptions>
+	<description descriptionType='Abstract'>This data set supports images and graphs in a the manuscript listed above. In brief: a new microfluidic method for the generation of sub-micron sized lipid stabilised particles containing perfluorocarbon (PFC). The nanoparticles are produced in a unique atomisation-like flow regime at high production rates, in excess of 106 particles / s and at high concentration, typically &gt; 1011 particles / mL. The average particle diameter appears to be around 100-200 nm. These particles, suspected of being a mix of liquid and gaseous C4F10 due to Laplace pressure, then phase convert into nanometer sized bubbles on the application of US. In vitro ultrasound characterisation from these nanoparticle populations showed strong backscattering compared to aqueous filled liposomes of a similar size. The nanoparticles were stable upon injection and gave excellent contrast enhancement when used for in vivo imaging, compared to microbubbles with an equivalent shell composition.</description>
+</descriptions>
+</resource>
+
+
+<resource>
+<identifier identifierType='DOI'>10.5518/35</identifier>
+<creators>
+	<creator>
+		<creatorName>Williamson, Gary</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>http://orcid.org/0000-0002-5624-6267</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+</creators>
+<titles>
+	<title>Data associated with &apos;Green tea catechins and their metabolites in human skin before and after exposure to ultraviolet radiation&apos; </title>
+</titles>
+<publisher>University of Leeds</publisher>
+<publicationYear>2016</publicationYear>
+<subjects>
+	<subject subjectScheme='JACS' schemeURI='https://www.hesa.ac.uk/jacs3'> B400 - Nutrition</subject>
+</subjects>
+<language>en</language>
+<resourceType resourceTypeGeneral='Dataset'>Dataset</resourceType>
+<relatedIdentifiers>
+	<relatedIdentifier relatedIdentifierType='DOI' relationType='References'>http://doi.org/10.1016/j.jnutbio.2015.09.001</relatedIdentifier>
+</relatedIdentifiers>
+<rightsList>
+	<rights rightsURI='https://creativecommons.org/licenses/by/4.0/'>Creative Commons Attribution 4.0 International (CC BY 4.0)  </rights>
+</rightsList>
+<descriptions>
+	<description descriptionType='Abstract'>Analytical data on green tea catechin metabolites in skin.</description>
+</descriptions>
+</resource>
+
+
+<resource>
+<identifier identifierType='DOI'>10.5518/36</identifier>
+<creators>
+	<creator>
+		<creatorName>Shunbo Li</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0001-5297-9079</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+</creators>
+<titles>
+	<title>Dataset associated with Rapid Preparation of Highly Reliable PDMS Double Emulsion Microfluidic Devices</title>
+</titles>
+<publisher>University of Leeds</publisher>
+<publicationYear>2016</publicationYear>
+<subjects>
+	<subject subjectScheme='JACS' schemeURI='http://www.hesa.ac.uk/jacs/'>F180</subject>
+</subjects>
+<language>en</language>
+<relatedIdentifiers>
+	<relatedIdentifier relatedIdentifierType='DOI' relationType='References'>http://doi.org/10.1039/c6ra03225g</relatedIdentifier>
+</relatedIdentifiers>
+<rightsList>
+	<rights rightsURI='https://creativecommons.org/licenses/by/4.0/'>cc_by_v4_0</rights>
+</rightsList>
+<descriptions>
+	<description descriptionType='Abstract'>This dataset is associated with one article which presents a simple and highly reliable method for preparing PDMS microfluidic double emulsion devices that employs a single-step oxidative plasma treatment to both pattern the wettability of microchannels and to bond the chips.  As a key component of our strategy we use epoxy glue to define the required hydrophobic zones and then remove this after plasma treatment, but prior to bonding.  This novel approach achieves surface modification and device sealing in a single process, which reduces chip preparation times to minutes and eliminates the need for unreliable coating processes.  The second key element of our procedure is the maintenance of the patterned surfaces, where we demonstrate that immediate filling of the prepared device with water or the use of solvent-extracted PDMS vastly extends the operational lifetimes of the chips.  This is a very useful technique to prepare microfluidic device with alternative surface wettabilities.</description>
+</descriptions>
+</resource>
+
+
+<resource>
+<identifier identifierType="DOI">10.5518/4</identifier>
+<creators>
+<creator>
+<creatorName>Pariyar, Bishnu</creatorName>
+</creator>
+</creators>
+<titles>
+<title>Nepal Energy Gardens Qualitative Dataset and Quantitative Survey Dataset</title>
+</titles>
+<publisher>University of Leeds</publisher>
+<publicationYear>2015</publicationYear>
+<subjects>
+<subject>Fuel Poverty</subject>
+<subject>Biofuel</subject>
+<subject>Nepal</subject>
+<subject>Energy Poverty</subject>
+<subject>Indigenous Species</subject>
+<subject>Feasibility</subject>
+</subjects>
+<language>eng</language>
+<resourceType resourceTypeGeneral="Dataset">Dataset</resourceType>
+<version>1</version>
+<descriptions>
+<description descriptionType="Abstract">
+Biofuels and biomass are important sources of renewable energy, yet implementation of bioenergy programmes has attracted considerable controversy for displacing food production, land-grabbing, loss of biodiversity and greenhouse gas emissions. Creation of large industrial biomass and biofuel production has an important role to play in sustainable energy provision, but the real strengths of using plants for energy is that they can be grown in a wide variety of situations and thousands of different species can be used.  These datasets present household survey data and qualitative data- focus group discussions and key informant interviews carried out in three rural villages in mid-hills, Nepal to investigate the possible to establish community-based biofuel production, thereby overcoming environmental and social concerns about biofuels.  A stratified random sampling procedure was used to sample the households for quantitative data to ensure that its representative of the villages where research was conducted. The research participants were drawn from different landholding categories, castes, gender and local development experts to obtain views of different section of the community in three project villages viz. Hamsapur (Gorkha), Lakuri Danda (Dolakha) and Khudi (Lamjung) in the mid-hills region of Nepal. Data collected through qualitative research complements those quantitative data collected through household survey. The qualitative research covered aspects such as forest status, local institutions for forests and biomass uses, communal and social capital, and various issues pertinent to local development and how experience from those can be utilised for community-based biofuel projects such as energy gardens. Data generated through qualitative methods will help to explain the differences in the level of fuel consumption, determining local fuel demand and supply and other local level institutions necessary for creation of energy gardens project.
+</description>
+</descriptions>
+</resource>
+
+
+<resource>
+<identifier identifierType='DOI'>10.5518/42</identifier>
+<creators>
+	<creator>
+		<creatorName>Eileen Ingham</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0002-9757-3045</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Tayyebeh Vafaee</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0002-0733-9803</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Daniel Thomas  </creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0001-5584-9114</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Amisha Desai</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0001-8611-9958</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Louise Jennings</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0003-1446-4511</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Helen Berry</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0003-2426-1881</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Paul Rooney</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0003-3724-5717</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>John Kearney</creatorName>
+		<affiliation>NHS Blood and Transplant (NHSBT)</affiliation>
+	</creator>
+	<creator>
+		<creatorName>John Fisher</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0003-3833-3700</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+</creators>
+<titles>
+	<title>Characteristics of low concentration SDS decellularised human donor aortic and pulmonary valved conduits.</title>
+</titles>
+<publisher>University of Leeds</publisher>
+<publicationYear>2016</publicationYear>
+<subjects>
+	<subject subjectScheme='JACS' schemeURI='http://www.hesa.ac.uk/jacs/'>A100</subject>
+	<subject subjectScheme='JACS' schemeURI='http://www.hesa.ac.uk/jacs/'>H162</subject>
+	<subject subjectScheme='JACS' schemeURI='http://www.hesa.ac.uk/jacs/'>C910</subject>
+	<subject subjectScheme='JACS' schemeURI='http://www.hesa.ac.uk/jacs/'>H160</subject>
+	<subject subjectScheme='JACS' schemeURI='http://www.hesa.ac.uk/jacs/'>H161</subject>
+	<subject subjectScheme='JACS' schemeURI='http://www.hesa.ac.uk/jacs/'>C110</subject>
+	<subject subjectScheme='JACS' schemeURI='http://www.hesa.ac.uk/jacs/'>H165</subject>
+</subjects>
+<language>en</language>
+<resourceType resourceTypeGeneral='Dataset'>Dataset</resourceType>
+<rightsList>
+	<rights rightsURI='https://creativecommons.org/licenses/by/4.0/'>cc_by_v4_0</rights>
+</rightsList>
+<descriptions>
+	<description descriptionType='Abstract'>Data on the biological and biomechanical properties of  human donor aortic and pulmonary cardiac valves  before and after decellularisation: biomechanical testing data (ultimate tensile strength, failure strain, Young&apos;s modulus); DNA, collagen and GAG content; in vitro biocompatibility. </description>
+</descriptions>
+</resource>
+
+
+<resource>
+<identifier identifierType='DOI'>10.5518/44</identifier>
+<creators>
+	<creator>
+		<creatorName>Xijin Hua</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0001-7512-660X</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>John Fisher</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>0000-0003-3833-3700</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+</creators>
+<titles>
+	<title>Finite element model for the modular total hip replacements: investigation of edge loading during daily activities.</title>
+</titles>
+<publisher>University of Leeds</publisher>
+<publicationYear>2016</publicationYear>
+<subjects>
+	<subject subjectScheme='JACS' schemeURI='http://www.hesa.ac.uk/jacs/'>H162</subject>
+</subjects>
+<language>en</language>
+<resourceType resourceTypeGeneral='Dataset'>Dataset</resourceType>
+<rightsList>
+	<rights rightsURI='https://creativecommons.org/licenses/by/4.0/'>cc_by_v4_0</rights>
+</rightsList>
+<descriptions>
+	<description descriptionType='Abstract'>The dataset was created as supplementary materials for the paper &quot;The contact mechanics and occurrence of edge loading in modular metal-on-polyethylene total hip replacement during daily activities&quot;. The dataset included the following documentation and data: the predicted results from the FE model; the FE models for the total hip replacements; the solid models of the components for the FE models.</description>
+</descriptions>
+</resource>
+
+
+<resource>
+<identifier identifierType='DOI'>10.5518/45</identifier>
+<creators>
+	<creator>
+		<creatorName>Tatchell-Evans, Morgan</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Kapur, Nik</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Summers, Jonathan</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org/'>http://orcid.org/0000-0001-8266-5038</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Thompson, Harvey</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Oldham, Dan</creatorName>
+		<affiliation>Digiplex</affiliation>
+	</creator>
+</creators>
+<titles>
+	<title>Cold air bypass within contained aisle data centres - experimental bypass measurements and calculations undertaken to estimate flows through, and power consumptions of servers</title>
+</titles>
+<publisher>University of Leeds</publisher>
+<publicationYear>2016</publicationYear>
+<subjects>
+	<subject subjectScheme='JACS' schemeURI='https://www.hesa.ac.uk/jacs3'>H141 - Fluid mechanics</subject>
+	<subject subjectScheme='JACS' schemeURI='https://www.hesa.ac.uk/jacs3'>H300 - Mechanical engineering</subject>
+</subjects>
+<language>en</language>
+<resourceType resourceTypeGeneral='Dataset'>dataset</resourceType>
+<relatedIdentifiers>
+	<relatedIdentifier relatedIdentifierType='DOI' relationType='IsReferencedBy'>http://doi.org/10.1016/j.apenergy.2016.03.076</relatedIdentifier>
+</relatedIdentifiers>
+<rightsList>
+	<rights rightsURI='https://creativecommons.org/licenses/by/4.0/'>Creative Commons Attribution 4.0 International (CC BY 4.0)  </rights>
+</rightsList>
+<descriptions>
+	<description descriptionType='Abstract'>Underlying data relating to the paper 'An experimental and theoretical investigation of the extent of bypass air within data centres employing aisle containment, and its impact on power consumption';. The dataset includes raw experimental results, as well as calculations made on data obtained from other sources.</description>
+</descriptions>
+</resource>
+
+
+<resource>
+<identifier identifierType='DOI'>10.5518/5</identifier>
+<creators>
+	<creator>
+		<creatorName>Kwan, Raymond</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Barrena, Eva</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Lin, Zhiyuan</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+</creators>
+<titles>
+	<title>CASPT2015: Train unit scheduling with bi-level capacity requirements</title>
+</titles>
+<publisher>University of Leeds</publisher>
+<publicationYear>2015</publicationYear>
+<subjects>
+	<subject subjectScheme='JACS' schemeURI='https://www.hesa.ac.uk/jacs3'>G200 Operational research</subject>
+	<subject subjectScheme='JACS' schemeURI='https://www.hesa.ac.uk/jacs3'>K460 Transport planning</subject>
+	<subject subjectScheme='JACS' schemeURI='https://www.hesa.ac.uk/jacs3'>I400 Artificial intelligence</subject>
+</subjects>
+<language>en</language>
+<resourceType resourceTypeGeneral='Dataset'>Dataset</resourceType>
+<descriptions>
+	<description descriptionType='Abstract'>This dataset is used for storing relevant data for the paper &quot;Train unit scheduling with bi-level capacity requirements&quot; to be presented in Conference on Advanced Systems in Public Transport (CASPT) 19-23 July 2015. Information on the trains served by class 334 units from the December 2011 ScotRail timetable as the input data for our experiments is provided, whose attributes include: headcode, departure time, operational day, origin, destination, arrival time and historic capacity provision in terms of number of units. The passenger count survey (PAX) data is not included for confidentiality reasons.</description>
+</descriptions>
+<geoLocations>
+	<geoLocation>
+		<geoLocationPlace>Scotland</geoLocationPlace>
+	</geoLocation>
+</geoLocations>
+</resource>
+
+
+<resource>
+<identifier identifierType='DOI'>10.5518/6</identifier>
+<creators>
+	<creator>
+		<creatorName>Fatma Al Ma’Mari</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Timothy Moorsom</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Gilberto Teobaldi</creatorName>
+		<affiliation>University of Liverpool</affiliation>
+	</creator>
+	<creator>
+		<creatorName>William Deacon</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Thomas Prokscha</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org'>http://orcid.org/0000-0002-7643-4695</nameIdentifier>
+		<affiliation>Paul Scherrer Institut</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Hubertus Luetkens</creatorName>
+		<affiliation>Paul Scherrer Institut</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Steve Lee</creatorName>
+		<affiliation>University of St Andrews</affiliation>
+	</creator>
+	<creator>
+		<creatorName>George E. Sterbinsky</creatorName>
+		<affiliation>Brookhaven National Laboratory</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Dario A. Arena</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org'>http://orcid.org/0000-0001-7463-6472</nameIdentifier>
+		<affiliation>Brookhaven National Laboratory</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Donald A. MacLaren</creatorName>
+		<affiliation>University of Glasgow</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Machiel Flokstra</creatorName>
+		<affiliation>University of St Andrews</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Mannan Ali</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>May C. Wheeler</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Gavin Burnell</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org'>http://orcid.org/0000-0002-9486-0639</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Bryan J. Hickey</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Oscar Cespedes</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org'>http://orcid.org/0000-0002-5249-9523</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+</creators>
+<titles>
+	<title>Beating the Stoner Criterion</title>
+</titles>
+<publisher>University of Leeds</publisher>
+<publicationYear>2015</publicationYear>
+<language>en</language>
+<resourceType resourceTypeGeneral='Dataset'>Dataset</resourceType>
+</resource>
+
+
+<resource>
+<identifier identifierType="DOI">10.5518/7</identifier>
+<creators>
+<creator>
+<creatorName>Brockway, Paul E.</creatorName>
+<nameIdentifier nameIdentifierScheme="ORCID" schemeURI="http://orcid.org/">0000-0001-6925-8040</nameIdentifier>
+<affiliation>University of Leeds</affiliation>
+</creator>
+</creators>
+<titles>
+<title>China useful work and exergy analysis data: 1971-2030</title>
+</titles>
+<publisher>University of Leeds</publisher>
+<publicationYear>2015</publicationYear>
+<subjects>
+<subject>Energy efficiency</subject>
+<subject>Energy demand</subject>
+<subject>Decomposition</subject>
+<subject>China</subject>
+<subject>Useful work</subject>
+<subject>Exergy</subject>
+</subjects>
+<language>eng</language>
+<resourceType resourceTypeGeneral="Dataset">Dataset</resourceType>
+<rightsList><rights rightsURI="https://creativecommons.org/licenses/by/4.0/">Attribution 4.0 International (CC BY 4.0)</rights></rightsList>
+<descriptions>
+<description descriptionType="Abstract">
+This dataset contains the base datasets and mapping process used to undertake the 1971-2030 China exergy analysis for the Applied Energy journal article at this link: http://dx.doi.org/10.1016/j.apenergy.2015.05.082. The datasets sets out the mapping (from primary energy to useful work categories), the task-level exergy efficiencies (i.e. the second law thermodynamic efficiencies that convert from primary exergy to useful work), and the detailed results (i.e. task-level values of useful work) for the 1971-2010 data period.
+</description>
+</descriptions>
+</resource>
+
+
+<resource>
+<identifier identifierType='DOI'>10.5518/8</identifier>
+<creators>
+	<creator>
+		<creatorName>Antonios Anastasiou</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org'>http://orcid.org/0000-0003-3858-9431</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Robert Mathieson</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+	<creator>
+		<creatorName>Animesh Jha </creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+</creators>
+<titles>
+	<title>Characterisation of calcium phosphates after femtosecond laser irradiation</title>
+</titles>
+<publisher>University of Leeds</publisher>
+<publicationYear>2015</publicationYear>
+<language>en</language>
+<resourceType resourceTypeGeneral='Dataset'>Dataset</resourceType>
+<descriptions>
+	<description descriptionType='Abstract'>A mixture of calcium phosphate (in the form of mineral brushite) powder with a bio-mineral gel was used to coat acid eroded bovine enamel surfaces. After forming the mineral layers, the samples were irradiated with two different 100-200 fs pulsed lasers, one at 800 nm with 1 kHz repetition rate, and the other at 1044nm with 1 GHz repetition rate. The laser-irradiated samples were characterized using X-ray diffraction, SEM, and Raman microscopy. </description>
+</descriptions>
+</resource>
+
+
+<resource>
+<identifier identifierType='DOI'>10.5518/9</identifier>
+<creators>
+	<creator>
+		<creatorName>Tavanai, Aryana</creatorName>
+		<nameIdentifier nameIdentifierScheme='ORCID' schemeURI='http://orcid.org'>http://orcid.org/0000-0002-1588-8116</nameIdentifier>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+</creators>
+<titles>
+	<title>MINDSEYE2015: Joint tracking and event analysis for carried object detection.</title>
+</titles>
+<publisher>University of Leeds</publisher>
+<publicationYear>2015</publicationYear>
+<language>en</language>
+<resourceType resourceTypeGeneral='Dataset'>Dataset</resourceType>
+</resource>
+
+
+<resource>
+<identifier identifierType='DOI'>10.5518/wp/1</identifier>
+<creators>
+	<creator>
+		<creatorName>McKay, Alison</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+</creators>
+<titles>
+	<title>Design: Shape &amp; Structure (decomposition / description) </title>
+	<title titleType='Subtitle'>A white paper resulting from a University of Leeds Fund for International Research Collaboration (FIRC) project</title>
+</titles>
+<publisher>University of Leeds</publisher>
+<publicationYear>2016</publicationYear>
+<contributors>
+	<contributor contributorType='Editor'>
+		<contributorName>McKay, Alison</contributorName>
+	</contributor>
+</contributors>
+<language>en</language>
+<resourceType resourceTypeGeneral='Text'>White Paper</resourceType>
+<rightsList>
+	<rights rightsURI='http://creativecommons.org/licenses/by-nc-sa/4.0/'>Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)  </rights>
+</rightsList>
+<descriptions>
+	<description descriptionType='Abstract'>Shortcomings in the cognate body of knowledge that underpins the discipline of engineering design result in slow incremental progress based on a series of ad hoc, idiosyncratic solutions with few if any high impact breakthroughs. This is problematic because engineering design is a critical early stage of the innovation processes that deliver new products to markets where societal challenges are addressed and wealth generated. This white paper reports results of a meeting that brought together a group of international research leaders. The working title for the meeting was &quot;Design: Shape and Structure (decomposition/ description)&quot; and the participating disciplines included architecture, computing, engineering and industrial design, manufacturing, and philosophy. The meeting took an existing research area, one characterised by experience-based frameworks and approaches, and explored the feasibility of establishing an integrated theory that draws together design with grammatical and mereological theories of shape and structure. Applying such theories to the synthesis of new designs could elevate the work of a designer above the detailed nuances of individual designers without diminishing their creativity and ingenuity. Benefits would include a well-founded theoretical and computational infrastructure on which the next generation of design systems could be built. The discussions focussed on aspects of engineering design that such an integrated theory might cover, how it might be used and who would benefit. With respect to coverage, three areas were identified: design process, functional aspects of designed artefacts and physical aspects of designed artefacts. The long-term impact of an integrated theory for engineering design would include coherent underlying principles for design definition and synthesis that could be used in design practice and education and as foundations for the development of future design systems. This, in turn, could lead to step-change improvements in the performance of the innovation processes that depend on effective and efficient engineering design processes, so resulting in the faster delivery of improved products to market using fewer (eg, financial and natural) resources. This white paper reports discussions and key conclusions from the meeting. The importance of distinguishing between design as a noun and designing as a verb was recognised. Given the broad range of areas and sectors such a theory would need to cover, a collection of related theories was regarded as more feasible and valuable. When considering design processes, a key requirement for any design theory lies in supporting zig-zagging processes between physical (for 3D products) and functional aspects of a design. There are well-established mechanisms for the definition of 3D products, developed through the development of 3D CAD systems and associated applications, but further work is needed to create a similar depth of understanding for functional aspects. ‘Capacity’ was put forward as a general concept that covers both function and behaviour. For designing as an activity, the critical unmet need in today’s computational design support systems lies in support for the ambiguity that designers need during creative episodes. Two areas for further development were identified: embedding and the need for computational tools that can operate on visual objects (so-called “visual machines”). In the shorter term, general purpose implementations of embedding will support design ambiguity by allowing visual and other emergent objects to be superimposed on existing design definitions. In the longer term, visual machines will be designed to support ambiguity by operating visually rather than symbolically. A roadmap for the development of these mechanisms is provided towards the end of this white paper.</description>
+</descriptions>
+</resource>
+
+
+<resource>
+<identifier identifierType='DOI'>10.5518/wp/2</identifier>
+<creators>
+	<creator>
+		<creatorName>Clegg, Chris W</creatorName>
+		<affiliation>University of Leeds</affiliation>
+	</creator>
+</creators>
+<titles>
+	<title>A systems approach to increasing UK productivity</title>
+</titles>
+<publisher>University of Leeds</publisher>
+<publicationYear>2016</publicationYear>
+<contributors>
+	<contributor contributorType='Editor'>
+		<contributorName>McKay, Alison</contributorName>
+	</contributor>
+</contributors>
+<language>en</language>
+<resourceType resourceTypeGeneral='Text'>Report</resourceType>
+<rightsList>
+	<rights rightsURI='http://creativecommons.org/licenses/by-nc-sa/4.0/'>Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0) </rights>
+</rightsList>
+</resource>
+
+
+
+<resource>
+<identifier identifierType="DOI">10.5521/ForestPlots.net/1999_1</identifier>
+<creators>
+<creator><creatorName>Phillips, Oliver L.</creatorName></creator>
+<creator><creatorName>Nunez Vargas, Percy</creatorName></creator>
+<creator><creatorName>Monteagudo, Abel</creatorName></creator>
+<creator><creatorName>Cornejo Valverde, Fernando </creatorName></creator>
+<creator><creatorName>Peña Cruz , Antonio</creatorName></creator>
+<creator><creatorName>Reatigui Ismodes, Adela</creatorName></creator>
+<creator><creatorName>Ramirez Salas, Wilfredo</creatorName></creator>
+<creator><creatorName>Chuspe, Maria Elena </creatorName></creator>
+<creator><creatorName>Lopez Flores, Marcial</creatorName></creator>
+<creator><creatorName>Chacon Troncoso, Cesar</creatorName></creator>
+<creator><creatorName>Mamani Balarezo, Abidio</creatorName></creator>
+<creator><creatorName>Rosales Solorzano, Emer</creatorName></creator>
+<creator><creatorName>Galindo Castro, Washington</creatorName></creator>
+<creator><creatorName>Calloquispe F., Hugo</creatorName></creator>
+<creator><creatorName>Pickavance, Georgia</creatorName></creator>
+
+
+
+</creators>
+<titles>
+<title>Data from 91 Transect Plots from “Proyecto Biodiversidad y Comunidad, Madre de Dios, Perú” </title>
+</titles>
+<publisher>
+ForestPlots.net
+
+</publisher>
+<publicationYear>2015</publicationYear>
+<subjects>
+<subject>Amazonia</subject>
+<subject>biodiversity</subject>
+<subject>forest inventory</subject> 
+<subject>survey</subject>
+<subject>Neotropics</subject> 
+<subject>Peru</subject>
+
+</subjects>
+<language>eng</language>
+<resourceType resourceTypeGeneral="Dataset">Dataset</resourceType>
+<formats>
+<format>csv file</format>
+</formats>
+<rightsList>
+<rights rightsURI="http://creativecommons.org/licenses/by-nd/4.0/">
+Creative Commons Attribution-NoDerivatives 4.0 International (CC BY-ND 4.0)
+</rights>
+</rightsList>
+
+<descriptions>
+<description descriptionType="Abstract"> 
+This data package makes available tree-by-tree diameter and floristic data from 91 samples of 0.1-ha each, in community and protected lands in eastern Madre de Dios, in Amazonian Peru.  Data were collected by a team of Peruvian botanists and assistants, in a collaboration between the University of Leeds, the Universidad Nacional San Antonio Abad del Cusco, and the Instituto de Investigaciones de la Amazonia Peruana. This work was part of a project funded by the U.K. Department for International Development, and represents the first coordinated contribution to the international RAINFOR consortium (Red Amazónica de Inventarios Forestales). Fieldwork was conducted in 1998 and 1999, with subsequent herbarium work focused on accurate identification of the plants collected. The field protocol involved the locally randomised location of sample plots within culturally and biophysical strata as defined by Landsat imagery in conjunction with researcher knowledge and representatives of the local indigenous and immigrant rural communities. The primary contrast is between ‘altura’ and ‘bajio’ forest systems, the former being terra firme forests on largely Pleistocene deposits, the latter in the Holocene floodplain zone (some but not all sites experiencing occasional flooding). Each 0.1-ha sample is a modified Gentry plot, with non-scandent stems down to 2.5cm diameter measured and identified, at a height of 1.3m or above buttresses.  For further details on methodology please see the references indicated.
+ </description>
+</descriptions>
+</resource>
+
+
+
+<resource>
+<identifier identifierType="DOI">10.5521/ForestPlots.net/2013_1</identifier>
+<creators>
+<creator><creatorName>Lewis, Simon L.</creatorName></creator>
+<creator><creatorName>Sonké, Bonaventure </creatorName></creator>
+<creator><creatorName>Sunderland, Terry </creatorName></creator>
+<creator><creatorName>Begne, Serge K.</creatorName></creator>
+<creator><creatorName>Lopez-Gonzalez, Gabriela </creatorName></creator>
+<creator><creatorName>van der Heijden, Geertje M. F.</creatorName></creator>
+<creator><creatorName>Phillips, Oliver L.</creatorName></creator>
+<creator><creatorName>Affum-Baffoe, Kofi </creatorName></creator>
+<creator><creatorName>Baker, Timothy R.</creatorName></creator>
+<creator><creatorName>Banin, Lindsay </creatorName></creator>
+<creator><creatorName>Bastin, Jean-François </creatorName></creator>
+<creator><creatorName>Beeckman, Hans </creatorName></creator>
+<creator><creatorName>Boeckx, Pascal </creatorName></creator>
+<creator><creatorName>Bogaert, Jan </creatorName></creator>
+<creator><creatorName>De Cannière, Charles </creatorName></creator>
+<creator><creatorName>Chezeaux, Eric </creatorName></creator>
+<creator><creatorName>Clark, Connie J.</creatorName></creator>
+<creator><creatorName>Collins, Murray </creatorName></creator>
+<creator><creatorName>Djagbletey, Gloria </creatorName></creator>
+<creator><creatorName>Djuikouo, Marie-Noël K.</creatorName></creator>
+<creator><creatorName>Droissart, Vincent </creatorName></creator>
+<creator><creatorName>Doucet, Jean-Louis </creatorName></creator>
+<creator><creatorName>Ewango, Cornielle E. N.</creatorName></creator>
+<creator><creatorName>Fauset, Sophie </creatorName></creator>
+<creator><creatorName>Feldpausch, Ted R.</creatorName></creator>
+<creator><creatorName>Foli, Ernest G.</creatorName></creator>
+<creator><creatorName>, Jean-François x</creatorName></creator>
+<creator><creatorName>Hamilton, Alan C.</creatorName></creator>
+<creator><creatorName>Harris, David J.</creatorName></creator>
+<creator><creatorName>Hart, Terese B.</creatorName></creator>
+<creator><creatorName>de Haulleville, Thales </creatorName></creator>
+<creator><creatorName>Hladik, Annette </creatorName></creator>
+<creator><creatorName>Hufkens, Koen </creatorName></creator>
+<creator><creatorName>Huygens, Dries </creatorName></creator>
+<creator><creatorName>Jeanmart, Philippe </creatorName></creator>
+<creator><creatorName>Jeffery, Kathryn J.</creatorName></creator>
+<creator><creatorName>Kearsley, Elizabeth </creatorName></creator>
+<creator><creatorName>Leal, Miguel E.</creatorName></creator>
+<creator><creatorName>Lloyd, Jon </creatorName></creator>
+<creator><creatorName>Lovett, Jon C.</creatorName></creator>
+<creator><creatorName>Makana, Jean-Remy </creatorName></creator>
+<creator><creatorName>Malhi, Yadvinder </creatorName></creator>
+<creator><creatorName>Marshall, Andrew R.</creatorName></creator>
+<creator><creatorName>Ojo, Lucas </creatorName></creator>
+<creator><creatorName>Peh, Kelvin S.-H.</creatorName></creator>
+<creator><creatorName>Pickavance, Georgia </creatorName></creator>
+<creator><creatorName>Poulsen, John R.</creatorName></creator>
+<creator><creatorName>Reitsma, Jan M.</creatorName></creator>
+<creator><creatorName>Sheil, Douglas </creatorName></creator>
+<creator><creatorName>Simo, Murielle </creatorName></creator>
+<creator><creatorName>Steppe, Kathy </creatorName></creator>
+<creator><creatorName>Taedoumg, Hermann E.</creatorName></creator>
+<creator><creatorName>Talbot, Joey </creatorName></creator>
+<creator><creatorName>Taplin, James R. D.</creatorName></creator>
+<creator><creatorName>Taylor, David </creatorName></creator>
+<creator><creatorName>Thomas, Sean C.</creatorName></creator>
+<creator><creatorName>Toirambe, Benjamin </creatorName></creator>
+<creator><creatorName>Verbeeck, Hans </creatorName></creator>
+<creator><creatorName>Vleminckx, Jason </creatorName></creator>
+<creator><creatorName>White, Lee J. T.</creatorName></creator>
+<creator><creatorName>Willcock, Simon </creatorName></creator>
+<creator><creatorName>Woell, Hannsjorg </creatorName></creator>
+<creator><creatorName>Zemagho, Lise </creatorName></creator>
+
+
+
+
+</creators>
+<titles>
+<title>Plot Data from: African forest structure and above-ground biomass measured in inventory plots. Plot data from "Above-ground biomass and structure of 260 African tropical forests." </title>
+</titles>
+<publisher>
+ForestPlots.net
+
+</publisher>
+<publicationYear>2013</publicationYear>
+<subjects>
+<subject>Ecology</subject>
+<subject>Environmental Science</subject>
+<subject>Plant Science</subject> 
+<subject>Africa</subject>
+<subject>Wood Density</subject>
+</subjects>
+<language>eng</language>
+<resourceType resourceTypeGeneral="Dataset">Dataset</resourceType>
+<formats>
+<format>csv file</format>
+</formats>
+<rightsList>
+<rights rightsURI="http://creativecommons.org/licenses/by-nd/4.0/">
+Creative Commons Attribution-NoDerivatives 4.0 International (CC BY-ND 4.0)
+</rights>
+</rightsList>
+
+<descriptions>
+<description descriptionType="Abstract"> We report above-ground biomass (AGB), basal area, stem density and wood mass density estimates from 260 sample plots (mean size: 1.2 ha) in intact closed-canopy tropical forests across 12 African countries. Mean AGB is 395.7 Mg dry mass ha-1 (95% CI: 14.3), substantially higher than Amazonian values, with the Congo Basin and contiguous forest region attaining AGB values (429 Mg ha-1) similar to those of Bornean forests, and significantly greater than East or West African forests. AGB therefore appears generally higher in palaeo- compared with neo-tropical forests. However, mean stem density is low (426±11 stems ha-1 greater than or equal to 100 mm diameter) compared with both Amazonian and Bornean forests (cf. approx. 600) and is the signature structural feature of African tropical forests. While spatial autocorrelation complicates analyses, AGB shows a positive relationship with rainfall in the driest nine months of the year, and an opposite association with the wettest three months of the year; a negative relationship with temperature; positive relationship with clay-rich soils; and negative relationships with C:N ratio (suggesting a positive soil phosphorus–AGB relationship), and soil fertility computed as the sum of base cations. The results indicate that AGB is mediated by both climate and soils, and suggest that the AGB of African closed-canopy tropical forests may be particularly sensitive to future precipitation and temperature changes.  </description>
+</descriptions>
+</resource>
+
+
+<resource>
+
+
+<identifier identifierType="DOI">10.5521/ForestPlots.net/2014_1</identifier>
+<creators>
+<creator> <creatorName>Lopez-Gonzalez, Gabriela </creatorName></creator>
+<creator> <creatorName>Mitchard, Edward T. A. </creatorName></creator>
+<creator> <creatorName>Feldpausch, Ted R. </creatorName></creator>
+<creator> <creatorName>Brienen, Roel J. W. </creatorName></creator>
+<creator> <creatorName>Monteagudo, Abel </creatorName></creator>
+<creator> <creatorName>Baker, Timothy R. </creatorName></creator>
+<creator> <creatorName>Lewis, Simon L. </creatorName></creator>
+<creator> <creatorName>Lloyd, Jonathan </creatorName></creator>
+<creator> <creatorName>Quesada, Carlos Alberto  </creatorName></creator>
+<creator> <creatorName>Gloor, Emanuel </creatorName></creator>
+<creator> <creatorName>ter Steege, Hans </creatorName></creator>
+<creator> <creatorName>Meir, Patrick </creatorName></creator>
+<creator> <creatorName>Alvarez, Esteban </creatorName></creator>
+<creator> <creatorName>Araujo-Murakami, Alejandro </creatorName></creator>
+<creator> <creatorName>Aragão, Luiz E. O. C.  </creatorName></creator>
+<creator> <creatorName>Arroyo, Luzmila </creatorName></creator>
+<creator> <creatorName>Aymard, Gerardo  </creatorName></creator>
+<creator> <creatorName>Banki, Olaf </creatorName></creator>
+<creator> <creatorName>Bonal, Damien </creatorName></creator>
+<creator> <creatorName>Brown, Sandra </creatorName></creator>
+<creator> <creatorName>Brown, Foster I. </creatorName></creator>
+<creator> <creatorName>Cerón, Carlos E. </creatorName></creator>
+<creator> <creatorName>Chama Moscoso, Victor </creatorName></creator>
+<creator> <creatorName>Chave, Jerome </creatorName></creator>
+<creator> <creatorName>Comiskey, James M. </creatorName></creator>
+<creator> <creatorName>Cornejo, Fernando </creatorName></creator>
+<creator> <creatorName>Corrales Medina, Massiel </creatorName></creator>
+<creator> <creatorName>Da Costa, Lola </creatorName></creator>
+<creator> <creatorName>Costa, Flavia R. C. </creatorName></creator>
+<creator> <creatorName>Di Fiore, Anthony </creatorName></creator>
+<creator> <creatorName>Domingues, Tomas </creatorName></creator>
+<creator> <creatorName>Erwin, Terry L. </creatorName></creator>
+<creator> <creatorName>Fredericksen, Todd  </creatorName></creator>
+<creator> <creatorName>Higuchi, Niro </creatorName></creator>
+<creator> <creatorName>Honorio Coronado, Euridice N. </creatorName></creator>
+<creator> <creatorName>Killeen, Tim J. </creatorName></creator>
+<creator> <creatorName>Laurance, William F. </creatorName></creator>
+<creator> <creatorName>Levis, Carolina   </creatorName></creator>
+<creator> <creatorName>Magnusson, William E. </creatorName></creator>
+<creator> <creatorName>Marimon, Beatriz S. </creatorName></creator>
+<creator> <creatorName>Marimon-Junior, Ben Hur; </creatorName></creator>
+<creator> <creatorName>Mendoza Polo, Irina </creatorName></creator>
+<creator> <creatorName>Mishra, Piyush </creatorName></creator>
+<creator> <creatorName>Nascimento, Marcelo </creatorName></creator>
+<creator> <creatorName>Neill, David </creatorName></creator>
+<creator> <creatorName>Nunez Vargas, Mario Percy </creatorName></creator>
+<creator> <creatorName>Palacios, Walter A. </creatorName></creator>
+<creator> <creatorName>Parada-Gutierrez, Alexander </creatorName></creator>
+<creator> <creatorName>Pardo Molina, Guido </creatorName></creator>
+<creator> <creatorName>Peña-Claros, Marielos </creatorName></creator>
+<creator> <creatorName>Pitman, Nigel </creatorName></creator>
+<creator> <creatorName>Peres, Carlos A. </creatorName></creator>
+<creator> <creatorName>Poorter, Lourens  </creatorName></creator>
+<creator> <creatorName>Prieto, Adriana </creatorName></creator>
+<creator> <creatorName>Ramírez-Angulo, Hirma </creatorName></creator>
+<creator> <creatorName>Restrepo Correa, Zorayda </creatorName></creator>
+<creator> <creatorName>Roopsind, Anand  </creatorName></creator>
+<creator> <creatorName>Roucoux, Katherine H. </creatorName></creator>
+<creator> <creatorName>Rudas, Agustin </creatorName></creator>
+<creator> <creatorName>Salomao, Rafael P. </creatorName></creator>
+<creator> <creatorName>Schietti, Juliana </creatorName></creator>
+<creator> <creatorName>Silveira, Marcos </creatorName></creator>
+<creator> <creatorName>De Souza, Priscila F. </creatorName></creator>
+<creator> <creatorName>Steiniger, Marc   </creatorName></creator>
+<creator> <creatorName>Stropp, Juliana </creatorName></creator>
+<creator> <creatorName>Terborgh, John </creatorName></creator>
+<creator> <creatorName>Thomas, Raquel P. </creatorName></creator>
+<creator> <creatorName>Toledo, Marisol </creatorName></creator>
+<creator> <creatorName>Torres-Lezama, Armando </creatorName></creator>
+<creator> <creatorName>Van Andel, Tinde R. </creatorName></creator>
+<creator> <creatorName>van der Heijden, Geertje M. F. </creatorName></creator>
+<creator> <creatorName>Vieira, Ima Celia Guimaraes  </creatorName></creator>
+<creator> <creatorName>Vieira, Simone </creatorName></creator>
+<creator> <creatorName>Vilanova-Torre, Emilio </creatorName></creator>
+<creator> <creatorName> Vos,Vincent A.  </creatorName></creator>
+<creator> <creatorName>Wang, Ophelia </creatorName></creator>
+<creator> <creatorName>Zartman, Charles E. </creatorName></creator>
+<creator> <creatorName>de Oliveira, Edmar Almeida </creatorName></creator>
+<creator> <creatorName>Morandi, Paulo Sergio </creatorName></creator>
+<creator> <creatorName>Malhi, Yadvinder </creatorName></creator>
+<creator> <creatorName>Phillips, Oliver L. </creatorName></creator>
+
+
+</creators>
+<titles>
+<title>Amazon forest biomass measured in inventory plots. Plot Data from "Markedly divergent estimates of Amazon forest carbon density from ground plots and satellites." </title>
+</titles>
+<publisher>
+ForestPlots.net
+
+</publisher>
+<publicationYear>2014</publicationYear>
+<subjects>
+<subject>Aboveground biomass</subject>
+<subject>Allometry</subject> 
+<subject>Carbon cycle</subject>
+<subject>REDD+</subject>
+<subject>Remote Sensing</subject>
+<subject>Satellite mapping</subject>
+<subject>Wood density</subject>
+
+
+</subjects>
+<language>eng</language>
+<resourceType resourceTypeGeneral="Dataset">Dataset</resourceType>
+<formats>
+<format>Excel File</format>
+</formats>
+<rightsList>
+<rights rightsURI="http://creativecommons.org/licenses/by-sa/4.0/deed.en_GB">
+Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0
+</rights>
+</rightsList>
+
+<descriptions>
+<description descriptionType="Abstract"> Abstract
+Abstract
+Aim
+The accurate mapping of forest carbon stocks is essential for understanding the global carbon cycle, for assessing emissions from deforestation, and for rational land-use planning. Remote sensing (RS) is currently the key tool for this purpose, but RS does not estimate vegetation biomass directly, and thus may miss significant spatial variations in forest structure. We test the stated accuracy of pantropical carbon maps using a large independent field dataset.
+Location
+Tropical forests of the Amazon basin. The permanent archive of the field plot data can be accessed at: http://dx.doi.org/10.5521/FORESTPLOTS.NET/2014_1
+Methods
+Two recent pantropical RS maps of vegetation carbon are compared to a unique ground-plot dataset, involving tree measurements in 413 large inventory plots located in nine countries. The RS maps were compared directly to field plots, and kriging of the field data was used to allow area-based comparisons.
+Results
+The two RS carbon maps fail to capture the main gradient in Amazon forest carbon detected using 413 ground plots, from the densely wooded tall forests of the north-east, to the light-wooded, shorter forests of the south-west. The differences between plots and RS maps far exceed the uncertainties given in these studies, with whole regions over- or under-estimated by more than 25%, whereas regional uncertainties for the maps were reported to be less than 5%.
+
+Main conclusions
+Pantropical biomass maps are widely used by governments and by projects aiming to reduce deforestation using carbon offsets, but may have significant regional biases. Carbon-mapping techniques must be revised to account for the known ecological variation in tree wood density and allometry to create maps suitable for carbon accounting. The use of single relationships between tree canopy height and above-ground biomass inevitably yields large, spatially correlated errors. This presents a significant challenge to both the forest conservation and remote sensing communities, because neither wood density nor species assemblages can be reliably mapped from space.</description>
+</descriptions>
+</resource>
+
+
+<resource>
+
+
+<identifier identifierType="DOI">10.5521/ForestPlots.net/2014_2</identifier>
+<creators>
+<creator> <creatorName>Talbot, Joey</creatorName></creator>
+<creator> <creatorName>Lewis, Simon L. </creatorName></creator>
+<creator> <creatorName>Lopez-Gonzalez, Gabriela </creatorName></creator>
+<creator><creatorName>Brienen, Roel J.W. </creatorName></creator>
+<creator><creatorName>Monteagudo, Abel </creatorName></creator>
+<creator><creatorName>Baker, Timothy R. </creatorName></creator>
+<creator><creatorName>Feldpausch, Ted R. </creatorName></creator>
+<creator><creatorName>Malhi, Yadvinder </creatorName></creator>
+<creator><creatorName>Vanderwel, Mark </creatorName></creator>
+<creator><creatorName>Araujo Murakami, Alejandro </creatorName></creator>
+<creator><creatorName>Arroyo, Luzmila P. </creatorName></creator>
+<creator><creatorName>Chao, Kuo-Jung </creatorName></creator>
+<creator><creatorName>Erwin, Terry </creatorName></creator>
+<creator><creatorName>van der Heijden, Geertje </creatorName></creator>
+<creator><creatorName>Keeling, Helen </creatorName></creator>
+<creator><creatorName>Killeen, Tim </creatorName></creator>
+<creator><creatorName>Neill, David </creatorName></creator>
+<creator><creatorName>Núñez Vargas, Percy </creatorName></creator>
+<creator><creatorName>Parada Gutierrez, Germaine Alexander </creatorName></creator>
+<creator><creatorName>Pitman, Nigel </creatorName></creator>
+<creator><creatorName>Quesada, Carlos Alberto </creatorName></creator>
+<creator><creatorName>Silveira, Marcos </creatorName></creator>
+<creator><creatorName>Stropp, Juliana </creatorName></creator>
+<creator><creatorName>Phillips, Oliver L. </creatorName></creator>
+
+
+</creators>
+<titles>
+<title>Plot Data from " Methods to estimate aboveground wood productivity from long-term forest inventory plots" </title>
+</titles>
+<publisher>
+ForestPlots.net
+
+</publisher>
+<publicationYear>2014</publicationYear>
+<subjects>
+<subject>Aboveground biomass</subject>
+<subject>Allometry</subject> 
+<subject>Census Interval Lenght</subject>
+<subject>POM Changes</subject>
+
+
+
+</subjects>
+<language>eng</language>
+<resourceType resourceTypeGeneral="Dataset">Dataset</resourceType>
+<formats>
+<format>Excel File</format>
+</formats>
+<rightsList>
+<rights rightsURI="http://creativecommons.org/licenses/by-nd/4.0/">
+Creative Commons Attribution-NoDerivatives 4.0 International (CC BY-ND 4.0)
+</rights>
+</rightsList>
+
+<descriptions>
+<description descriptionType="Abstract"> Forest inventory plots are widely used to estimate biomass carbon storage and its change over time. While there has been much debate and exploration of the analytical methods for calculating biomass, the methods used to determine rates of wood production have not been evaluated to the same degree. This affects assessment of ecosystem fluxes and may have wider implications if inventory data are used to parameterise biospheric models, or scaled to large areas in assessments of carbon sequestration. Here we use a dataset of 35 long-term Amazonian forest inventory plots to test different methods of calculating wood production rates. These address potential biases associated with three issues that routinely impact the interpretation of tree measurement data: (1) changes in the point of measurement (POM) of stem diameter as trees grow over time; (2) unequal length of time between censuses; and (3) the treatment of trees that pass the minimum diameter threshold (“recruits”). We derive corrections that control for changing POM height, that account for the unobserved growth of trees that die within census intervals, and that explore different assumptions regarding the growth of recruits during the previous census interval. For our dataset we find that annual aboveground coarse wood production (AGWP; in Mg ha-1 year-1 of dry matter) is underestimated on average by 9.2 % if corrections are not made to control for changes in POM height. Failure to control for the length of sampling intervals results in a mean underestimation of 2.7 % in annual AGWP in our plots for a mean interval length of 3.6 years. Different methods for treating recruits result in mean differences of up to 8.1 % in AGWP. In general, the greater the length of time a plot is sampled for and the greater the time elapsed between censuses, the greater the tendency to underestimate wood production. We recommend that POM changes, census interval length, and the contribution of recruits should all be accounted for when estimating productivity rates, and suggest methods for doing this. </description>
+</descriptions>
+</resource>
+
+
+<resource>
+
+
+<identifier identifierType="DOI">10.5521/ForestPlots.net/2014_3</identifier>
+<creators>
+
+<creator> <creatorName>Banin, Lindsay </creatorName></creator>
+<creator> <creatorName>Lewis, Simon L. </creatorName></creator>
+<creator> <creatorName>Lopez-Gonzalez, Gabriela </creatorName></creator>
+<creator> <creatorName>Baker, Timothy R. </creatorName></creator>
+<creator> <creatorName>Quesada, Carlos Alberto  </creatorName></creator>
+<creator> <creatorName>Chao, Kuo-Jung </creatorName></creator>
+<creator> <creatorName>Burslem, David F. R. P. </creatorName></creator>
+<creator> <creatorName>Nilus, Reuben</creatorName></creator>
+<creator> <creatorName>Abu Salim, Kamariah </creatorName></creator>
+<creator> <creatorName>Keeling, Helen C. </creatorName></creator>
+<creator> <creatorName>Tan, Sylvester</creatorName></creator>
+<creator> <creatorName>Davies, Stuart J. </creatorName></creator>
+<creator> <creatorName>Monteagudo Mendoza, Abel </creatorName></creator>
+<creator> <creatorName>Vasquez, Rodolfo</creatorName></creator>
+<creator> <creatorName>Lloyd, Jon </creatorName></creator>
+<creator> <creatorName>Neill, David </creatorName></creator>
+<creator> <creatorName>Pitman, Nigel </creatorName></creator>
+<creator> <creatorName>Phillips, Oliver L. </creatorName></creator>
+
+
+</creators>
+<titles>
+<title>Plot Data from "Tropical forest wood production: a cross-continentalcomparison" </title>
+</titles>
+<publisher>
+ForestPlots.net
+
+</publisher>
+<publicationYear>2014</publicationYear>
+<subjects>
+<subject>Amazon</subject>
+<subject>Asia</subject> 
+<subject>Carbon</subject>
+<subject>Dipterocarpaceae</subject>
+<subject>Dynamics</subject>
+<subject>growth</subject>
+<subject>plant-soil interactions</subject>
+<subject>Productivity</subject>
+<subject>soil nutrients</subject>
+<subject>tropical forest</subject>
+
+
+</subjects>
+<language>eng</language>
+<resourceType resourceTypeGeneral="Dataset">Dataset</resourceType>
+<formats>
+<format>Excel File</format>
+</formats>
+<rightsList>
+<rights rightsURI="http://creativecommons.org/licenses/by-sa/4.0/deed.en_GB">
+Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0
+</rights>
+</rightsList>
+
+<descriptions>
+<description descriptionType="Abstract"> Abstract
+Insert abstract here.
+
+</description>
+</descriptions>
+</resource>
+
+
+
+<resource>
+<identifier identifierType="DOI">10.5521/ForestPlots.net/2014_4</identifier>
+<creators>
+<creator><creatorName>Brienen, Roel J. W.</creatorName></creator>
+<creator><creatorName>Phillips, Oliver L.</creatorName></creator>
+<creator><creatorName>Feldpausch, Ted R.</creatorName></creator>
+<creator><creatorName>Gloor, Emanuel</creatorName></creator>
+<creator><creatorName>Baker, Timothy R.</creatorName></creator>
+<creator><creatorName>Lloyd, Jonathan</creatorName></creator>
+<creator><creatorName>Lopez-Gonzalez, Gabriela</creatorName></creator>
+<creator><creatorName>Monteagudo Mendoza, Abel</creatorName></creator>
+<creator><creatorName>Malhi, Yadvinder</creatorName></creator>
+<creator><creatorName>Lewis, Simon L.</creatorName></creator>
+<creator><creatorName>Vásquez Martinez, Rodolfo</creatorName></creator>
+<creator><creatorName>Alexiades, Miguel</creatorName></creator>
+<creator><creatorName>Álvarez Dávila, Esteban A.</creatorName></creator>
+<creator><creatorName>Alvarez-Loayza, Patricia</creatorName></creator>
+<creator><creatorName>Andrade, Ana</creatorName></creator>
+<creator><creatorName>Aragão, Luiz E.O.C.</creatorName></creator>
+<creator><creatorName>Araujo Murakami, Alejandro </creatorName></creator>
+<creator><creatorName>Arets, Eric J.M.M.</creatorName></creator>
+<creator><creatorName>Arroyo, Luzmila</creatorName></creator>
+<creator><creatorName>Aymard C., Gerardo A.</creatorName></creator>
+<creator><creatorName>Bánki, Olaf S.</creatorName></creator>
+<creator><creatorName>Baraloto , Chris</creatorName></creator>
+<creator><creatorName>Barroso, Jorcely G.</creatorName></creator>
+<creator><creatorName>Bonal , Damien </creatorName></creator>
+<creator><creatorName>Boot, Rene</creatorName></creator>
+<creator><creatorName>Camargo, José Luís</creatorName></creator>
+<creator><creatorName>Castilho, Carolina </creatorName></creator>
+<creator><creatorName>Chama, Victor</creatorName></creator>
+<creator><creatorName>Chao, Kuo-Jung</creatorName></creator>
+<creator><creatorName>Chave, Jérôme</creatorName></creator>
+<creator><creatorName>Comiskey, James A.</creatorName></creator>
+<creator><creatorName>Cornejo, Fernando </creatorName></creator>
+<creator><creatorName>da Costa, Lola</creatorName></creator>
+<creator><creatorName>de Oliveira, Edmar Almeida </creatorName></creator>
+<creator><creatorName>Di Fiore, Anthony</creatorName></creator>
+<creator><creatorName>Erwin, Terry L.</creatorName></creator>
+<creator><creatorName>Fauset , Sophie</creatorName></creator>
+<creator><creatorName>Forsthofer, Mônica </creatorName></creator>
+<creator><creatorName>Grahame, Sue E.</creatorName></creator>
+<creator><creatorName>Groot, Nicoline Elizabeth</creatorName></creator>
+<creator><creatorName>Herault , Bruno </creatorName></creator>
+<creator><creatorName>Higuchi, Niro</creatorName></creator>
+<creator><creatorName>Honorio C., Eurídice</creatorName></creator>
+<creator><creatorName>Keeling, Helen</creatorName></creator>
+<creator><creatorName>Killeen, Tim</creatorName></creator>
+<creator><creatorName>Laurance, William</creatorName></creator>
+<creator><creatorName>Laurance, Susan</creatorName></creator>
+<creator><creatorName>Licona, Juan-Carlos</creatorName></creator>
+<creator><creatorName>Magnussen, William E. </creatorName></creator>
+<creator><creatorName>Marimon, Beatriz S.</creatorName></creator>
+<creator><creatorName>Marimon-Junior, Ben Hur</creatorName></creator>
+<creator><creatorName>Mendoza, Casimiro</creatorName></creator>
+<creator><creatorName>Neill, David</creatorName></creator>
+<creator><creatorName>Nogueira, Euler M.</creatorName></creator>
+<creator><creatorName>Nunez, Percy</creatorName></creator>
+<creator><creatorName>Pallqui Camacho, Nadir Carolina</creatorName></creator>
+<creator><creatorName>Parada, Alexander</creatorName></creator>
+<creator><creatorName>Pardo , Guido </creatorName></creator>
+<creator><creatorName>Peacock, Julie </creatorName></creator>
+<creator><creatorName>Pena-Claros, Marielos</creatorName></creator>
+<creator><creatorName>Pickavance, Georgia C.</creatorName></creator>
+<creator><creatorName>Pitman, Nigel C. A.</creatorName></creator>
+<creator><creatorName>Poorter, Lourens</creatorName></creator>
+<creator><creatorName>Prieto, Adriana</creatorName></creator>
+<creator><creatorName>Quesada, Carlos A.</creatorName></creator>
+<creator><creatorName>Ramírez, Fredy</creatorName></creator>
+<creator><creatorName>Ramírez-Angulo, Hirma</creatorName></creator>
+<creator><creatorName>Restrepo, Zorayda</creatorName></creator>
+<creator><creatorName>Roopsind, Anand</creatorName></creator>
+<creator><creatorName>Rudas, Agustín</creatorName></creator>
+<creator><creatorName>Salomão, Rafael P.</creatorName></creator>
+<creator><creatorName>Schwarz, Michael</creatorName></creator>
+<creator><creatorName>Silva, Natalino</creatorName></creator>
+<creator><creatorName>Silva-Espejo, Javier E.</creatorName></creator>
+<creator><creatorName>Silveira, Marcos</creatorName></creator>
+<creator><creatorName>Stropp, Juliana</creatorName></creator>
+<creator><creatorName>Talbot, Joey </creatorName></creator>
+<creator><creatorName>ter Steege, Hans</creatorName></creator>
+<creator><creatorName>Teran-Aguilar, Jeremy </creatorName></creator>
+<creator><creatorName>Terborgh, John</creatorName></creator>
+<creator><creatorName>Thomas-Caesar, Raquel</creatorName></creator>
+<creator><creatorName>Toledo , Marisol </creatorName></creator>
+<creator><creatorName>Torello-Raventos, Mireia</creatorName></creator>
+<creator><creatorName>Umetsu , Ricardo  K.</creatorName></creator>
+<creator><creatorName>van der Heijden, Geertje M. F.</creatorName></creator>
+<creator><creatorName>van der Hout, Peter </creatorName></creator>
+<creator><creatorName>Guimaraes Vieira, Ima</creatorName></creator>
+<creator><creatorName>Vieira, Simone A,</creatorName></creator>
+<creator><creatorName>Vilanova, Emilio</creatorName></creator>
+<creator><creatorName>Vos, Vincent</creatorName></creator>
+<creator><creatorName>Zagt, Roderick J.</creatorName></creator>
+
+
+
+</creators>
+<titles>
+<title>Plot Data from: "Long-term decline of the Amazon carbon sink."  </title>
+</titles>
+<publisher>
+ForestPlots.net
+
+</publisher>
+<publicationYear>2014</publicationYear>
+<subjects>
+<subject>Aboveground biomass</subject>
+<subject>Amazon rainforest</subject>
+<subject>Biomass dynamics</subject> 
+<subject>Carbon sink</subject>
+
+</subjects>
+<language>eng</language>
+<resourceType resourceTypeGeneral="Dataset">Dataset</resourceType>
+<formats>
+<format>csv file</format>
+</formats>
+<rightsList>
+<rights rightsURI="http://creativecommons.org/licenses/by-nd/4.0/">
+Creative Commons Attribution-NoDerivatives 4.0 International (CC BY-ND 4.0)
+</rights>
+</rightsList>
+
+<descriptions>
+<description descriptionType="Abstract"> Atmospheric CO2 records indicate that the land surface has acted as a strong global carbon sink over recent decades, with a substantial fraction of this sink likely located in the tropics, particularly in the Amazon. Nevertheless, it is unclear how the terrestrial carbon sink will evolve as climate and atmospheric composition continue to change. Here we analyse the historic evolution of the biomass dynamics of the Amazon rainforest over three decades using a distributed network of 321 plots. While this analysis confirms that the Amazon has acted as a long-term net biomass sink, we find a long-term decreasing trend of carbon accumulation. Rates of net increase in above ground biomass declined by a third during the last decade compared to the 1990s. This is a consequence of growth rate increases levelling off recently, while reduction in biomass due to tree mortality persistently increased throughout, leading to a shortening of carbon residence times. Potential drivers for the mortality increase include a greater climate variability, and feedbacks of faster growth on mortality, resulting in shortened tree longevity. The observed decline of the Amazon sink diverges markedly from the recent increase in terrestrial carbon uptake at the global scale, and is contrary to expectations based on models.  </description>
+</descriptions>
+</resource>
+
+
+
+<resource>
+<identifier identifierType="DOI">10.5521/ForestPlots.net/2015_1</identifier>
+<creators>
+<creator><creatorName>Sophie, Fauset</creatorName></creator>
+<creator><creatorName>Michelle O., Johnson</creatorName></creator>
+<creator><creatorName>Manuel, Gloor</creatorName></creator>
+<creator><creatorName>Timothy R., Baker</creatorName></creator>
+<creator><creatorName>Abel M., Monteagudo</creatorName></creator>
+<creator><creatorName>Roel J.W., Brienen</creatorName></creator>
+<creator><creatorName>Ted R., Feldpausch</creatorName></creator>
+<creator><creatorName>Gabriela, Lopez-Ganzalez</creatorName></creator>
+<creator><creatorName>Yadvinder, Malhi</creatorName></creator>
+<creator><creatorName>Hans, ter Steege</creatorName></creator>
+<creator><creatorName>Nigel C.A., Pitman</creatorName></creator>
+<creator><creatorName>Christopher, Baraloto</creatorName></creator>
+<creator><creatorName>Julien, Engel</creatorName></creator>
+<creator><creatorName>Pascal, Pétronelli</creatorName></creator>
+<creator><creatorName>Ana, Andrade</creatorName></creator>
+<creator><creatorName>José Luís C., Camargo</creatorName></creator>
+<creator><creatorName>Susan G.W., Laurance</creatorName></creator>
+<creator><creatorName>William F., Laurance</creatorName></creator>
+<creator><creatorName>Jerôme, Chave</creatorName></creator>
+<creator><creatorName>Elodie, Allie</creatorName></creator>
+<creator><creatorName>Percy, Núñez Vargas</creatorName></creator>
+<creator><creatorName>John J., Terborgh</creatorName></creator>
+<creator><creatorName>Kalle, Ruokolainen</creatorName></creator>
+<creator><creatorName>Marcos, Silveira</creatorName></creator>
+<creator><creatorName>Gerardo A., Aymard C.</creatorName></creator>
+<creator><creatorName>Luzmila, Arroyo</creatorName></creator>
+<creator><creatorName>Damien, Bonal</creatorName></creator>
+<creator><creatorName>Hirma, Ramirez-Angulo</creatorName></creator>
+<creator><creatorName>Alejandro, Araujo-Murakami</creatorName></creator>
+<creator><creatorName>David, Neill</creatorName></creator>
+<creator><creatorName>Bruno, Hérault</creatorName></creator>
+<creator><creatorName>Aurélie , Dourdain</creatorName></creator>
+<creator><creatorName>Armando, Torres-Lezama</creatorName></creator>
+<creator><creatorName>Beastriz S., Marimon</creatorName></creator>
+<creator><creatorName>Rafael P., Salomão</creatorName></creator>
+<creator><creatorName>James A., Comiskey</creatorName></creator>
+<creator><creatorName>Maxime, Réjou-Méchain</creatorName></creator>
+<creator><creatorName>Marisol, Toledo</creatorName></creator>
+<creator><creatorName>Juan Carlos, Licona</creatorName></creator>
+<creator><creatorName>Alfredo, Alarcón</creatorName></creator>
+<creator><creatorName>Adriana, Prieto</creatorName></creator>
+<creator><creatorName>Augstín, Rudas</creatorName></creator>
+<creator><creatorName>Peter J., van de Meer</creatorName></creator>
+<creator><creatorName>Timothy J., Killeen</creatorName></creator>
+<creator><creatorName>Ben-Hur, Marimon Jr.</creatorName></creator>
+<creator><creatorName>Lourens, Poorter</creatorName></creator>
+<creator><creatorName>Rene G.A., Boot</creatorName></creator>
+<creator><creatorName>Basil, Stergios</creatorName></creator>
+<creator><creatorName>Emilio, Vilanova Torre</creatorName></creator>
+<creator><creatorName>Flávia R.C., Costa</creatorName></creator>
+<creator><creatorName>Carolina, Levis</creatorName></creator>
+<creator><creatorName>Juliana, Schietti</creatorName></creator>
+<creator><creatorName>Priscila, Souza</creatorName></creator>
+<creator><creatorName>Nikée, Groot</creatorName></creator>
+<creator><creatorName>Eric, Arets</creatorName></creator>
+<creator><creatorName>Victor, Chama Moscoso</creatorName></creator>
+<creator><creatorName>Wendeson, Castro</creatorName></creator>
+<creator><creatorName>Euridice N., Honorio Coronado</creatorName></creator>
+<creator><creatorName>Marielos, Peña-Claros</creatorName></creator>
+<creator><creatorName>Clement, Stahl</creatorName></creator>
+<creator><creatorName>Jorcely, Barroso</creatorName></creator>
+<creator><creatorName>Joey, Talbot</creatorName></creator>
+<creator><creatorName>Ima Célia, Guimarães Vieira</creatorName></creator>
+<creator><creatorName>Geertje, van der Heijden</creatorName></creator>
+<creator><creatorName>Raquel, Thomas</creatorName></creator>
+<creator><creatorName>Vincent A., Vos</creatorName></creator>
+<creator><creatorName>Everton C., Almeida</creatorName></creator>
+<creator><creatorName>Esteban, Álvarez Davila</creatorName></creator>
+<creator><creatorName>Luiz E.O.C., Aragão</creatorName></creator>
+<creator><creatorName>Terry, Erwin</creatorName></creator>
+<creator><creatorName>Paulo S., Morandi</creatorName></creator>
+<creator><creatorName>Edmar, Almeida de Oliveira</creatorName></creator>
+<creator><creatorName>Marco B.X. , Valadão</creatorName></creator>
+<creator><creatorName>Roderick J., Zagt</creatorName></creator>
+<creator><creatorName>Peter, van der Hout</creatorName></creator>
+<creator><creatorName>Patricia, Alvarez Loayza</creatorName></creator>
+<creator><creatorName>John J., Pipoly III</creatorName></creator>
+<creator><creatorName>Ophelia, Wang</creatorName></creator>
+<creator><creatorName>Miguel, Alexiades</creatorName></creator>
+<creator><creatorName>Carlos E., Cerón</creatorName></creator>
+<creator><creatorName>Isau, Huamantupa-Chuquimaco</creatorName></creator>
+<creator><creatorName>Anthony, Di Fiore</creatorName></creator>
+<creator><creatorName>Julie, Peacock</creatorName></creator>
+<creator><creatorName>Nadir C., Pallqui Camacho</creatorName></creator>
+<creator><creatorName>Ricardo K., Umetsu</creatorName></creator>
+<creator><creatorName>Plínio, Barbosa de Camargo</creatorName></creator>
+<creator><creatorName>Robyn, Burnham</creatorName></creator>
+<creator><creatorName>Rafael, Herrera</creatorName></creator>
+<creator><creatorName>Carlos A., Quesada</creatorName></creator>
+<creator><creatorName>Juliana, Stropp</creatorName></creator>
+<creator><creatorName>Simone A., Vieira</creatorName></creator>
+<creator><creatorName>Marc, Steininger</creatorName></creator>
+<creator><creatorName>Carlos, Reynel Rodríguez</creatorName></creator>
+<creator><creatorName>Zorayda, Restrepo</creatorName></creator>
+<creator><creatorName>Adriane, Esquivel Muelbert</creatorName></creator>
+<creator><creatorName>Simon L., Lewis</creatorName></creator>
+<creator><creatorName>Georgia C., Pickavance</creatorName></creator>
+<creator><creatorName>Oliver L., Phillips</creatorName></creator>
+
+
+</creators>
+<titles>
+<title>Data from "Hyperdominance in Amazonian forest carbon cycling Amazon". </title>
+</titles>
+<publisher>
+ForestPlots.net
+
+</publisher>
+<publicationYear>2015</publicationYear>
+<subjects>
+<subject>Aboveground biomass</subject>
+<subject>Amazon rainforest</subject>
+<subject>Biomass dynamics</subject> 
+<subject>Carbon sink</subject>
+
+</subjects>
+<language>eng</language>
+<resourceType resourceTypeGeneral="Dataset">Dataset</resourceType>
+<formats>
+<format>csv file</format>
+</formats>
+<rightsList>
+<rights rightsURI="http://creativecommons.org/licenses/by-nd/4.0/">
+Creative Commons Attribution-NoDerivatives 4.0 International (CC BY-ND 4.0)
+</rights>
+</rightsList>
+
+<descriptions>
+<description descriptionType="Abstract"> The extraordinary diversity of Amazonian forests conceals that tree abundance is 121 strongly skewed towards relatively few ‘hyperdominant’ species. In addition to their 122 diversity, Amazonian trees are a key component of the global carbon cycle, 123 assimilating and storing more carbon than any other ecosystem on Earth. Here, we 124 ask, using a unique dataset of 530 forest plots, if the functions of storing and 125 producing woody carbon are concentrated in a small number of tree species, whether 126 the most abundant species also dominate carbon cycling, and whether dominant 127 species are characterized by specific functional traits. We find that dominance of 128 forest function is even more concentrated in a few species than is dominance of tree 129 abundance, with only ≈1% of all Amazon tree species responsible for 50% of carbon 130 storage and productivity. Whilst those species that contribute most to biomass and 131 productivity are often abundant, species maximum size also has a critical role.  </description>
+</descriptions>
+</resource>
+
+
+
+<resource>
+<identifier identifierType="DOI">10.5521/FORESTPLOTS.NET/2015_2</identifier>
+<creators>
+
+<creator><creatorName>Baker, Timothy R.</creatorName></creator>
+<creator><creatorName>Vela, Dilys M.</creatorName></creator>
+<creator><creatorName>Chama Moscoso, Victor</creatorName></creator>
+<creator><creatorName>Navarro, Gilberto</creatorName></creator>
+<creator><creatorName>Monteagudo, Abel</creatorName></creator>
+<creator><creatorName>Pinto, Ruy</creatorName></creator>
+<creator><creatorName>Cangani, Katia</creatorName></creator>
+<creator><creatorName>Fyllas, Nikolaos M.</creatorName></creator>
+<creator><creatorName>Lopez Gonzalez, Gabriela</creatorName></creator>
+<creator><creatorName>Laurance, William F.</creatorName></creator>
+<creator><creatorName>Lewis, Simon L.</creatorName></creator>
+<creator><creatorName>Lloyd, Jonathan L. </creatorName></creator>
+<creator><creatorName>ter Steege, Hans</creatorName></creator>
+<creator><creatorName>Terborgh, John W. </creatorName></creator>
+<creator><creatorName>Phillips, Oliver L.</creatorName></creator>
+
+
+
+
+</creators>
+<titles>
+<title>Data from: "Consistent, small effects of tree-fall disturbances on the composition and diversity of four Amazonian forests" </title>
+</titles>
+<publisher>
+ForestPlots.net
+
+</publisher>
+<publicationYear>2015</publicationYear>
+<subjects>
+<subject>alpha diversity</subject>
+<subject> beta diversity</subject>
+<subject> determinants of plant community diversity and structure</subject>
+<subject>functional composition</subject> 
+<subject> maximum height</subject>
+<subject> seed mass</subject> 
+<subject> tropical forest</subject>
+<subject> wood density </subject>
+
+
+</subjects>
+<language>eng</language>
+<resourceType resourceTypeGeneral="Dataset">Dataset</resourceType>
+<formats>
+<format>Excel files</format>
+</formats>
+<rightsList>
+<rights rightsURI="http://creativecommons.org/licenses/by-nd/4.0/">
+Creative Commons Attribution-NoDerivatives 4.0 International (CC BY-ND 4.0)
+</rights>
+</rightsList>
+
+<descriptions>
+<description descriptionType="Abstract"> 
+1. Understanding the resilience of moist tropical forests to tree fall disturbance events is important for understanding the mechanisms that underlie species coexistence and for predicting the future composition of these ecosystems. Here, we test whether variation in the functional composition of Amazonian forests determines their resilience to disturbance.
+2. We studied the legacy of natural tree fall disturbance events in four forests across Amazonia that differ substantially in functional composition. We compared the composition and diversity of all free-standing woody stems 2 - 10 cm diameter in previously disturbed and undisturbed 20 x 20 m subplots within 55, one hectare, long-term forest inventory plots. 
+3. Overall, stem number increased following disturbance, and species and functional composition shifted to favour light-wooded, small-seeded taxa. Alpha diversity increased, but beta diversity was unaffected by disturbance, in all four forests.
+4. Changes in response to disturbance in both functional composition and alpha diversity were, however, small (2 – 4 % depending on the parameter) and similar among forests.
+5. Synthesis. This study demonstrates that variation in the functional composition of Amazonian forests does not lead to large differences in the response of these forests to tree fall disturbances and overall, these events have a minor role in maintaining the diversity of these ecosystems.
+
+  </description>
+</descriptions>
+</resource>
+
+
+
+<resource>
+<identifier identifierType="DOI">10.5521/FORESTPLOTS.NET/2016_1</identifier>
+<creators>
+
+<creator><creatorName>Cuni-Sanchez, Aida</creatorName></creator>
+<creator><creatorName>White, Lee J.T.</creatorName></creator>
+<creator><creatorName>Calders, Kim</creatorName></creator>
+<creator><creatorName>Jeffery, Kathryn J.</creatorName></creator>
+<creator><creatorName>Burt, Andrew </creatorName></creator>
+<creator><creatorName>Disney, Mathias </creatorName></creator>
+<creator><creatorName>Gilpin, Martin </creatorName></creator>
+<creator><creatorName>Gomez-Dans, Jose L. .</creatorName></creator>
+<creator><creatorName>Lewis, Simon L.</creatorName></creator>
+
+
+
+
+</creators>
+<titles>
+<title>Data from: "African savanna-forest boundary dynamics: a 20-year study"</title>
+</titles>
+<publisher>
+ForestPlots.net
+
+</publisher>
+<publicationYear>2016</publicationYear>
+<subjects>
+<subject>Biomass</subject>
+<subject> Africa</subject>
+<subject> Tropical Forest</subject>
+
+
+</subjects>
+<language>eng</language>
+<resourceType resourceTypeGeneral="Dataset">Dataset</resourceType>
+<formats>
+<format>Excel files</format>
+</formats>
+<rightsList>
+<rights rightsURI="http://creativecommons.org/licenses/by-nd/4.0/">
+Creative Commons Attribution-NoDerivatives 4.0 International (CC BY-ND 4.0)
+</rights>
+</rightsList>
+
+<descriptions>
+<description descriptionType="Abstract"> Recent studies show widespread encroachment of forest into savannas with important consequences for the global carbon cycle and land-atmosphere interactions. However, little research has focused on in situ measurements of forest-savanna boundary change over time. Using long-term inventory plots we quantify changes in above-ground biomass (AGB), vegetation structure and biodiversity over 20 years for five vegetation types (savanna, colonising forest or F1, successional monodominant forest or F2, Marantaceae forest or F3 and mixed forest or F4) along a savanna-forest transition of central Gabon, all occurring on similar soils. Additionally, we use novel 3D terrestrial laser scanning (TLS) measurements to assess forest structure differences across the transition.
+ 
+Overall, F1 and F2 forests increased in AGB, mainly as a result of adding stems (recruitment in F1) or increased Basal Area (F2). Some plots of F3 and F4 increased in AGB while some decreased. Changes in biodiversity and species’ dominance were small. After 20 years no plot could be classified as having moved to the next stage in the succession. TLS vertical plant profiles showed very distinctive differences amongst the vegetation types. 
+We highlight two relevant points: (i) as forest colonises, changes in biodiversity are much slower than changes in forest structure or AGB; and (ii) all forest types store important quantities of Carbon. Decades long-term monitoring is likely to be required to assess the speed of transition between vegetation types, ideally with TLS, as this provides more objective forest classifications than inventory monitoring.
+
+
+  </description>
+</descriptions>
+</resource>
+
+
+
+<resource>
+<identifier identifierType="DOI">10.5521/FORESTPLOTS.NET/2016_2</identifier>
+<creators>
+
+<creator><creatorName>Johnson, Michelle O.</creatorName></creator>
+<creator><creatorName>Galbraith, David </creatorName></creator>
+<creator><creatorName>Gloor, Emanuel </creatorName></creator>
+<creator><creatorName>De Deurwaerder, Hannes </creatorName></creator>
+<creator><creatorName>Guimberteau, Matthieu </creatorName></creator>
+<creator><creatorName>Rammig, Anja </creatorName></creator>
+<creator><creatorName>Thonicke, Kirsten </creatorName></creator>
+<creator><creatorName>Verbeeck, Hans </creatorName></creator>
+<creator><creatorName>von Randow, Celso </creatorName></creator>
+<creator><creatorName>Monteagudo, Abel </creatorName></creator>
+<creator><creatorName>Phillips, Oliver L.</creatorName></creator>
+<creator><creatorName>Brienen, Roel J.W.</creatorName></creator>
+<creator><creatorName>Feldpausch, Ted R.</creatorName></creator>
+<creator><creatorName>Lopez Gonzalez, Gaby </creatorName></creator>
+<creator><creatorName>Fauset, Sophie</creatorName></creator>
+<creator><creatorName>Quesada, Carlos A.</creatorName></creator>
+<creator><creatorName>Christoffersen, Bradley </creatorName></creator>
+<creator><creatorName>Ciais, Phillipe </creatorName></creator>
+<creator><creatorName>Gilvan, Sampaio </creatorName></creator>
+<creator><creatorName>Kruijt, Bart </creatorName></creator>
+<creator><creatorName>Meir, Patrick </creatorName></creator>
+<creator><creatorName>Moorcroft, Paul </creatorName></creator>
+<creator><creatorName>Zhang, Ke </creatorName></creator>
+<creator><creatorName>Alvarez, Esteban </creatorName></creator>
+<creator><creatorName>Alves de Oliveira, Atila </creatorName></creator>
+<creator><creatorName>Amaral, Iêda </creatorName></creator>
+<creator><creatorName>Andrade, Ana </creatorName></creator>
+<creator><creatorName>Aragao, Luiz E.O.C.</creatorName></creator>
+<creator><creatorName>Araujo-Murakami, Alejandro </creatorName></creator>
+<creator><creatorName>Arets, Eric J.M.M</creatorName></creator>
+<creator><creatorName>Arroyo, Luzmila </creatorName></creator>
+<creator><creatorName>Aymard, Gerado A.</creatorName></creator>
+<creator><creatorName>Baraloto, Christopher </creatorName></creator>
+<creator><creatorName>Barroso, Jorcely </creatorName></creator>
+<creator><creatorName>Bonal, Damien </creatorName></creator>
+<creator><creatorName>Boot, Rene </creatorName></creator>
+<creator><creatorName>Camargo, Jose Luis </creatorName></creator>
+<creator><creatorName>Chave, Jerome </creatorName></creator>
+<creator><creatorName>Cogollo, Alvaro </creatorName></creator>
+<creator><creatorName>Cornejo Valverde, Fernando </creatorName></creator>
+<creator><creatorName>da Costa, Lola </creatorName></creator>
+<creator><creatorName>di_Fiore, Anthony </creatorName></creator>
+<creator><creatorName>Ferreira, Leandro </creatorName></creator>
+<creator><creatorName>Higuchi, Niro </creatorName></creator>
+<creator><creatorName>Honorio, Euridice </creatorName></creator>
+<creator><creatorName>Killeen, Tim J.</creatorName></creator>
+<creator><creatorName>Laurance, Susan G.</creatorName></creator>
+<creator><creatorName>Laurance, William F.</creatorName></creator>
+<creator><creatorName>Leal, Darley C.</creatorName></creator>
+<creator><creatorName>Licona, Juan Carlos </creatorName></creator>
+<creator><creatorName>Lovejoy, Thomas </creatorName></creator>
+<creator><creatorName>Malhi, Yadvinder </creatorName></creator>
+<creator><creatorName>Marimon, Beatriz </creatorName></creator>
+<creator><creatorName>Marimon_Junior, Ben H.</creatorName></creator>
+<creator><creatorName>Mendoza, Casimiro </creatorName></creator>
+<creator><creatorName>Neill, David A.</creatorName></creator>
+<creator><creatorName>Pardo, Guido </creatorName></creator>
+<creator><creatorName>Peña-Claros, Marielos </creatorName></creator>
+<creator><creatorName>Pitman, Nigel C.A.</creatorName></creator>
+<creator><creatorName>Poorter, Lourens </creatorName></creator>
+<creator><creatorName>Prieto, Adriana </creatorName></creator>
+<creator><creatorName>Ramirez-Angulo, Hirma </creatorName></creator>
+<creator><creatorName>Roopsind, Anand </creatorName></creator>
+<creator><creatorName>Rudas, Agustin </creatorName></creator>
+<creator><creatorName>Salomao, Rafael P.</creatorName></creator>
+<creator><creatorName>Silveira, Marcos </creatorName></creator>
+<creator><creatorName>Stropp, Juliana </creatorName></creator>
+<creator><creatorName>ter_Steege, Hans </creatorName></creator>
+<creator><creatorName>Terborgh, John </creatorName></creator>
+<creator><creatorName>Thomas, Raquel </creatorName></creator>
+<creator><creatorName>Toledo, Marisol </creatorName></creator>
+<creator><creatorName>Torres, Armando </creatorName></creator>
+<creator><creatorName>van der Heijden, Geertje M.F.</creatorName></creator>
+<creator><creatorName>Vasquez, Rodolfo </creatorName></creator>
+<creator><creatorName>Vieira, Ima </creatorName></creator>
+<creator><creatorName>Vilanova, Emilio </creatorName></creator>
+<creator><creatorName>Vos, Vincent A.</creatorName></creator>
+<creator><creatorName>Baker, Timothy R.</creatorName></creator>
+
+
+
+
+
+</creators>
+<titles>
+<title>Plot data from: "Variation in stem mortality rates determines patterns of aboveground biomass in Amazonian forests: implications for dynamic global vegetation models" </title>
+</titles>
+<publisher>
+ForestPlots.net
+
+</publisher>
+<publicationYear>2016</publicationYear>
+<subjects>
+<subject>aboveground biomass</subject>
+<subject> Amazonian forests</subject>
+<subject> dynamic global vegetation models</subject>
+<subject>stem mortality rates</subject> 
+
+
+
+</subjects>
+<language>eng</language>
+<resourceType resourceTypeGeneral="Dataset">Dataset</resourceType>
+<formats>
+<format>Excel files</format>
+</formats>
+<rightsList>
+<rights rightsURI="http://creativecommons.org/licenses/by-nd/4.0/">
+Creative Commons Attribution-NoDerivatives 4.0 International (CC BY-ND 4.0)
+</rights>
+</rightsList>
+
+<descriptions>
+<description descriptionType="Abstract"> 
+Understanding the processes that determine aboveground biomass (AGB) in Amazonian forests is important for predicting the sensitivity of these ecosystems to environmental change and for designing and evaluating dynamic global vegetation models (DGVMs). AGB is determined by inputs from woody productivity (woody NPP) and the rate at which carbon is lost through tree mortality. Here, we test whether two direct metrics of tree mortality (the absolute rate of woody biomass loss and the rate of stem mortality) and/or woody NPP, control variation in AGB among 167 plots in intact forest across Amazonia. We then compare these relationships and the observed variation in AGB and woody NPP with the predictions of four DGVMs. The observations show that stem mortality rates, rather than absolute rates of woody biomass loss, are the most important predictor of AGB, which is consistent with the importance of stand size-structure for determining spatial variation in AGB. The relationship between stem mortality rates and AGB varies among different regions of Amazonia, indicating that variation in wood density and height/diameter relationships also influence AGB. In contrast to previous findings, we find that woody NPP is not correlated with stem mortality rates, and is weakly positively correlated with AGB. Across the four models, basin-wide average AGB is similar to the mean of the observations. However, the models consistently overestimate woody NPP, and poorly represent the spatial patterns of both AGB and woody NPP estimated using plot data. In marked contrast to the observations, DGVMs typically show strong positive relationships between woody NPP and AGB. Resolving these differences will require incorporating forest size structure, mechanistic models of stem mortality and variation in functional composition in DGVMs.
+
+  </description>
+</descriptions>
+</resource>
+
+
+</resources>

@@ -1,0 +1,82 @@
+#!/usr/bin/perl -w
+use FindBin;
+use lib "$FindBin::Bin/../perl_lib";
+use EPrints;
+use strict;
+
+# list of eprint IDs to be processed
+my @eprint_ids = ( 1, 2, 3, 5, 6, 7, 9 );
+
+# repository to work with
+my $repo_id = 'researchdata';
+
+# connect to repository
+my $repo = new EPrints::Session( 1 , $repo_id , 1 );
+if( !defined $repo )
+{
+	print STDERR "Failed to load repository: $repo_id\n";
+	exit 1;
+}
+
+# get eprints dataset
+my $ds = $repo->dataset( 'eprint' ) ;
+if( !defined $ds )
+{
+	print STDERR "Unknown Dataset ID: eprint\n";
+	$repo->terminate;
+	exit 1;
+}
+
+foreach my $epid ( @eprint_ids ) {
+	#my $ep = new EPrints::DataObj::EPrint( $repo, $epid );
+	my $ep = $ds->dataobj( $epid );
+	if ( defined $ep ) {
+		# do_arkivum( $ep ) if defined $ep;
+	 	print "$epid: " . $ep->get_value('title') . "\n"; 
+	}
+}
+
+$repo->terminate;
+exit;
+
+
+
+
+# process an eprint object to set it for archive 
+sub do_arkivum 
+{
+	my $eprint = shift;
+	
+	  # request to store the eprint in A-Stor
+	  if ( defined $eprint ) 
+	  {
+			my $eprintid = $eprint->id;
+			my $status = $eprint->get_value( "eprint_status" );
+			if ( $status eq 'archive' ) 
+			{
+				  $repo->dataset( "astor_eprint" )->create_dataobj(
+				  {
+						eprintid => $eprintid,
+						userid => $repo->current_user->id,
+						justification => 'EPrint A-Stor Archive Request',
+						astor_status => 'archive_scheduled',
+				  });
+				  
+				  # Update the eprint archive_status field so we know
+				  # that the A-Stor request has been made
+				  $eprint->set_value("archive_status", "archive_approved");
+				  $eprint->commit();
+			}
+	  }
+}
+
+# set a trigger on an eprint object
+sub do_trigger
+{
+	my $eprint = shift;
+	$eprint->{dataset}->run_trigger( EPrints::Const::EP_TRIGGER_STATUS_CHANGE,
+			dataobj => $eprint,
+			old_status => 'archive',
+			new_status => 'archive'
+        );
+}

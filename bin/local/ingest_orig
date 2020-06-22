@@ -1,0 +1,41 @@
+#!/usr/bin/perl -w 
+
+use strict;
+use File::Basename;
+
+$|=1;
+
+die "Sorry, you need to be 'eprints' user to run this\n" if getpwuid($<) ne 'eprints';
+
+my $base_path = '/mnt/rdl/Repository/';
+my $log_path = '/usr/share/eprints/var/';
+my $log_file = $log_path . basename($0) . '_' . timestring() . '.log';
+#my $cmd_ingest = '/usr/share/eprints/bin/import --force --verbose --verbose $repoid eprint XMLIngest $xml_file >> $log_file 2>&1';
+my $cmd_ingest = '/usr/share/eprints/bin/import --force --verbose --verbose $repoid eprint XMLIngest $xml_file 2>&1 | tee -a $log_file';
+
+my $repoid = $ARGV[0];
+my $xml_file = $ARGV[1];
+
+die "Usage:\n\t" . basename($0) . " <repo_id> <rel_path_to_xml_file>\n" if ! ( $ARGV[0] && $ARGV[1] );
+die "The <repo_id> must be either 'researchdata' or 'rdtest'\n"
+	if (( $repoid ne 'researchdata' ) && ( $repoid ne 'rdtest' ));
+
+# append base path to XML file
+$xml_file = $base_path . $xml_file if $xml_file !~ /^$base_path/;
+die "Cannot find XML file '$xml_file'\n" if ! -f $xml_file; 
+
+my $cmd = eval('"'."$cmd_ingest".'"');
+
+system( "date >> $log_file" );
+open ( my $fh, '>>', $log_file );
+print $fh "Repository: $repoid\n";
+print $fh "XML file: $xml_file\n";
+close $fh;
+print `$cmd`;
+system( "date >> $log_file" );
+
+sub timestring
+{
+	my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
+	return sprintf("%04d%02d%02d%02d%02d%02d", $year+1900, $mon+1, $mday, $hour, $min, $sec);
+}

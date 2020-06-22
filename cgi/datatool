@@ -1,3 +1,5 @@
+#!perl
+
 use EPrints;
 use strict;
 use Data::Dumper;
@@ -76,6 +78,7 @@ my $down_file = '/usr/share/eprints/cgi/no_ingest';
 # define history info string
 my $history_str = <<'__HISTORY_INFO__';
 VERSION HISTORY
+1.8.0 - ADD: add RADAR as additional repository destination
 1.7.0 - MOD: invoke custom ingest wrapper script for hybrid ingestions
 1.6.1 - ADD: error trap for empty document nodes (without file nodes) in XML files
 1.6.0 - ADD: enhanced XML file analysis using LibXML library module
@@ -129,6 +132,12 @@ my %host_cfg = (
 			researchdata => {
 				label => 'RDL live repository [ARE YOU SURE!!]',
 				lat_link => 'http://archive.researchdata.leeds.ac.uk/cgi/latest',
+				do_views => 0,
+				do_abs => 0,
+			},
+			radar => {
+				label => 'RADAR live restricted repository [ARE YOU SURE!!]',
+				lat_link => 'http://radar.researchdata.leeds.ac.uk/cgi/latest',
 				do_views => 0,
 				do_abs => 0,
 			}
