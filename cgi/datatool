@@ -19,7 +19,7 @@ my $history = $repo->param( "history" );
 my $DEBUG = $repo->param( "debug" );
 
 # some parameters
-my $VERSION = 'v1.4.5';
+my $VERSION = 'v1.4.6';
 my $DEBUG_LOG = 1;
 my $TITLE = "RDL hybrid ingestion";
 $TITLE .= ' (debug mode)' if $DEBUG;
@@ -40,6 +40,7 @@ my $down_file = '/usr/share/eprints/cgi/no_ingest';
 # define history info string
 my $history_str = <<'__HISTORY_INFO__';
 VERSION HISTORY
+1.4.6 - ADD: error trap to detect spaces in spreadsheet file path or file name
 1.4.5 - MOD: implement review subdomain replacing roadmap2 for RDL review repo
 1.4.4 - ADD: down for maintenance functionality
 1.4.3 - ADD: thread ID and thread size output in debug mode
@@ -197,18 +198,27 @@ elsif ( defined $xlsfile )
 	my $xmlfile = $xlsfile;
 	$xmlfile =~ s#\.xls$#\.xml#i;
 
+	# initiate output string
+	my $op = '';
+	
 	# initiate an error string in case it's needed
 	my $error_str = '';
 
-	# try the conversion to XML file
-	my $op = "Converting '$xlspath$xlsfile'\n\n";
-	my $cmd = eval('"'."$cmd_conv".'"') . " $xlslpath$xlsfile $xlslpath$xmlfile 2>&1";
-	$op .= `$cmd`;
-	$op .= "XML file creation completed.\n\n";
+	# check for spaces in the file path or file name
+	$error_str = 'spaces in the file name' if $xlsfile =~ / /;
+	$error_str = 'spaces in the file path' if $xlslpath =~ / /;
+	
+	# try the conversion to XML file if there are no file path or file name errors
+	if ( ! $error_str ) {
+		$op = "Converting '$xlspath$xlsfile'\n\n";
+		my $cmd = eval('"'."$cmd_conv".'"') . " $xlslpath$xlsfile $xlslpath$xmlfile 2>&1";
+		$op .= `$cmd`;
+		$op .= "XML file creation completed.\n\n";
 
-	# flag an error if required
-	$error_str = 'spreadsheet errors' if $op =~ /ERROR\:/;
-
+		# flag an error if required
+		$error_str = 'spreadsheet errors' if $op =~ /ERROR\:/;
+	}
+	
 	# try file reference checking only if there are no errors so far
 	if ( ! $error_str ) {
 		$op .= "Checking file references in '$xmlfile'...\n\n";
@@ -249,8 +259,16 @@ elsif ( defined $xlsfile )
 	# if there are errors don't allow continuation
 	if ( $error_str ) {
 	        my $ep = $repo->make_element( "p" );
-	        $ep->appendChild( $repo->make_text( "There are $error_str - please make a copy of the spreadsheet in its current state if necessary, then edit the spreadsheet to correct the errrors, be sure to save the changes to it, then " ) );
-
+			if ($error_str =~ /file path/ ) {
+				$ep->appendChild( $repo->make_text( "There are $error_str - please rename folder(s) in the spreadsheet file path replacing any spaces with underscores, then " ) );			
+			}
+			elsif ( $error_str =~ /file name/ ) {
+				$ep->appendChild( $repo->make_text( "There are $error_str - please rename the spreadsheet file replacing any spaces with underscores, then " ) );			
+			}
+			else {
+				$ep->appendChild( $repo->make_text( "There are $error_str - please make a copy of the spreadsheet in its current state if necessary, then edit the spreadsheet to correct the errrors, be sure to save the changes to it, then " ) );
+			}
+			
 	        my $ea = $DEBUG ?
 				$repo->render_link( $host_cfg{$hostname}{https_link} ) :
 				$repo->render_link( $host_cfg{$hostname}{https_link} . '?debug=1' );
