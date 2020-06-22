@@ -1,9 +1,11 @@
 use EPrints;
 use strict;
 use Data::Dumper;
+use Sys::Hostname;
+
 $|++;
-my $eprints = EPrints->new;
-my $repo = $eprints->current_repository;
+#my $eprints = EPrints->new;
+my $repo = EPrints->new->current_repository;
 exit( 0 ) unless( defined $repo );
 
 # Get xlsfile and path parameters from URL
@@ -30,7 +32,9 @@ my %repo_labels = (
 	researchdata => 'live RDL repository',
 );
 
-my $hostname = `hostname`;
+#my $hostname = `hostname`;
+# use the Sys::Hostname library (safer than shell command)
+my $hostname = hostname;
 $hostname =~ s/\s//; # remove white space form host name
 
 my %host_cfg = (
@@ -72,17 +76,17 @@ my %host_cfg = (
 # Create empty document
 my $page = $repo->make_doc_fragment();
 
-print STDERR $host_cfg{$hostname}; 
-show_error('Sorry but this facility is not configured to run on this host') if ! exists $host_cfg{$hostname};
-show_error('Sorry but I can only work on a secure connection - try ', $host_cfg{$hostname}{https_link}) if(!$ENV{'HTTPS'});
+print STDERR "Datatool: hostname is $hostname\n"; 
+show_error($repo, $page, 'Sorry but this facility is not configured to run on this host') if ! exists $host_cfg{$hostname};
+show_error($repo, $page, 'Sorry but I can only work on a secure connection - try ', $host_cfg{$hostname}{https_link}) if(!$ENV{'HTTPS'});
 
 # PROCESS XLS FILE
 if ( defined $xlsfile )
 {
-	show_error("Invalid passphrase") if $passphrase ne $ppans; 
-	show_error("You have not selected an .xls file") if $xlsfile !~ /\.xls$/i; 
+	show_error($repo, $page, "Invalid passphrase") if $passphrase ne $ppans; 
+	show_error($repo, $page, "You have not selected an .xls file") if $xlsfile !~ /\.xls$/i; 
 
-	show_error("You have not supplied the full path to the file .xls file")
+	show_error($repo, $page, "You have not supplied the full path to the file .xls file")
 		 if ! defined $xlspath || $xlspath =~ /^$pathmsg/ ; 
 
 	# convert path to slashes
@@ -91,14 +95,14 @@ if ( defined $xlsfile )
 	# add trailing slash if not present
 	$xlspath .= '/' if $xlspath !~ m#/$# ;
 
-	show_error("The supplied path is not allowed. The file must reside in the Repository folder with the RDL share on the N: drive") if $xlspath !~ /^$prepath/ ; 
+	show_error($repo, $page, "The supplied path is not allowed. The file must reside in the Repository folder with the RDL share on the N: drive") if $xlspath !~ /^$prepath/ ; 
 
 	# create a linux version of the path
 	my $xlslpath = $xlspath;
 	$xlslpath  =~ s#^$prepath#$linuxpath#;
 
 	# check if file exists on linux side
-	show_error("The file '$xlspath$xlsfile' cannot be found.") if ! -f $xlslpath.$xlsfile;
+	show_error($repo, $page, "The file '$xlspath$xlsfile' cannot be found.") if ! -f $xlslpath.$xlsfile;
 	
 	# construct the output filename
 	my $xmlfile = $xlsfile;
@@ -136,7 +140,7 @@ if ( defined $xlsfile )
 # INGEST XML FILE
 elsif ( defined $xmlfilepath )
 {
-	show_error("Invalid passphrase") if $passphrase ne $ppans; 
+	show_error($repo, $page, "Invalid passphrase") if $passphrase ne $ppans; 
 	my $xmlpcfilepath = $xmlfilepath;
 	
 	$xmlpcfilepath =~ s#^$linuxpath#$prepath#;
@@ -218,34 +222,41 @@ $repo->send_page();
 $repo->terminate;
 
 
-
 sub show_error
 {
+	# NOTE - need to pass in any globally defined variables here to prevent
+	# pesky thread caching issues where for a given apache thread, a sub
+	# may end up using a globally defined variable value from a previous
+	# instantiation of the script - the only other way to prevent this
+	# is to restart the apache service after each run - probably best
+	# not doing that!
+	my $rr = shift;
+	my $pp = shift;
 	my $msg = shift;
 	my $uri = shift;
 	my $link_name = shift;
 
 	$msg =~ s#\n# #g;
 
-	my $p = $repo->make_element( "p" );
-        $p->appendChild( $repo->make_text( $msg ) );
+	my $p = $rr->make_element( "p" );
+        $p->appendChild( $rr->make_text( "[ $$ ] $msg" ) );
 
 	if ( defined $uri ) {
-		my $a = $repo->render_link( $uri );
+		my $a = $rr->render_link( $uri );
 		$link_name = $uri if ! defined $link_name;
-		$a->appendChild( $repo->make_text( $link_name ) );
+		$a->appendChild( $rr->make_text( $link_name ) );
 		$p->appendChild( $a );
 	}
 
-        $page->appendChild( $p );
+        $pp->appendChild( $p );
 
 	# Build error page
-	$repo->build_page(
-		$repo->make_text( "ERROR" ),
-		$page,
+	$rr->build_page(
+		$rr->make_text( "ERROR" ),
+		$pp,
 	);
-	$repo->send_page();
-	$repo->terminate;
+	$rr->send_page();
+	$rr->terminate;
 	exit;
 }
 
@@ -262,7 +273,7 @@ sub show_error
 
 # Iterate over fields
 #foreach my $field ( @fields )
-#{
+
 #	# Add table row containing field name / field value
 #	my $tr = $repo->make_element( "tr" );
 #	$table->appendChild( $tr );
@@ -275,3 +286,4 @@ sub show_error
 #}
 
 #my $title = $eprint->render_value( "title" );
+
