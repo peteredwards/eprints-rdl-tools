@@ -21,7 +21,7 @@ my $DEBUG = $repo->param( "debug" );
 my $hbinmode = $repo->param( "hbinmode" );
 
 # some parameters
-my $VERSION = 'v1.6.0';
+my $VERSION = 'v1.6.1';
 
 # NOTE: back-end file/ingest limits should always be geater than hybrid limits
 # max allowed file size for ingestion
@@ -75,6 +75,7 @@ my $down_file = '/usr/share/eprints/cgi/no_ingest';
 # define history info string
 my $history_str = <<'__HISTORY_INFO__';
 VERSION HISTORY
+1.6.1 - ADD: error trap for empty document nodes (without file nodes) in XML files
 1.6.0 - ADD: enhanced XML file analysis using LibXML library module
         ADD: error trap to detect unmatched document 'main' values in XML files
 1.5.1 - ADD: link to ABE Ingest checker
@@ -361,6 +362,12 @@ elsif ( defined $xlsfile )
 		{
 			$op .= "ERROR: The following files were not found: -\n$fchk_files\n\n";
 			$error_str = 'bad file references';
+		}
+		# empty document nodes without file child node
+		elsif ( $fref->{dempty} )
+		{
+			$op .= "ERROR: There are " . $fref->{dempty} . " empty document references (without a 'path' reference)\n\n";
+			$error_str = 'empty document references';
 		}
 		# unmatched document 'main's
 		elsif ( $fref->{dunmatched} )
@@ -675,6 +682,7 @@ sub check_files
 		dtotal => 0,
 		docs => [],
 		dunmatched => 0,
+		dempty => 0,
 		# file level
 		ftotal => 0,
 		ffound => 0,
@@ -702,8 +710,10 @@ sub check_files
 				$r{dtotal}++;
 				$d{main} = $doc->findvalue('./main');
 				$d{matched} = 0;
+				$d{empty} = 1;
 				foreach my $file ( $doc->findnodes('./files/file') )
 				{
+					$d{empty} = 0;
 					my %f;
 					$f{size} = 0;
 					$r{ftotal}++;
@@ -729,7 +739,11 @@ sub check_files
 					push @{$r{files}}, \%f;
 					$d{matched} = 1 if $d{main} eq basename( $raw_path );
 				}
-				if ( ! $d{matched} )
+				if ( $d{empty} )
+				{
+					$r{dempty}++;
+				}
+				elsif ( ! $d{matched} )
 				{
 					$r{dunmatched}++;
 				}
