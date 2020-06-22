@@ -19,7 +19,7 @@ my $history = $repo->param( "history" );
 my $DEBUG = $repo->param( "debug" );
 
 # some parameters
-my $VERSION = 'v1.4.2';
+my $VERSION = 'v1.4.3';
 my $DEBUG_LOG = 1;
 my $TITLE = "RDL hybrid ingestion";
 $TITLE .= ' (debug mode)' if $DEBUG;
@@ -33,10 +33,14 @@ my $cmd_conv = 'perl /export/home/eprints/_scripts/excel.pl -o -u 1 -t archive -
 my $cmd_ingest = '/usr/share/eprints/bin/import --force $opt_verbose $repoid eprint XMLIngest ';
 my $cmd_genview = '/usr/share/eprints/bin/generate_views $opt_verbose $repoid ';
 my $cmd_genabs = '/usr/share/eprints/bin/generate_abstracts $opt_verbose $repoid ';
+my $cmd_psmem = 'ps -o vsz --no-headers $$';
+my $thread_size = '';
 
 # define history info string
 my $history_str = <<'__HISTORY_INFO__';
 VERSION HISTORY
+1.4.3 - ADD: thread ID and thread size output in debug mode
+        ADD: thread size output in debug log
 1.4.2 - ADD: debug flag across all ingestion stages
         ADD: verbose debug mode for second stage of ingestion
 1.4.1 - ADD: back-end logging facility (to be further developed)
@@ -128,11 +132,18 @@ $v->appendChild( $repo->make_text( $VERSION . ' ' ) );
 my $va = $repo->render_link( $host_cfg{$hostname}{https_link} . '?history=1' );
 $va->appendChild( $repo->make_text( '[version history]' ) );
 $v->appendChild( $va );
+if ( $DEBUG ) {
+	my $dp = $repo->make_element( "p" );
+	my $scmd = eval('"'."$cmd_psmem".'"') . " 2>&1";
+	chomp( $thread_size = `$scmd` );
+	$dp->appendChild( $repo->make_text( "DEBUG INFO - Thread ID: $$ - Thread size: $thread_size"  ) );
+	$v->appendChild( $dp );
+}
 $page->appendChild( $v );
 
 
 # log the instance
-print STDERR "Datatool: [ $$ ] " . localtime . " " . $repo->{request}->connection->remote_ip . "\n" if $DEBUG_LOG;
+print STDERR "Datatool: [ $$ ] " . localtime . " $thread_size " . $repo->{request}->connection->remote_ip . "\n" if $DEBUG_LOG || $DEBUG;
 print STDERR "Datatool: Debug initiated\n" if $DEBUG;
 show_error($repo, $page, 'Sorry but this facility is not configured to run on this host') if ! exists $host_cfg{$hostname};
 show_error($repo, $page, 'Sorry but I can only work on a secure connection - try ', $host_cfg{$hostname}{https_link}) if(!$ENV{'HTTPS'});
