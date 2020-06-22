@@ -18,24 +18,38 @@ my $passphrase = $repo->param( "oneliner" );
 my $repoid = $repo->param( "repoid" );
 my $history = $repo->param( "history" );
 my $DEBUG = $repo->param( "debug" );
+my $hbinmode = $repo->param( "hbinmode" );
 
 # some parameters
-my $VERSION = 'v1.4.8';
+my $VERSION = 'v1.5.0';
 
+# NOTE: back-end file/ingest limits should always be geater than hybrid limits
 # max allowed file size for ingestion
 my $max_fsize = 2 * 1024 * 1024 * 1024;
-#my $max_fsize = 450 * 1024; # for testing
 
 # max allowed total ingestion size
 my $max_isize = 10 * 1024 * 1024 * 1024;
-#my $max_isize = 400 * 1024; # for testing
+
+# max allowed file size for back-end ingestion
+my $max_befsize = 10 * 1024 * 1024 * 1024;
+
+# max allowed total back-end ingestion size
+my $max_beisize = 100 * 1024 * 1024 * 1024;
 
 # free space always required on root file system
 # this is deducted from rootfs_free and max_isize is reduced if necessary
 my $rootfs_reqd = 2 * 1024 * 1024 * 1024;
 
+####
+# TO DO - check file sizes at point if ingestion?
+####
+
+# enable flags for hybrid and back-end ingestion
+my $hy_enabled = 1;
+my $be_enabled = 1;
+
 my $DEBUG_LOG = 1;
-my $TITLE = "RDL hybrid ingestion";
+my $TITLE = "RDL hybrid and back-end ingestion";
 $TITLE .= ' (debug mode)' if $DEBUG;
 my $opt_verbose = $DEBUG ? '--verbose --verbose' : '';
 my $pathmsg = 'PASTE FULL PATH HERE';
@@ -49,6 +63,7 @@ my $cmd_genview = '/usr/share/eprints/bin/generate_views $opt_verbose $repoid ';
 my $cmd_genabs = '/usr/share/eprints/bin/generate_abstracts $opt_verbose $repoid ';
 my $cmd_psmem = 'ps -o vsz --no-headers $$';
 my $cmd_rootfs = 'df -P -B 1 / | awk \'NR==2 { print $4 }\'';
+my $cmd_inprep = '/usr/share/eprints/bin/inprep $repoid \'$xmlfilepath\'';
 my $thread_size = '';
 my $rootfs_free = '';
 my $down_file = '/usr/share/eprints/cgi/no_ingest';
@@ -56,6 +71,7 @@ my $down_file = '/usr/share/eprints/cgi/no_ingest';
 # define history info string
 my $history_str = <<'__HISTORY_INFO__';
 VERSION HISTORY
+1.5.0 - ADD: back-end ingestion option for large files and datasets
 1.4.8 - ADD: max file size, ingestion size and root file system free space checks
 1.4.7 - ADD: translation of URI escaped characters in filename references
 1.4.6 - ADD: error trap to detect spaces in spreadsheet file path or file name
@@ -163,8 +179,13 @@ $thread_size *= 1024; # output from ps is in KB
 # get root fs free space
 chomp( $rootfs_free = `$cmd_rootfs` );
 
+# some sanity checks
 # max file size cannot be larger than max ingestion size
 $max_fsize = $max_isize if ( $max_fsize > $max_isize );
+$max_befsize = $max_beisize if ( $max_befsize > $max_beisize );
+# hybrid ingestion limits cannot be larger than back-end limits
+$max_fsize = $max_befsize if ( $max_fsize > $max_befsize );
+$max_isize = $max_beisize if ( $max_isize > $max_beisize );
 
 # amend max_fsize if necessary depending on how much available root fs space
 my $rootfs_avail = $rootfs_free - $rootfs_reqd;
@@ -172,26 +193,26 @@ $rootfs_avail = 0 if $rootfs_avail < 0;
 $max_fsize = $rootfs_avail if ( $rootfs_avail < $max_fsize );
 
 ########
-
 # TO DO
-
-# display max fsize and isize for user
-
+# user (non-debug) display of max fsize/isize for hybrid/back-end?
+# also user (non-debug) display if hybrid/back-end is not enabled?
 ########
 if ( $DEBUG ) {
 	my $dp = $repo->make_element( "p" );
-	$dp->appendChild( $repo->make_text( "DEBUG INFO - Thread ID: $$ - Thread size: " . hr_bytes( $thread_size, 1 ) ) );
+	my $pre = $repo->make_element( "pre" );
+	my $opstr = "DEBUG INFO\n";
+	$opstr .= "Thread ID: $$ - Thread size: " . hr_bytes( $thread_size, 1 ) . "\n";
+	$opstr .= "Root file system free space: " . hr_bytes( $rootfs_free, 1 ) . "\n";
+	$opstr .= "Root file system reserved space: " . hr_bytes( $rootfs_reqd, 1 ) . "\n";
+	$opstr .= "Hybrid ingestion status: " . ( ( $hy_enabled ) ? "enabled" : "disabled" ) . "\n";
+	$opstr .= "Max hybrid file/ingest size: " . hr_bytes( $max_fsize, 1 )
+		. " / " . hr_bytes( $max_isize, 1 ) . "\n";
+	$opstr .= "Back-end ingestion status: " . ( ( $be_enabled ) ? "enabled" : "disabled" ) . "\n";
+	$opstr .= "Max back-end file/ingest size: " . hr_bytes( $max_befsize, 1 )
+		. " / " . hr_bytes( $max_beisize, 1 ) . "\n";
+	$pre->appendChild( $repo->make_text( $opstr ) );
+	$dp->appendChild( $pre );
 	$v->appendChild( $dp );
-	my $dp2 = $repo->make_element( "p" );
-	$dp2->appendChild( $repo->make_text( "DEBUG INFO - root file system free space: " . hr_bytes( $rootfs_free, 1 ) ) );
-	$v->appendChild( $dp2 );
-	my $dp3 = $repo->make_element( "p" );
-	$dp3->appendChild( $repo->make_text( "DEBUG INFO - root file system reserved space: " . hr_bytes( $rootfs_reqd, 1 ) ) );
-	$v->appendChild( $dp3 );
-	my $dp4 = $repo->make_element( "p" );
-	$dp4->appendChild( $repo->make_text( "DEBUG INFO - max file / ingestion size: " . hr_bytes( $max_fsize, 1 )
-		. " / " . hr_bytes( $max_isize, 1 ) ) );
-	$v->appendChild( $dp4 );
 }
 $page->appendChild( $v );
 
@@ -199,7 +220,8 @@ $page->appendChild( $v );
 # log the instance
 print STDERR "Datatool: [ $$ ] " . localtime . "  TS: " . hr_bytes( $thread_size, 1 ) . "  RFSF: " . hr_bytes( $rootfs_free, 1 ) . "  IP: " . $repo->{request}->connection->remote_ip . "\n" if $DEBUG_LOG || $DEBUG;
 print STDERR "Datatool: Debug initiated\n" if $DEBUG;
-show_error($repo, $page, 'Sorry but this facility is currently disabled for maintenance purposes. Please try again later. For further details please contact the system administrator.') if -f $down_file;
+show_error($repo, $page, 'Sorry, this facility is currently disabled for maintenance purposes. Please try again later. For further details please contact the system administrator.') if -f $down_file;
+show_error($repo, $page, 'Sorry, neither hybrid nor back-end ingestion are enabled at the moment. Please try again later. For further details please contact the system administrator.') if ( ( ! $be_enabled ) && ( ! $hy_enabled ) );
 show_error($repo, $page, 'Sorry but this facility is not configured to run on this host') if ! exists $host_cfg{$hostname};
 show_error($repo, $page, 'Sorry but I can only work on a secure connection - try ', $host_cfg{$hostname}{https_link}) if(!$ENV{'HTTPS'});
 show_error($repo, $page, 'Default repository is not defined for this host') if ! exists $host_cfg{$hostname}{default_repo};
@@ -223,6 +245,8 @@ if ( defined $history ) {
 # PROCESS XLS FILE
 elsif ( defined $xlsfile )
 {
+	my $hbin_ok = ( $hy_enabled ) ? 1 : 0; # flag to indicate if hybrid ingest is acceptable
+	
 	show_error($repo, $page, "Invalid passphrase") if $passphrase ne $ppans; 
 	show_error($repo, $page, "You have not selected an .xls file") if $xlsfile !~ /\.xls$/i; 
 
@@ -280,6 +304,8 @@ elsif ( defined $xlsfile )
 		my $fchk_files = '';
 		my $schk_oversized = 0;
 		my $schk_files = '';
+		my $schk_hbin_oversized = 0;
+		my $schk_hbin_files = '';
 		my $isize = 0;
 
         	if ( -f "$xlslpath$xmlfile" ) {
@@ -293,11 +319,19 @@ elsif ( defined $xlsfile )
         	                                $fchk_found++;
 											my $fsize = -s $raw_path;
 											$isize += $fsize;
-											if ( $max_fsize && ( $fsize > $max_fsize ))
+											# check back-end file size limit
+											if ( $max_befsize && ( $fsize > $max_befsize ))
 											{
 												$schk_files .= basename($raw_path)
 													. '   [' . hr_bytes( $fsize, 1 ) . "]\n";
 												$schk_oversized++;
+											}
+											# check hybrid file size limit
+											if ( $max_fsize && ( $fsize > $max_fsize ))
+											{
+												$schk_hbin_files .= basename($raw_path)
+													. '   [' . hr_bytes( $fsize, 1 ) . "]\n";
+												$schk_hbin_oversized++;
 											}
         	                        }
         	                        else {
@@ -309,24 +343,73 @@ elsif ( defined $xlsfile )
         	}
 
 		$op .= "Found $fchk_found out of $fchk_total files referenced in the XML file\n\n";
+		
+		# ERROR TRAPS
+		# missing files
 		if ( $fchk_missing )
 		{
 			$op .= "ERROR: The following files were not found: -\n$fchk_files\n\n";
 			$error_str = 'bad file references';
 		}
-		elsif ( $schk_oversized )
+		# back-end ingestion size limits (if enabled)
+		elsif ( $be_enabled && $schk_oversized )
 		{
-			$op .= "ERROR: The following files are too large to be ingested "
-				. "[max " . hr_bytes( $max_fsize, 1 ) . "] : -\n$schk_files\n\n";
+			$op .= "ERROR: The following files are too large for back-end ingestion "
+				. "[max " . hr_bytes( $max_befsize, 1 ) . "] : -\n$schk_files\n\n";
 			$error_str = 'file sizes too large';
 		}
-		elsif ( $max_isize && ( $isize > $max_isize ))
+		elsif ( $be_enabled && $max_beisize && ( $isize > $max_beisize ))
 		{
-			$op .= "ERROR: The total size of this ingestion ["
-				. hr_bytes( $isize, 1 ) . "] is too large.\n"
-				. "       Maximum permitted ingestion size is "
-				. hr_bytes( $max_isize, 1 ) . "\n\n";
-			$error_str = 'ingestion size too large';
+				$op .= "ERROR: The total size of this ingestion ["
+					. hr_bytes( $isize, 1 ) . "] is too large.\n"
+					. "Maximum permitted back-end ingestion size is "
+					. hr_bytes( $max_beisize, 1 ) . "\n\n";
+				$error_str = 'ingestion size too large';
+		}
+		# hybrid ingestion size limits (if enabled )
+		# NOTE: if we get here we know the back-end limits are okay
+		elsif ( $hy_enabled )
+		{
+			if ( $schk_hbin_oversized )
+			{
+				# we can't use hybrid in this case
+				$hbin_ok = 0;
+				
+				if ( $be_enabled )
+				{
+					$op .= "INFO: Back-end ingestion is necessary because ";
+					$op .= "the following files\nare too large for hybrid ingestion "
+						. "[max " . hr_bytes( $max_fsize, 1 ) . "] : -\n$schk_hbin_files\n\n";
+				}
+				else
+				{
+					$op .= "ERROR: The following files are too large for hybrid ingestion "
+						. "[max " . hr_bytes( $max_fsize, 1 ) . "] : -\n$schk_hbin_files\n\n";
+					$error_str = 'file sizes too large';
+				}
+			}
+			elsif ( $max_isize && ( $isize > $max_isize ))
+			{
+				# we can't use hybrid in this case
+				$hbin_ok = 0;
+				
+				if ( $be_enabled )
+				{			
+					$op .= "INFO: Back-end ingestion is necessary because ";
+					$op .= "the total size of this ingestion is\n"
+						. hr_bytes( $isize, 1 ) . "].\n"
+						. "Maximum permitted hybrid ingestion size is "
+						. hr_bytes( $max_isize, 1 ) . "\n\n";
+				}
+				else
+				{
+					$op .= "ERROR: The total size of this ingestion ["
+						. hr_bytes( $isize, 1 ) . "] is too large.\n"
+						. "Maximum permitted hybrid ingestion size is "
+						. hr_bytes( $max_isize, 1 ) . "\n\n";
+					$error_str = 'ingestion size too large';				
+				}
+			}	
 		}
 	}
 
@@ -368,13 +451,17 @@ elsif ( defined $xlsfile )
 	{
 		# Create paragraph
 		my $p = $repo->make_element( "p" );
-		$p->appendChild( $repo->make_text( "If the conversion appears to have worked without errors you can attempt ingestion..." ) );
+		my $prompt = ( $hbin_ok ) ?
+			"If the conversion appears to have worked without errors you can attempt ingestion..." :
+			"If the conversion has worked without errors you can set this item for back-end ingestion...";
+		$p->appendChild( $repo->make_text( "$prompt" ) );
 		$page->appendChild( $p );
 	
 		# create form
 		my $f = $repo->render_form( "POST" );
 		$f->appendChild( $repo->render_hidden_field( "xmlfilepath", "$xlslpath$xmlfile" ) );
 		$f->appendChild( $repo->render_hidden_field( "debug", "$DEBUG" ) );
+		$f->appendChild( $repo->render_hidden_field( "hbinmode", "1" ) ) if $hbin_ok;		
 		$f->appendChild( $repo->render_option_list(
         	        name => 'repoid',
         	        id => 'repoid',
@@ -383,7 +470,10 @@ elsif ( defined $xlsfile )
         	        labels => \%labels ) );
 
 		$f->appendChild( $repo->render_input_field( name => "oneliner", size => 40, value => "$ppmsg")  );
-		$f->appendChild( $repo->render_action_buttons( submit => "Ingest into EPrints" ) );
+		my $subtxt = ( $hbin_ok ) ?
+			"Ingest into EPrints" :
+			"Set for back-end ingestion";
+		$f->appendChild( $repo->render_action_buttons( submit => "$subtxt" ) );
 		$page->appendChild( $f );
 	}
 	
@@ -398,22 +488,39 @@ elsif ( defined $xmlfilepath )
 	$xmlpcfilepath =~ s#^$linuxpath#$prepath#;
 	$xmlpcfilepath =~ s#/#\\#g;
 	
-	my $op = "Attempting ingestion using metadata file\n'$xmlpcfilepath'...\n\n";
-	my $cmd = eval('"'."$cmd_ingest".'"') . " $xmlfilepath 2>&1";
-	#$op = "$cmd";
-	$op .= `$cmd`;
+	my $op = '';
+	my $cmd = '';
+	my $chktxt = '';
 	
-	# update views if approrpiate config flag is set
-	if ( $host_cfg{$hostname}{repo}{$repoid}{do_views} ) {
-		$op .= "\n\nUpdating the repository views to show the new additions...\n\n";
-		$cmd = eval('"'."$cmd_genview".'"') . " 2>&1";
+	# hybrid ingestion
+	if ( defined $hbinmode )
+	{
+		$op = "Attempting ingestion using metadata file\n'$xmlpcfilepath'...\n\n";
+		$cmd = eval('"'."$cmd_ingest".'"') . " $xmlfilepath 2>&1";
+		#$op = "$cmd";
 		$op .= `$cmd`;
+		
+		# update views if approrpiate config flag is set
+		if ( $host_cfg{$hostname}{repo}{$repoid}{do_views} ) {
+			$op .= "\n\nUpdating the repository views to show the new additions...\n\n";
+			$cmd = eval('"'."$cmd_genview".'"') . " 2>&1";
+			$op .= `$cmd`;
+		}
+		# update abstracts if approrpiate config flag is set
+		if ( $host_cfg{$hostname}{repo}{$repoid}{do_abs} ) {	
+			$op .= "\n\nRegenerating abstract pages to overwrite any old cached pages for current items...\n\n";
+			$cmd = eval('"'."$cmd_genabs".'"') . " 2>&1";
+			$op .= `$cmd`;
+		}
+		$chktxt = "You can check if data ingestion has been successful by going to ";
 	}
-	# update abstracts if approrpiate config flag is set
-	if ( $host_cfg{$hostname}{repo}{$repoid}{do_abs} ) {	
-		$op .= "\n\nRegenerating abstract pages to overwrite any old cached pages for current items...\n\n";
-		$cmd = eval('"'."$cmd_genabs".'"') . " 2>&1";
+	# back-end ingestion
+	else
+	{
+		$cmd = eval('"'."$cmd_inprep".'"') . " 2>&1";
+		$op = "Invoking back-end ingestion preparation for this item...\n\n";
 		$op .= `$cmd`;
+		$chktxt .= "After back-end ingestion has run you can check if it was successful by going to ";
 	}
 	
 	my $pre = $repo->make_element( "pre", style => 'white-space: pre-wrap; overflow: auto;' );
@@ -421,7 +528,7 @@ elsif ( defined $xmlfilepath )
 	$page->appendChild( $pre );
 	
 	my $p = $repo->make_element( "p" );
-	$p->appendChild( $repo->make_text( "You can check if data ingestion has been successful by going to " ) );
+	$p->appendChild( $repo->make_text( "$chktxt" ) );
 
 	my $a = $repo->render_link( $host_cfg{$hostname}{repo}{$repoid}{lat_link} );
 	$a->appendChild( $repo->make_text( $host_cfg{$hostname}{repo}{$repoid}{lat_link} ) );
