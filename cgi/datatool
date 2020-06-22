@@ -19,7 +19,7 @@ my $history = $repo->param( "history" );
 my $DEBUG = $repo->param( "debug" );
 
 # some parameters
-my $VERSION = 'v1.4.4';
+my $VERSION = 'v1.4.5';
 my $DEBUG_LOG = 1;
 my $TITLE = "RDL hybrid ingestion";
 $TITLE .= ' (debug mode)' if $DEBUG;
@@ -40,6 +40,7 @@ my $down_file = '/usr/share/eprints/cgi/no_ingest';
 # define history info string
 my $history_str = <<'__HISTORY_INFO__';
 VERSION HISTORY
+1.4.5 - MOD: implement review subdomain replacing roadmap2 for RDL review repo
 1.4.4 - ADD: down for maintenance functionality
 1.4.3 - ADD: thread ID and thread size output in debug mode
         ADD: thread size output in debug log
@@ -76,7 +77,7 @@ my %host_cfg = (
 		repo => {
 			rdtest => {
 				label => 'RDL review repository',
-				lat_link => 'http://roadmap2.leeds.ac.uk/cgi/latest',
+				lat_link => 'http://review.researchdata.leeds.ac.uk/cgi/latest',
 				do_views => 1,
 				do_abs => 0,
 			},
