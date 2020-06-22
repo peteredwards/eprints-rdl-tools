@@ -19,7 +19,7 @@ my $history = $repo->param( "history" );
 my $DEBUG = $repo->param( "debug" );
 
 # some parameters
-my $VERSION = 'v1.4.3';
+my $VERSION = 'v1.4.4';
 my $DEBUG_LOG = 1;
 my $TITLE = "RDL hybrid ingestion";
 $TITLE .= ' (debug mode)' if $DEBUG;
@@ -35,10 +35,12 @@ my $cmd_genview = '/usr/share/eprints/bin/generate_views $opt_verbose $repoid ';
 my $cmd_genabs = '/usr/share/eprints/bin/generate_abstracts $opt_verbose $repoid ';
 my $cmd_psmem = 'ps -o vsz --no-headers $$';
 my $thread_size = '';
+my $down_file = '/usr/share/eprints/cgi/no_ingest';
 
 # define history info string
 my $history_str = <<'__HISTORY_INFO__';
 VERSION HISTORY
+1.4.4 - ADD: down for maintenance functionality
 1.4.3 - ADD: thread ID and thread size output in debug mode
         ADD: thread size output in debug log
 1.4.2 - ADD: debug flag across all ingestion stages
@@ -145,6 +147,7 @@ $page->appendChild( $v );
 # log the instance
 print STDERR "Datatool: [ $$ ] " . localtime . " $thread_size " . $repo->{request}->connection->remote_ip . "\n" if $DEBUG_LOG || $DEBUG;
 print STDERR "Datatool: Debug initiated\n" if $DEBUG;
+show_error($repo, $page, 'Sorry but this facility is currently disabled for maintenance purposes. Please try again later. For further details please contact the system administrator.') if -f $down_file;
 show_error($repo, $page, 'Sorry but this facility is not configured to run on this host') if ! exists $host_cfg{$hostname};
 show_error($repo, $page, 'Sorry but I can only work on a secure connection - try ', $host_cfg{$hostname}{https_link}) if(!$ENV{'HTTPS'});
 show_error($repo, $page, 'Default repository is not defined for this host') if ! exists $host_cfg{$hostname}{default_repo};
