@@ -21,20 +21,24 @@ my $DEBUG = $repo->param( "debug" );
 my $hbinmode = $repo->param( "hbinmode" );
 
 # some parameters
-my $VERSION = 'v1.5.0';
+my $VERSION = 'v1.5.1';
 
 # NOTE: back-end file/ingest limits should always be geater than hybrid limits
 # max allowed file size for ingestion
-my $max_fsize = 2 * 1024 * 1024 * 1024;
+#my $max_fsize = 2 * 1024 * 1024 * 1024;
+my $max_fsize = 400 * 1024; # for testing
 
 # max allowed total ingestion size
-my $max_isize = 10 * 1024 * 1024 * 1024;
+#my $max_isize = 10 * 1024 * 1024 * 1024;
+my $max_isize = 450 * 1024; # for testing
 
 # max allowed file size for back-end ingestion
-my $max_befsize = 10 * 1024 * 1024 * 1024;
+#my $max_fsize = 2 * 1024 * 1024 * 1024;
+my $max_befsize = 900 * 1024; # for testing
 
 # max allowed total back-end ingestion size
-my $max_beisize = 100 * 1024 * 1024 * 1024;
+#my $max_isize = 10 * 1024 * 1024 * 1024;
+my $max_beisize = 800 * 1024; # for testing
 
 # free space always required on root file system
 # this is deducted from rootfs_free and max_isize is reduced if necessary
@@ -49,7 +53,7 @@ my $hy_enabled = 1;
 my $be_enabled = 1;
 
 my $DEBUG_LOG = 1;
-my $TITLE = "RDL hybrid and back-end ingestion";
+my $TITLE = "RDL Data Tool - hybrid and back-end ingestion";
 $TITLE .= ' (debug mode)' if $DEBUG;
 my $opt_verbose = $DEBUG ? '--verbose --verbose' : '';
 my $pathmsg = 'PASTE FULL PATH HERE';
@@ -71,6 +75,7 @@ my $down_file = '/usr/share/eprints/cgi/no_ingest';
 # define history info string
 my $history_str = <<'__HISTORY_INFO__';
 VERSION HISTORY
+1.5.1 - ADD: link to ABE Ingest checker
 1.5.0 - ADD: back-end ingestion option for large files and datasets
 1.4.8 - ADD: max file size, ingestion size and root file system free space checks
 1.4.7 - ADD: translation of URI escaped characters in filename references
@@ -170,6 +175,16 @@ $v->appendChild( $repo->make_text( $VERSION . ' ' ) );
 my $va = $repo->render_link( $host_cfg{$hostname}{https_link} . '?history=1' );
 $va->appendChild( $repo->make_text( '[version history]' ) );
 $v->appendChild( $va );
+$page->appendChild( $v );
+
+# set link to ABE Checker
+my $abe = $repo->make_element( "p" );
+$abe->appendChild( $repo->make_text( "[You can use the " ) );
+my $abe_link = $repo->render_link( 'abecheck' );
+$abe_link->appendChild( $repo->make_text( 'ABE Ingestion Checker' ) );
+$abe->appendChild( $abe_link );
+$abe->appendChild( $repo->make_text( " to check which items are set for Automated Back-End Ingestion]" ) );
+$page->appendChild( $abe );
 
 # get thread size
 my $scmd = eval('"'."$cmd_psmem".'"') . " 2>&1";
@@ -212,9 +227,9 @@ if ( $DEBUG ) {
 		. " / " . hr_bytes( $max_beisize, 1 ) . "\n";
 	$pre->appendChild( $repo->make_text( $opstr ) );
 	$dp->appendChild( $pre );
-	$v->appendChild( $dp );
+	$page->appendChild( $dp );
 }
-$page->appendChild( $v );
+#$page->appendChild( $v );
 
 
 # log the instance
@@ -550,7 +565,7 @@ else
 	$page->appendChild( $p );
 
 	$p = $repo->make_element( "p" );
-	$p->appendChild( $repo->make_text( "In this beta version you must supply the full path to the file separately (copy it from top of File Upload window)" ) );
+	$p->appendChild( $repo->make_text( "Due to web browser security restrictions you also need to supply the full path to the file separately (the quickest way is to copy it from the top of the File Upload window)" ) );
 	$page->appendChild( $p );
 
 	$p = $repo->make_element( "p" );
@@ -566,8 +581,6 @@ else
 	$f->appendChild( $repo->render_action_buttons( submit => "Convert to EPrints XML" ) );
 	$page->appendChild( $f );
 }
-
-
 
 # create title
 my $title = $repo->make_text( $TITLE );
