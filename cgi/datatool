@@ -20,7 +20,20 @@ my $history = $repo->param( "history" );
 my $DEBUG = $repo->param( "debug" );
 
 # some parameters
-my $VERSION = 'v1.4.7';
+my $VERSION = 'v1.4.8';
+
+# max allowed file size for ingestion
+my $max_fsize = 2 * 1024 * 1024 * 1024;
+#my $max_fsize = 450 * 1024; # for testing
+
+# max allowed total ingestion size
+my $max_isize = 10 * 1024 * 1024 * 1024;
+#my $max_isize = 400 * 1024; # for testing
+
+# free space always required on root file system
+# this is deducted from rootfs_free and max_isize is reduced if necessary
+my $rootfs_reqd = 2 * 1024 * 1024 * 1024;
+
 my $DEBUG_LOG = 1;
 my $TITLE = "RDL hybrid ingestion";
 $TITLE .= ' (debug mode)' if $DEBUG;
@@ -35,12 +48,15 @@ my $cmd_ingest = '/usr/share/eprints/bin/import --force $opt_verbose $repoid epr
 my $cmd_genview = '/usr/share/eprints/bin/generate_views $opt_verbose $repoid ';
 my $cmd_genabs = '/usr/share/eprints/bin/generate_abstracts $opt_verbose $repoid ';
 my $cmd_psmem = 'ps -o vsz --no-headers $$';
+my $cmd_rootfs = 'df -P -B 1 / | awk \'NR==2 { print $4 }\'';
 my $thread_size = '';
+my $rootfs_free = '';
 my $down_file = '/usr/share/eprints/cgi/no_ingest';
 
 # define history info string
 my $history_str = <<'__HISTORY_INFO__';
 VERSION HISTORY
+1.4.8 - ADD: max file size, ingestion size and root file system free space checks
 1.4.7 - ADD: translation of URI escaped characters in filename references
 1.4.6 - ADD: error trap to detect spaces in spreadsheet file path or file name
 1.4.5 - MOD: implement review subdomain replacing roadmap2 for RDL review repo
@@ -138,18 +154,50 @@ $v->appendChild( $repo->make_text( $VERSION . ' ' ) );
 my $va = $repo->render_link( $host_cfg{$hostname}{https_link} . '?history=1' );
 $va->appendChild( $repo->make_text( '[version history]' ) );
 $v->appendChild( $va );
+
+# get thread size
+my $scmd = eval('"'."$cmd_psmem".'"') . " 2>&1";
+chomp( $thread_size = `$scmd` );
+$thread_size *= 1024; # output from ps is in KB
+
+# get root fs free space
+chomp( $rootfs_free = `$cmd_rootfs` );
+
+# max file size cannot be larger than max ingestion size
+$max_fsize = $max_isize if ( $max_fsize > $max_isize );
+
+# amend max_fsize if necessary depending on how much available root fs space
+my $rootfs_avail = $rootfs_free - $rootfs_reqd;
+$rootfs_avail = 0 if $rootfs_avail < 0;
+$max_fsize = $rootfs_avail if ( $rootfs_avail < $max_fsize );
+
+########
+
+# TO DO
+
+# display max fsize and isize for user
+
+########
 if ( $DEBUG ) {
 	my $dp = $repo->make_element( "p" );
-	my $scmd = eval('"'."$cmd_psmem".'"') . " 2>&1";
-	chomp( $thread_size = `$scmd` );
-	$dp->appendChild( $repo->make_text( "DEBUG INFO - Thread ID: $$ - Thread size: $thread_size"  ) );
+	$dp->appendChild( $repo->make_text( "DEBUG INFO - Thread ID: $$ - Thread size: " . hr_bytes( $thread_size, 1 ) ) );
 	$v->appendChild( $dp );
+	my $dp2 = $repo->make_element( "p" );
+	$dp2->appendChild( $repo->make_text( "DEBUG INFO - root file system free space: " . hr_bytes( $rootfs_free, 1 ) ) );
+	$v->appendChild( $dp2 );
+	my $dp3 = $repo->make_element( "p" );
+	$dp3->appendChild( $repo->make_text( "DEBUG INFO - root file system reserved space: " . hr_bytes( $rootfs_reqd, 1 ) ) );
+	$v->appendChild( $dp3 );
+	my $dp4 = $repo->make_element( "p" );
+	$dp4->appendChild( $repo->make_text( "DEBUG INFO - max file / ingestion size: " . hr_bytes( $max_fsize, 1 )
+		. " / " . hr_bytes( $max_isize, 1 ) ) );
+	$v->appendChild( $dp4 );
 }
 $page->appendChild( $v );
 
 
 # log the instance
-print STDERR "Datatool: [ $$ ] " . localtime . " $thread_size " . $repo->{request}->connection->remote_ip . "\n" if $DEBUG_LOG || $DEBUG;
+print STDERR "Datatool: [ $$ ] " . localtime . "  TS: " . hr_bytes( $thread_size, 1 ) . "  RFSF: " . hr_bytes( $rootfs_free, 1 ) . "  IP: " . $repo->{request}->connection->remote_ip . "\n" if $DEBUG_LOG || $DEBUG;
 print STDERR "Datatool: Debug initiated\n" if $DEBUG;
 show_error($repo, $page, 'Sorry but this facility is currently disabled for maintenance purposes. Please try again later. For further details please contact the system administrator.') if -f $down_file;
 show_error($repo, $page, 'Sorry but this facility is not configured to run on this host') if ! exists $host_cfg{$hostname};
@@ -230,6 +278,9 @@ elsif ( defined $xlsfile )
 		my $fchk_found = 0;
 		my $fchk_missing = 0;
 		my $fchk_files = '';
+		my $schk_oversized = 0;
+		my $schk_files = '';
+		my $isize = 0;
 
         	if ( -f "$xlslpath$xmlfile" ) {
         	        open FILE, "$xlslpath$xmlfile" or die "\nERROR: Cannot open file $xlslpath$xmlfile\n\n";
@@ -240,6 +291,14 @@ elsif ( defined $xlsfile )
 									my $raw_path = uri_unescape($1);
         	                        if (-f $raw_path) {
         	                                $fchk_found++;
+											my $fsize = -s $raw_path;
+											$isize += $fsize;
+											if ( $max_fsize && ( $fsize > $max_fsize ))
+											{
+												$schk_files .= basename($raw_path)
+													. '   [' . hr_bytes( $fsize, 1 ) . "]\n";
+												$schk_oversized++;
+											}
         	                        }
         	                        else {
         	                                $fchk_files .= basename($raw_path) . "\n";
@@ -250,8 +309,25 @@ elsif ( defined $xlsfile )
         	}
 
 		$op .= "Found $fchk_found out of $fchk_total files referenced in the XML file\n\n";
-		$op .= "ERROR: The following files were not found: -\n$fchk_files\n\n" if $fchk_missing;
-		$error_str = 'bad file references' if $op =~ /ERROR\:/;
+		if ( $fchk_missing )
+		{
+			$op .= "ERROR: The following files were not found: -\n$fchk_files\n\n";
+			$error_str = 'bad file references';
+		}
+		elsif ( $schk_oversized )
+		{
+			$op .= "ERROR: The following files are too large to be ingested "
+				. "[max " . hr_bytes( $max_fsize, 1 ) . "] : -\n$schk_files\n\n";
+			$error_str = 'file sizes too large';
+		}
+		elsif ( $max_isize && ( $isize > $max_isize ))
+		{
+			$op .= "ERROR: The total size of this ingestion ["
+				. hr_bytes( $isize, 1 ) . "] is too large.\n"
+				. "       Maximum permitted ingestion size is "
+				. hr_bytes( $max_isize, 1 ) . "\n\n";
+			$error_str = 'ingestion size too large';
+		}
 	}
 
 	# display the system output regardless of any errors
@@ -268,8 +344,14 @@ elsif ( defined $xlsfile )
 			elsif ( $error_str =~ /file name/ ) {
 				$ep->appendChild( $repo->make_text( "There are $error_str - please rename the spreadsheet file replacing any spaces with underscores, then " ) );			
 			}
+			elsif ( $error_str =~ /file sizes/ ) {
+				$ep->appendChild( $repo->make_text( "There are $error_str - please use another ingestion method OR try splitting some of the files into smaller ones, make a copy of the spreadsheet in its current state if necessary, amend it to reflect the new list of files, be sure to save the changes to it, then  " ) );			
+			}
+			elsif ( $error_str =~ /ingestion size/ ) {
+				$ep->appendChild( $repo->make_text( "Total $error_str - please use another ingestion method OR try reducing the number of files, make a copy of the spreadsheet in its current state if necessary, amend it to reflect the new list of files, be sure to save the changes to it, then  " ) );			
+			}
 			else {
-				$ep->appendChild( $repo->make_text( "There are $error_str - please make a copy of the spreadsheet in its current state if necessary, then edit the spreadsheet to correct the errrors, be sure to save the changes to it, then " ) );
+				$ep->appendChild( $repo->make_text( "There are $error_str - please make a copy of the spreadsheet in its current state if necessary, then edit the spreadsheet to correct the errors, be sure to save the changes to it, then " ) );
 			}
 			
 	        my $ea = $DEBUG ?
@@ -435,7 +517,27 @@ sub show_error
 	exit;
 }
 
+# pretty print a byte number in units of 1024 - and show raw bytes too if show_bytes flag is set
+sub hr_bytes
+{
+	my $rawb = shift;
+	my $show_bytes = shift || 0;
+	
+	return '' if $rawb !~ /^[0-9]+$/;
+	
+	my $modb = $rawb;
 
+	foreach ( 'bytes', 'KB', 'MB', 'GB', 'TB', 'PB' )
+	{
+		if ( $modb < 1024 )
+		{
+			my $op = sprintf("%.0f ",$modb)."$_";
+			$op .= " ($rawb bytes)" if ( $show_bytes && $rawb > 1023 );
+			return $op;
+		}
+		$modb /= 1024;
+	}
+}
 
 
 # Create table for metadata
