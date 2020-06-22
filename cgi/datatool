@@ -21,16 +21,60 @@ my $prepath = 'N:/Academic\-Services/Library\-Services/RDL/Repository/';
 my $linuxpath = '/mnt/rdl/Repository/';
 my $cmd_conv = 'perl /export/home/eprints/_scripts/excel.pl -o -u 1 -t archive -p $xlslpath researchdata ';
 my $cmd_ingest = '/usr/share/eprints/bin/import --force $repoid eprint XMLIngest ';
+my $cmd_genview = '/usr/share/eprints/bin/generate_views $repoid ';
+my $cmd_genabs = '/usr/share/eprints/bin/generate_abstracts $repoid ';
+
 my @repo_list = ( 'rdtest', 'researchdata' ); 
 my %repo_labels = (
-	rdtest => 'RDL review repository',
-	researchdata => 'RDL live repository [WARNING - ARE YOU SURE?]',
+	rdtest => 'staging repository',
+	researchdata => 'live RDL repository',
 );
 
-show_error('Sorry but I can only work on a secure connection (try retyping the URL prefixing it with https://)') if(!$ENV{'HTTPS'});
+my $hostname = `hostname`;
+$hostname =~ s/\s//; # remove white space form host name
+
+my %host_cfg = (
+
+	roadmap2 => {
+		repo_list => [
+			'rdtest',
+			'researchdata',
+		],
+		repo_label => {
+			rdtest => 'RDL review repository',
+			researchdata => 'RDL live repository [ARE YOU SURE!!]',
+		},
+		repo_link => {
+			rdtest => 'http://roadmap2.leeds.ac.uk/cgi/latest',
+			researchdata => 'http://archive.researchdata.leeds.ac.uk/cgi/latest',		
+		},
+		https_link => 'https://archive.researchdata.leeds.ac.uk/cgi/datatool',
+	},
+	
+	roadmap4 => {
+		repo_list => [
+			'rdtest',
+			'researchdata',
+		],
+		repo_label => {
+			rdtest => 'RDL dev test repository',
+			researchdata => 'RDL dev primary repository',
+		},
+		repo_link => {
+			rdtest => 'http://129.11.6.56/cgi/latest',
+			researchdata => 'http://roadmap4.leeds.ac.uk/cgi/latest',		
+		},
+		https_link => 'https://roadmap4.leeds.ac.uk/cgi/datatool',
+	},
+	
+);
 
 # Create empty document
 my $page = $repo->make_doc_fragment();
+
+print STDERR $host_cfg{$hostname}; 
+show_error('Sorry but this facility is not configured to run on this host') if ! exists $host_cfg{$hostname};
+show_error('Sorry but I can only work on a secure connection - try ', $host_cfg{$hostname}{https_link}) if(!$ENV{'HTTPS'});
 
 # PROCESS XLS FILE
 if ( defined $xlsfile )
@@ -79,9 +123,9 @@ if ( defined $xlsfile )
 	$f->appendChild( $repo->render_option_list(
                 name => 'repoid',
                 id => 'repoid',
-                values => \@repo_list,
-                default => $repo_list[0],
-                labels => \%repo_labels ) );
+                values => $host_cfg{$hostname}{repo_list},
+                default => $host_cfg{$hostname}{repo_list}[0],
+                labels => $host_cfg{$hostname}{repo_label} ) );
 
 	$f->appendChild( $repo->render_input_field( name => "oneliner", size => 40, value => "$ppmsg")  );
 	$f->appendChild( $repo->render_action_buttons( submit => "Ingest into EPrints" ) );
@@ -99,83 +143,38 @@ elsif ( defined $xmlfilepath )
 	$xmlpcfilepath =~ s#/#\\#g;
 	
 	my $op = "Attempting ingestion using metadata file\n'$xmlpcfilepath'...\n\n";
-
 	my $cmd = eval('"'."$cmd_ingest".'"') . " $xmlfilepath 2>&1";
+	#$op = "$cmd";
 	$op .= `$cmd`;
-	#$op .= `$cmd_ingest $xmlfilepath 2>&1`;
-
+	
+	# update views and abstracts but only if we are ingesting to the review repository
+	if ( $repoid eq 'rdtest' ) {
+		$op .= "\n\nUpdating the repository views to show the new additions...\n\n";
+		$cmd = eval('"'."$cmd_genview".'"') . " 2>&1";
+		$op .= `$cmd`;
+		
+		$op .= "\n\nRegenerating abstract pages to overwrite any old cached pages for current items...\n\n";
+		$cmd = eval('"'."$cmd_genabs".'"') . " 2>&1";
+		$op .= `$cmd`;
+	}
+	
 	my $pre = $repo->make_element( "pre", style => 'white-space: pre-wrap; overflow: auto;' );
 	$pre->appendChild( $repo->make_text( $op ) );
 	$page->appendChild( $pre );
+	
+	my $p = $repo->make_element( "p" );
+	$p->appendChild( $repo->make_text( "You can check if data ingestion has been successful by going to " ) );
+
+	my $a = $repo->render_link( $host_cfg{$hostname}{repo_link}{$repoid} );
+	$a->appendChild( $repo->make_text( $host_cfg{$hostname}{repo_link}{$repoid} ) );
+	$p->appendChild( $a );
+	
+	$page->appendChild( $p );
 }
 
 # SHOW FILE SELECTOR
 else
 {
-	# render form
-        my $t = $repo->make_element( "h1" );
-        $t->appendChild( $repo->make_text( "Spreadsheet conversion [BETA!!]" ) );
-        $page->appendChild( $t );
-
-        # Create paragraphs
-        my $p = $repo->make_element( "p" );
-        $p->appendChild( $repo->make_text( "Browse to the .xls spreadsheet file you wish to convert to EPrints XML" ) );
-        $page->appendChild( $p );
-
-        $p = $repo->make_element( "p" );
-        $p->appendChild( $repo->make_text( "Note: the spreadsheet file must reside within the Repostiory folder in the RDL area of the N: drive, and any associated data files must reside in the same folder as the spreadsheet file, or in a sub-folder within it." ) );
-        $page->appendChild( $p );
-
-        $p = $repo->make_element( "p" );
-        $p->appendChild( $repo->make_text( "In this beta version you must supply the full path to the file separately (copy it from top of File Upload window)" ) );
-        $page->appendChild( $p );
-
-        $p = $repo->make_element( "p" );
-        $p->appendChild( $repo->make_text( "IMPORTANT: this facility OVERWRITES the .xml file without warning (e.g. oops.xls -> oops.xml)" ) );
-        $page->appendChild( $p );
-
-        # create form
-        my $f = $repo->render_form( "POST" );
-        $f->appendChild( $repo->render_upload_field( "xlsfile" )  );
-        $f->appendChild( $repo->render_input_field( name => "xlspath", size => 120, value => "$pathmsg... e.g. N:\\Academic-Services\\Library-Services\\RDL\\Repository\\Some\\path")  );
-        $f->appendChild( $repo->render_input_field( name => "oneliner", size => 40, value => "$ppmsg")  );
-        $f->appendChild( $repo->render_action_buttons( submit => "Convert to EPrints XML" ) );
-        $page->appendChild( $f );
-}
-
-
-
-# create title
-my $title = $repo->make_text( "Spreadsheet conversion [BETA!!]" );
-
-# Wrap in template
-$repo->build_page( $title, $page );
-$repo->send_page();
-
-# End repo
-$repo->terminate;
-
-
-
-
-sub show_error
-{
-	my $msg = shift;
-	$msg =~ s#\n# #g;
-
-	# Build error page
-		$repo->build_page(
-		$repo->make_text( "ERROR" ),
-		$repo->make_text( $msg ),
-	);
-	$repo->send_page();
-	$repo->terminate;
-	exit;
-}
-
-sub render_custom_form
-{
-	# if not we present the user with a description, file browse button and submit button
 	my $t = $repo->make_element( "h1" );
 	$t->appendChild( $repo->make_text( "Spreadsheet conversion [BETA!!]" ) );
 	$page->appendChild( $t );
@@ -205,6 +204,52 @@ sub render_custom_form
 	$f->appendChild( $repo->render_action_buttons( submit => "Convert to EPrints XML" ) );
 	$page->appendChild( $f );
 }
+
+
+
+# create title
+my $title = $repo->make_text( "Spreadsheet conversion [BETA!!]" );
+
+# Wrap in template
+$repo->build_page( $title, $page );
+$repo->send_page();
+
+# End repo
+$repo->terminate;
+
+
+
+sub show_error
+{
+	my $msg = shift;
+	my $uri = shift;
+	my $link_name = shift;
+
+	$msg =~ s#\n# #g;
+
+	my $p = $repo->make_element( "p" );
+        $p->appendChild( $repo->make_text( $msg ) );
+
+	if ( defined $uri ) {
+		my $a = $repo->render_link( $uri );
+		$link_name = $uri if ! defined $link_name;
+		$a->appendChild( $repo->make_text( $link_name ) );
+		$p->appendChild( $a );
+	}
+
+        $page->appendChild( $p );
+
+	# Build error page
+	$repo->build_page(
+		$repo->make_text( "ERROR" ),
+		$page,
+	);
+	$repo->send_page();
+	$repo->terminate;
+	exit;
+}
+
+
 
 
 # Create table for metadata
