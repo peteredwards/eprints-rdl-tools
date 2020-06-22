@@ -3,6 +3,7 @@ use strict;
 use Data::Dumper;
 use Sys::Hostname;
 use File::Basename;
+use URI::Escape;
 
 $|++;
 #my $eprints = EPrints->new;
@@ -19,7 +20,7 @@ my $history = $repo->param( "history" );
 my $DEBUG = $repo->param( "debug" );
 
 # some parameters
-my $VERSION = 'v1.4.6';
+my $VERSION = 'v1.4.7';
 my $DEBUG_LOG = 1;
 my $TITLE = "RDL hybrid ingestion";
 $TITLE .= ' (debug mode)' if $DEBUG;
@@ -40,6 +41,7 @@ my $down_file = '/usr/share/eprints/cgi/no_ingest';
 # define history info string
 my $history_str = <<'__HISTORY_INFO__';
 VERSION HISTORY
+1.4.7 - ADD: translation of URI escaped characters in filename references
 1.4.6 - ADD: error trap to detect spaces in spreadsheet file path or file name
 1.4.5 - MOD: implement review subdomain replacing roadmap2 for RDL review repo
 1.4.4 - ADD: down for maintenance functionality
@@ -235,11 +237,12 @@ elsif ( defined $xlsfile )
         	                chomp;
         	                if ($_ =~ /<url>file:\/\/(.*?)<\/url>/) {
         	                        $fchk_total++;
-        	                        if (-f $1) {
+									my $raw_path = uri_unescape($1);
+        	                        if (-f $raw_path) {
         	                                $fchk_found++;
         	                        }
         	                        else {
-        	                                $fchk_files .= basename($1) . "\n";
+        	                                $fchk_files .= basename($raw_path) . "\n";
         	                                $fchk_missing++;
         	                        }
         	                }
