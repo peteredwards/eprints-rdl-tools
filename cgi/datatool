@@ -21,7 +21,7 @@ my $DEBUG = $repo->param( "debug" );
 my $hbinmode = $repo->param( "hbinmode" );
 
 # some parameters
-my $VERSION = 'v1.6.1';
+my $VERSION = 'v1.7.0';
 
 # NOTE: back-end file/ingest limits should always be geater than hybrid limits
 # max allowed file size for ingestion
@@ -62,7 +62,8 @@ my $ppans = 'g0_r3s34rch_d4t4';
 my $prepath = 'N:/Academic\-Services/Library\-Services/RDL/Repository/';
 my $linuxpath = '/mnt/rdl/Repository/';
 my $cmd_conv = 'perl /export/home/eprints/_scripts/excel.pl -o -u 1 -t archive -p $xlslpath researchdata ';
-my $cmd_ingest = '/usr/share/eprints/bin/import --force $opt_verbose $repoid eprint XMLIngest ';
+#my $cmd_ingest = '/usr/share/eprints/bin/import --force $opt_verbose $repoid eprint XMLIngest ';
+my $cmd_ingest = '/usr/share/eprints/bin/ingest -c HYB $repoid ';
 my $cmd_genview = '/usr/share/eprints/bin/generate_views $opt_verbose $repoid ';
 my $cmd_genabs = '/usr/share/eprints/bin/generate_abstracts $opt_verbose $repoid ';
 my $cmd_psmem = 'ps -o vsz --no-headers $$';
@@ -75,6 +76,7 @@ my $down_file = '/usr/share/eprints/cgi/no_ingest';
 # define history info string
 my $history_str = <<'__HISTORY_INFO__';
 VERSION HISTORY
+1.7.0 - MOD: invoke custom ingest wrapper script for hybrid ingestions
 1.6.1 - ADD: error trap for empty document nodes (without file nodes) in XML files
 1.6.0 - ADD: enhanced XML file analysis using LibXML library module
         ADD: error trap to detect unmatched document 'main' values in XML files
