@@ -2,7 +2,7 @@ use EPrints;
 use strict;
 use Data::Dumper;
 
-my $VERSION = '1.0.0';
+my $VERSION = '1.2.1 (JB 08/06/2016)';
 
 my $eprints = EPrints->new;
 my $repo = $eprints->current_repository;
@@ -47,9 +47,121 @@ my %counts;
 						$dtotal
                 );
 				
-		print "\n\n  TOTAL EPRINTS: $etotal\nTOTAL DOCUMENTS: $dtotal\n\n";
+		print "\n  TOTAL EPRINTS: $etotal\nTOTAL DOCUMENTS: $dtotal\n\n";
 }
 
+{
+        my $sql = 'SELECT count(*), eprint_divisions.divisions, name_name, ancestors FROM eprint_divisions';
+		$sql .= ' JOIN subject_name_name ON eprint_divisions.divisions=subject_name_name.subjectid';
+		$sql .= ' JOIN eprint ON eprint_divisions.eprintid=eprint.eprintid';
+		$sql .= ' JOIN subject_ancestors ON eprint_divisions.divisions=subject_ancestors.subjectid';
+		$sql .= ' WHERE eprint_status=\'archive\' AND ancestors IN';
+		$sql .= ' ( SELECT subjectid FROM subject_name_name WHERE name_name LIKE \'Faculty%\' )';
+		$sql .= ' GROUP BY ancestors, eprint_divisions.divisions;';
+
+        my $sth = $repo->get_database->prepare_select( $sql );
+        $repo->get_database->execute( $sth , $sql );
+        my %ecounts;
+		my $etotal;
+		my %factotal;
+		
+        while( my ( $num, $divid, $divname, $facid ) = $sth->fetchrow_array )
+        {
+                $ecounts{$facid}{$divid} = [ $divname, $num ];
+				$etotal += $num;
+				$factotal{$facid} += $num;
+				
+        }
+		
+		print "\n\n** EPRINTS COUNT IN RDL LIVE ARCHIVE GROUPED BY SCHOOL/INSTITUTE AND FACULTY\n\n";
+        foreach my $fac ( sort keys %ecounts )
+        {
+			foreach my $div ( sort keys %{$ecounts{$fac}} )
+			{
+                print sprintf("%8s %8s %-60s  %5d\n", 
+                        $fac,
+						$div,
+                        ${$ecounts{$fac}{$div}}[0],
+						${$ecounts{$fac}{$div}}[1]
+                );
+			}
+			print "\n";
+			#print sprintf("%8s %8s %60s  %5d\n\n",
+			#	"", "", "$fac FACULTY TOTAL", $factotal{$fac}
+			#);
+        }
+
+		foreach ( sort keys %factotal )
+		{
+			print sprintf("%8s %8s %60s  %5d\n",
+				"", "", "$_ FACULTY TOTAL", $factotal{$_}
+			);			
+		}
+		print sprintf("%8s %8s %60s  %5d\n", 
+                        "", "", "GRAND TOTAL", $etotal
+            );	
+		print "\nTOTAL EPRINTS (WITH MULTIPLE COUNTING): $etotal\n\n";
+}
+
+{
+        my $sql = 'SELECT count(*), eprint_divisions.divisions, name_name, ancestors FROM eprint_divisions';
+		$sql .= ' JOIN subject_name_name ON eprint_divisions.divisions=subject_name_name.subjectid';
+		$sql .= ' JOIN eprint ON eprint_divisions.eprintid=eprint.eprintid';
+		$sql .= ' JOIN document ON eprint.eprintid=document.eprintid';
+		$sql .= ' JOIN subject_ancestors ON eprint_divisions.divisions=subject_ancestors.subjectid';
+		$sql .= ' WHERE eprint_status=\'archive\' AND ancestors IN';
+		$sql .= ' ( SELECT subjectid FROM subject_name_name WHERE name_name LIKE \'Faculty%\' )';
+		$sql .= ' AND docid NOT IN (SELECT docid FROM document_relation_type)';
+		$sql .= ' GROUP BY ancestors, eprint_divisions.divisions;';
+
+        my $sth = $repo->get_database->prepare_select( $sql );
+        $repo->get_database->execute( $sth , $sql );
+        my %dcounts;
+		my $dtotal;
+		my %factotal;
+		
+        while( my ( $num, $divid, $divname, $facid ) = $sth->fetchrow_array )
+        {
+                $dcounts{$facid}{$divid} = [ $divname, $num ];
+				$dtotal += $num;
+				$factotal{$facid} += $num;
+				
+        }
+		
+		print "\n\n** ORIGINAL DOCUMENTS COUNT IN RDL LIVE ARCHIVE GROUPED BY SCHOOL/INSTITUTE AND FACULTY\n\n";
+        foreach my $fac ( sort keys %dcounts )
+        {
+			foreach my $div ( sort keys %{$dcounts{$fac}} )
+			{
+                print sprintf("%8s %8s %-60s  %5d\n", 
+                        $fac,
+						$div,
+                        ${$dcounts{$fac}{$div}}[0],
+						${$dcounts{$fac}{$div}}[1]
+                );
+			}
+			print "\n";
+			#print sprintf("%8s %8s %60s  %5d\n\n",
+			#	"", "", "$fac FACULTY TOTAL", $factotal{$fac}
+			#);
+        }
+
+		foreach ( sort keys %factotal )
+		{
+			print sprintf("%8s %8s %60s  %5d\n",
+				"", "", "$_ FACULTY TOTAL", $factotal{$_}
+			);			
+		}
+		print sprintf("%8s %8s %60s  %5d\n", 
+                        "", "", "GRAND TOTAL", $dtotal
+            );	
+		print "\nTOTAL DOCUMENTS (WITH MULTIPLE COUNTING): $dtotal\n\n";
+}
+
+print "\n\n** PLEASE NOTE: MULTIPLE COUNTING\n";
+print "1) Schools/institutes belonging to more than one faculty are assessed/counted multiple times\n";
+print "2) Eprints with more than one school/institute set are assessed/counted multiple times\n";
+print "   Therefore some eprints/documents are counted more than once using methods above prefixed with **.\n\n";
 
 # version
 print sprintf(" bstats version: %s\n", $VERSION);
