@@ -73,3 +73,5 @@ This repository contains additional files found in the EPrints installation on `
 ```
 
 This repository has taken the versioned `datatool` and `bstats` CGI scripts and added all versions as tags in this repository (to avoid duplication of files). Some of the files have been moved to bin/local as they are obviously utilities which were used on the command line, but other have been left in place. Some are called by cron tasks so should not be moved without editing the crontab.
+
+The repository also contains two directories from the eprints home directory, `cron` and `_scripts`
