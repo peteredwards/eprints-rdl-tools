@@ -126,7 +126,7 @@ my %host_cfg = (
 			rdtest => {
 				label => 'RDL review repository',
 				lat_link => 'http://review.researchdata.leeds.ac.uk/cgi/latest',
-				do_views => 1,
+				do_views => 0,
 				do_abs => 0,
 			},
 			researchdata => {
